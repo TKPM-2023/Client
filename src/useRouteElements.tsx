@@ -1,18 +1,19 @@
 import { useRoutes } from 'react-router-dom'
 
-import ProductList from './pages/ProductList'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import RegisterLayout from './layouts/RegisterLayout'
+import config from './config'
 
 function useRouteElements() {
   const routeElements = useRoutes([
     {
-      path: '/',
-      element: <ProductList />
+      path: config.routes.home,
+      element: <Home />
     },
     {
-      path: '/login',
+      path: config.routes.login,
       element: (
         <RegisterLayout>
           <Login />
@@ -20,7 +21,7 @@ function useRouteElements() {
       )
     },
     {
-      path: '/register',
+      path: config.routes.register,
       element: (
         <RegisterLayout>
           <Register />
