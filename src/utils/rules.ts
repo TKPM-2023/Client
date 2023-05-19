@@ -24,5 +24,8 @@ const schema = yup
   })
   .required()
 
-export type Schema = yup.InferType<typeof schema>
+type Schema = yup.InferType<typeof schema>
+export type LoginFormDataType = Omit<Schema, 'first_name' | 'last_name' | 'confirm_password'>
+export type RegisterFormDataType = Schema
+
 export default schema

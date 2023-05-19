@@ -1,11 +1,29 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+
 import config from 'src/config'
+import schema, { LoginFormDataType } from 'src/utils/rules'
+
+type FormData = LoginFormDataType
 
 function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: yupResolver(schema)
+  })
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
+  })
+
   return (
     <div className='grid grid-cols-1 gap-8 bg-orange px-8 py-28 lg:grid-cols-5'>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
-        <form className='rounded bg-white px-8 py-6 shadow-md'>
+        <form className='rounded bg-white px-8 py-6 shadow-md' onSubmit={onSubmit} noValidate>
           <h3 className='text-xl'>Đăng nhập</h3>
 
           <div className='mt-6'>

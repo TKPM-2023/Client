@@ -1,24 +1,53 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import Input from 'src/components/Input'
+import { useMutation } from '@tanstack/react-query'
 
 import config from 'src/config'
-import schema, { Schema } from 'src/utils/rules'
+import Input from 'src/components/Input'
+import schema, { RegisterFormDataType } from 'src/utils/rules'
+import { registerAccount } from 'src/apis/auth.api'
+import { isAxiosBadRequestError } from 'src/utils/utils'
 
-type FormData = Schema
+type FormData = RegisterFormDataType
+type ErrorResponse = {
+  error_key: string
+  log: string
+  message: string
+  status_code: number
+} | null
 
 function Register() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(schema)
   })
 
+  const registerMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+  })
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    registerMutation.mutate(data, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosBadRequestError<ErrorResponse>(error)) {
+          const formError = error.response?.data
+          if (formError && formError.error_key === 'ErrEmailExist') {
+            setError('email', {
+              message: formError.message,
+              type: 'server'
+            })
+          }
+        }
+      }
+    })
   })
 
   return (
