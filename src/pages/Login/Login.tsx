@@ -4,7 +4,7 @@ import config from 'src/config'
 function Login() {
   return (
     <div className='grid grid-cols-1 gap-8 bg-orange px-8 py-28 lg:grid-cols-5'>
-      <div className='lg:col-span-2 lg:col-start-4'>
+      <div className='mx-8 lg:col-span-2 lg:col-start-4'>
         <form className='rounded bg-white px-8 py-6 shadow-md'>
           <h3 className='text-xl'>Đăng nhập</h3>
 

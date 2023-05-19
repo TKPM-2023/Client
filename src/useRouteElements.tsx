@@ -3,7 +3,7 @@ import { useRoutes } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import RegisterLayout from './layouts/RegisterLayout'
+import AuthLayout from './layouts/AuthLayout'
 import config from './config'
 
 function useRouteElements() {
@@ -13,20 +13,18 @@ function useRouteElements() {
       element: <Home />
     },
     {
-      path: config.routes.login,
-      element: (
-        <RegisterLayout>
-          <Login />
-        </RegisterLayout>
-      )
-    },
-    {
-      path: config.routes.register,
-      element: (
-        <RegisterLayout>
-          <Register />
-        </RegisterLayout>
-      )
+      path: '',
+      element: <AuthLayout />,
+      children: [
+        {
+          path: config.routes.login,
+          element: <Login />
+        },
+        {
+          path: config.routes.register,
+          element: <Register />
+        }
+      ]
     }
   ])
 

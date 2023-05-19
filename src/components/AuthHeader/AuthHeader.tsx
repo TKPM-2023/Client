@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import config from 'src/config'
+import routes from 'src/config/routes'
 
-function RegisterHeader() {
+function AuthHeader() {
+  const registerMatch = useMatch(routes.register)
+  const isRegisterPage = Boolean(registerMatch)
+
   return (
     <header className='py-5'>
       <div className='container'>
@@ -13,11 +17,11 @@ function RegisterHeader() {
               </g>
             </svg>
           </Link>
-          <h2 className='text-xl lg:text-2xl'>Đăng ký</h2>
+          <h2 className='text-xl lg:text-2xl'>{isRegisterPage ? 'Đăng ký' : 'Đăng nhập'}</h2>
         </nav>
       </div>
     </header>
   )
 }
 
-export default RegisterHeader
+export default AuthHeader
