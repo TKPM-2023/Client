@@ -1,14 +1,15 @@
 export type LoginResponse = {
-  data: {
-    access_token: {
-      token: string
-      created: string
-      expiry: number
-    }
-    refresh_token: {
-      token: string
-      created: string
-      expiry: number
-    }
+  access_token: {
+    token: string
   }
+  refresh_token: {
+    token: string
+  }
+}
+
+export type ErrorResponse = {
+  error_key: string
+  log: string
+  message: string
+  status_code: number
 }

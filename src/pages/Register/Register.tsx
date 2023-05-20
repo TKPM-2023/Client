@@ -1,23 +1,21 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 
 import config from 'src/config'
 import Input from 'src/components/Input'
-import schema, { RegisterFormDataType } from 'src/utils/rules'
+import Button from 'src/components/Button'
 import { registerAccount } from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
+import schema, { RegisterFormDataType } from 'src/utils/rules'
+import { ErrorResponse } from 'src/types/auth.type'
 
 type FormData = RegisterFormDataType
-type ErrorResponse = {
-  error_key: string
-  log: string
-  message: string
-  status_code: number
-} | null
 
 function Register() {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -33,8 +31,8 @@ function Register() {
 
   const onSubmit = handleSubmit((data) => {
     registerMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        navigate(config.routes.login)
       },
       onError: (error) => {
         if (isAxiosBadRequestError<ErrorResponse>(error)) {
@@ -99,10 +97,14 @@ function Register() {
             />
           </div>
 
-          <button type='submit' className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'>
+          <Button
+            type='submit'
+            className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'
+            isLoading={registerMutation.isLoading}
+            disabled={registerMutation.isLoading}
+          >
             Đăng ký
-          </button>
-
+          </Button>
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>
             <Link to={config.routes.login} className='text-red-500'>

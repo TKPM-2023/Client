@@ -1,55 +1,112 @@
+import { useContext } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import config from 'src/config'
+import Input from 'src/components/Input'
+import Button from 'src/components/Button'
+import { getProfile, loginAccount } from 'src/apis/auth.api'
 import schema, { LoginFormDataType } from 'src/utils/rules'
+import { isAxiosBadRequestError } from 'src/utils/utils'
+import { ErrorResponse } from 'src/types/auth.type'
+import { AppContext } from 'src/contexts/app.context'
+import { User } from 'src/types/user.type'
 
 type FormData = LoginFormDataType
+const loginSchema = schema.omit(['first_name', 'last_name', 'confirm_password'])
 
 function Login() {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(loginSchema)
+  })
+
+  const loginAccountMutation = useMutation({
+    mutationFn: (body: FormData) => loginAccount(body)
+  })
+
+  useQuery({
+    queryKey: ['profile'],
+    queryFn: ({ signal }) => getProfile({ signal }),
+    enabled: loginAccountMutation.isSuccess,
+    onSuccess: (data: User) => {
+      setProfile(data)
+      setIsAuthenticated(true)
+      navigate(config.routes.home)
+    },
+    onError: (error) => {
+      console.log(error)
+    }
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    loginAccountMutation.mutate(data, {
+      onSuccess: () => {
+        // Khi login thành công thì sẽ gọi api get profile
+        // Query key của hàm invalidateQueries match với query key của useQuery trên => Gọi API trên
+        queryClient.invalidateQueries({
+          queryKey: ['profile']
+        })
+      },
+      onError: (error) => {
+        if (isAxiosBadRequestError<ErrorResponse>(error)) {
+          // Kiểm tra lỗi có phải từ API trả về không
+          const formError = error.response?.data
+
+          if (formError && formError.error_key === 'ErrEmailOrPasswordInvalid') {
+            setError('password', {
+              message: formError.message,
+              type: 'server'
+            })
+          }
+        }
+      }
+    })
   })
 
   return (
     <div className='grid grid-cols-1 gap-8 bg-orange px-8 py-28 lg:grid-cols-5'>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
-        <form className='rounded bg-white px-8 py-6 shadow-md' onSubmit={onSubmit} noValidate>
+        <form className='rounded bg-white px-8 py-6 shadow-md' noValidate onSubmit={onSubmit}>
           <h3 className='text-xl'>Đăng nhập</h3>
 
           <div className='mt-6'>
-            <div className='mt-2'>
-              <input
-                type='text'
-                name='username'
-                className='w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
-                placeholder='Tên tài khoản'
-              />
-              <div className='min-h-[1rem] text-xs text-red-400'></div>
-            </div>
-            <div className='mt-2'>
-              <input
-                type='password'
-                name='password'
-                className='w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
-                placeholder='Mật khẩu'
-              />
-              <div className='min-h-[1rem] text-xs text-red-400'></div>
-            </div>
+            <Input<FormData>
+              className='mt-2'
+              type='email'
+              name='email'
+              placeholder='Email'
+              register={register}
+              errorMessage={errors.email?.message}
+            />
+            <Input<FormData>
+              className='mt-2'
+              type='password'
+              name='password'
+              placeholder='Mật khẩu'
+              register={register}
+              errorMessage={errors.password?.message}
+            />
           </div>
 
-          <button type='submit' className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'>
+          <Button
+            type='submit'
+            className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'
+            isLoading={loginAccountMutation.isLoading}
+            disabled={loginAccountMutation.isLoading}
+          >
             Đăng nhập
-          </button>
+          </Button>
 
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>

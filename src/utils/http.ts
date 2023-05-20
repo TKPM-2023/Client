@@ -1,8 +1,15 @@
-import axios from 'axios'
+import axios, { HttpStatusCode } from 'axios'
+import { toast } from 'react-toastify'
+import { getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+import { LoginResponse } from 'src/types/auth.type'
+
+const API_URL = import.meta.env.VITE_API_URL as string
 
 const createHttpInstance = () => {
+  let access_token = getAccessTokenFromLS()
+
   const http = axios.create({
-    baseURL: 'http://localhost:8080/v1/',
+    baseURL: API_URL,
     timeout: 10000,
     headers: { 'Content-Type': 'application/json' }
   })
@@ -10,11 +17,10 @@ const createHttpInstance = () => {
   // Add a request interceptor
   http.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
+      if (access_token) config.headers.Authorization = 'Bearer ' + access_token
       return config
     },
     function (error) {
-      // Do something with request error
       return Promise.reject(error)
     }
   )
@@ -22,13 +28,23 @@ const createHttpInstance = () => {
   // Add a response interceptor
   http.interceptors.response.use(
     function (response) {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
+      const url = response.config.url
+
+      if (url === 'authenticate') {
+        const data = response.data.data as LoginResponse
+        access_token = data.access_token.token
+        saveAccessTokenToLS(access_token)
+      }
+
       return response
     },
     function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
+      if (error.response?.status !== HttpStatusCode.BadRequest) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data: any | undefined = error.response?.data
+        const errorMessage = data?.message || error.message
+        toast.error(errorMessage)
+      }
       return Promise.reject(error)
     }
   )
