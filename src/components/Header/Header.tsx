@@ -1,21 +1,33 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import config from 'src/config'
 import images from 'src/assets/images'
 import Popover from '../Popover'
+import { AppContext } from 'src/contexts/app.context'
+import { clearLS } from 'src/utils/auth'
 
 function Header() {
+  const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
+
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    setProfile(null)
+    clearLS()
+  }
+
+  console.log(profile)
+
   return (
     <header className='bg-header'>
       <div className='container'>
-        <nav className='flex justify-between py-2.5'>
+        <nav className='flex h-20 justify-between py-2.5'>
           <Link to={config.routes.home} className='flex w-40 items-center lg:w-56'>
             <img src={images.logo} alt='Logo' className='w-full object-cover' />
           </Link>
           <ul className='flex items-center gap-4'>
             <Popover
               as='li'
-              initialOpen={true}
               className='flex cursor-default items-center gap-1 px-3 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:bg-orange-300 hover:text-black'
               renderPopover={
                 <div className='flex min-w-[260px] gap-6 rounded-sm bg-white p-4 shadow-md'>
@@ -165,6 +177,57 @@ function Header() {
               </svg>
             </Popover>
 
+            {isAuthenticated && (
+              <Popover
+                as='li'
+                placement='bottom-end'
+                className='flex cursor-default items-center gap-1 px-3 py-4 text-sm font-semibold text-white transition duration-300 hover:opacity-70'
+                renderPopover={
+                  <div className='min-w-[200px] rounded-sm bg-white px-4 py-2 shadow-md'>
+                    <Link
+                      to={config.routes.profile}
+                      className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
+                    >
+                      Tài khoản của tôi
+                    </Link>
+                    <div className='border-b border-gray-200'></div>
+                    <button
+                      className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
+                      onClick={handleLogout}
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
+                }
+              >
+                <div className='w-6'>
+                  <img
+                    src='https://scontent.fsgn5-14.fna.fbcdn.net/v/t39.30808-6/332294296_872079104071978_8443506191486236265_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=ncdA72EMyS0AX-ioKAG&_nc_ht=scontent.fsgn5-14.fna&oh=00_AfAYQR8aHfxBXitFgHxw-s0MdAyHLeEtXnSJjI_exNg8LQ&oe=646D891D'
+                    alt='avatar'
+                    className='w-full rounded-full object-cover'
+                  />
+                </div>
+                <span>{profile?.first_name + ' ' + profile?.last_name}</span>
+              </Popover>
+            )}
+
+            {!isAuthenticated && (
+              <li className='flex items-center gap-1'>
+                <Link
+                  to={config.routes.login}
+                  className='flex items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:opacity-70'
+                >
+                  Đăng nhập
+                </Link>
+                <Link
+                  to={config.routes.register}
+                  className='flex items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:opacity-70'
+                >
+                  Đăng ký
+                </Link>
+              </li>
+            )}
+
             <li className='mr-2'>
               <button
                 type='button'
@@ -186,6 +249,7 @@ function Header() {
                 </svg>
               </button>
             </li>
+
             <Popover
               as='li'
               renderPopover={
