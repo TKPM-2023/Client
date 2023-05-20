@@ -10,10 +10,12 @@ import { registerAccount } from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import schema, { RegisterFormDataType } from 'src/utils/rules'
 import { ErrorResponse } from 'src/types/auth.type'
+import useTitle from 'src/hooks/useTitle'
 
 type FormData = RegisterFormDataType
 
 function Register() {
+  useTitle('Đăng ký')
   const navigate = useNavigate()
 
   const {

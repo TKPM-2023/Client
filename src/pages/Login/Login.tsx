@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -13,11 +13,13 @@ import { isAxiosBadRequestError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/auth.type'
 import { AppContext } from 'src/contexts/app.context'
 import { User } from 'src/types/user.type'
+import useTitle from 'src/hooks/useTitle'
 
 type FormData = LoginFormDataType
 const loginSchema = schema.omit(['first_name', 'last_name', 'confirm_password'])
 
 function Login() {
+  useTitle('Đăng nhập')
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
@@ -35,7 +37,7 @@ function Login() {
     mutationFn: (body: FormData) => loginAccount(body)
   })
 
-  useQuery({
+  const profileQuery = useQuery({
     queryKey: ['profile'],
     queryFn: ({ signal }) => getProfile({ signal }),
     enabled: loginAccountMutation.isSuccess,
@@ -102,8 +104,8 @@ function Login() {
           <Button
             type='submit'
             className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'
-            isLoading={loginAccountMutation.isLoading}
-            disabled={loginAccountMutation.isLoading}
+            isLoading={loginAccountMutation.isLoading || profileQuery.isInitialLoading}
+            disabled={loginAccountMutation.isLoading || profileQuery.isInitialLoading}
           >
             Đăng nhập
           </Button>

@@ -1,21 +1,8 @@
-import { Link } from 'react-router-dom'
-import config from 'src/config'
+import useTitle from 'src/hooks/useTitle'
 
 function Home() {
-  return (
-    <div className='bg-orange'>
-      <div className='container'>
-        <div className='flex h-24 items-start justify-end gap-4 py-2'>
-          <Link to={config.routes.register} className='text-md py-2 text-white'>
-            Đăng ký
-          </Link>
-          <Link to={config.routes.login} className='text-md py-2 text-white'>
-            Đăng nhập
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
+  useTitle('Nón Trùm | Chuỗi Cửa Hàng Mũ Bảo Hiểm Đẹp')
+  return <div>Home</div>
 }
 
 export default Home
