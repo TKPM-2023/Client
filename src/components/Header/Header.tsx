@@ -1,8 +1,36 @@
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import images from 'src/assets/images'
+import { motion } from 'framer-motion'
+import {
+  useFloating,
+  useHover,
+  useInteractions,
+  FloatingPortal,
+  FloatingArrow,
+  flip,
+  arrow,
+  offset,
+  autoUpdate
+} from '@floating-ui/react'
+
 import config from 'src/config'
+import images from 'src/assets/images'
 
 function Header() {
+  const [isOpen, setIsOpen] = useState(false)
+  const arrowRef = useRef<SVGSVGElement | null>(null)
+
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
+    middleware: [flip(), arrow({ element: arrowRef }), offset(6)],
+    whileElementsMounted: autoUpdate
+  })
+
+  const hover = useHover(context)
+
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover])
+
   return (
     <header className='bg-header'>
       <div className='container'>
@@ -11,7 +39,11 @@ function Header() {
             <img src={images.logo} alt='Logo' className='w-full object-cover' />
           </Link>
           <ul className='flex items-center gap-4'>
-            <li className='flex cursor-default items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:bg-orange-300 hover:text-black'>
+            <li
+              ref={refs.setReference}
+              {...getReferenceProps()}
+              className='flex cursor-default items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:bg-orange-300 hover:text-black'
+            >
               <span>Nón bảo hiểm</span>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -23,6 +55,38 @@ function Header() {
               >
                 <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
               </svg>
+
+              {true && (
+                <FloatingPortal>
+                  <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
+                    <motion.div>
+                      <FloatingArrow ref={arrowRef} context={context} fill='white' className='shadow-md' />
+                      <div className='min-w-[260px] rounded-sm bg-white p-4 shadow-md'>
+                        <Link
+                          to={config.routes.home}
+                          className='block p-2.5 text-sm font-medium text-black/70 hover:text-black'
+                        >
+                          Kính
+                        </Link>
+                        <div className='border-b border-gray-300'></div>
+                        <Link
+                          to={config.routes.home}
+                          className='block p-2.5 text-sm font-medium text-black/70 hover:text-black'
+                        >
+                          Găng tay
+                        </Link>
+                        <div className='border-b border-gray-300'></div>
+                        <Link
+                          to={config.routes.home}
+                          className='block p-2.5 text-sm font-medium text-black/70 hover:text-black'
+                        >
+                          Khác
+                        </Link>
+                      </div>
+                    </motion.div>
+                  </div>
+                </FloatingPortal>
+              )}
             </li>
             <li className='flex cursor-default items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:bg-orange-300 hover:text-black'>
               <span>Phụ kiện</span>
