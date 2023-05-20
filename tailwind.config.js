@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        orange: '#ee4d2d'
+        header: '#2A2A2A'
       }
     }
   },
