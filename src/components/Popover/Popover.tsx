@@ -11,7 +11,8 @@ import {
   offset,
   autoUpdate,
   safePolygon,
-  shift
+  shift,
+  Placement
 } from '@floating-ui/react'
 
 interface Props {
@@ -20,9 +21,17 @@ interface Props {
   className?: string
   as?: ElementType
   initialOpen?: boolean
+  placement?: Placement
 }
 
-function Popover({ as: Element = 'div', className, initialOpen = false, renderPopover, children }: Props) {
+function Popover({
+  as: Element = 'div',
+  placement = 'bottom',
+  className,
+  initialOpen = false,
+  renderPopover,
+  children
+}: Props) {
   const [isOpen, setIsOpen] = useState(initialOpen)
   const arrowRef = useRef<SVGSVGElement | null>(null)
 
@@ -30,7 +39,8 @@ function Popover({ as: Element = 'div', className, initialOpen = false, renderPo
     open: isOpen,
     onOpenChange: setIsOpen,
     middleware: [flip(), shift(), arrow({ element: arrowRef }), offset(6)],
-    whileElementsMounted: autoUpdate
+    whileElementsMounted: autoUpdate,
+    placement
   })
 
   const hover = useHover(context, {

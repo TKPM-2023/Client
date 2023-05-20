@@ -12,7 +12,7 @@ export const loginAccount = (body: LoginFormDataType) => {
 }
 
 export const getProfile = ({ signal }: { signal?: AbortSignal }) => {
-  return http.get<User>('profile', {
+  return http.get<{ data: User }>('profile', {
     signal
   })
 }

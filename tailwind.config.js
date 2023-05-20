@@ -10,7 +10,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        header: '#2A2A2A'
+        header: '#2A2A2A',
+        primary: '#EE4D2D'
       }
     }
   },

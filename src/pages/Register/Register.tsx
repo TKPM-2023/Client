@@ -51,7 +51,7 @@ function Register() {
   })
 
   return (
-    <div className='grid grid-cols-1 gap-8 bg-orange px-8 py-28 lg:grid-cols-5'>
+    <div className='grid grid-cols-1 gap-8 bg-primary px-8 py-28 lg:grid-cols-5'>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
         <form className='rounded bg-white px-8 py-6 shadow-md' noValidate onSubmit={onSubmit}>
           <h3 className='text-xl'>Đăng ký</h3>
@@ -101,7 +101,7 @@ function Register() {
 
           <Button
             type='submit'
-            className='mt-2 w-full rounded bg-orange px-4 py-2 text-sm uppercase text-white'
+            className='mt-2 w-full rounded bg-primary px-4 py-2 text-sm uppercase text-white'
             isLoading={registerMutation.isLoading}
             disabled={registerMutation.isLoading}
           >
