@@ -14,6 +14,7 @@ import { ErrorResponse } from 'src/types/auth.type'
 import { AppContext } from 'src/contexts/app.context'
 import { User } from 'src/types/user.type'
 import useTitle from 'src/hooks/useTitle'
+import { saveProfileToLS } from 'src/utils/auth'
 
 type FormData = LoginFormDataType
 const loginSchema = schema.omit(['first_name', 'last_name', 'confirm_password'])
@@ -42,7 +43,9 @@ function Login() {
     queryFn: ({ signal }) => getProfile({ signal }),
     enabled: loginAccountMutation.isSuccess,
     onSuccess: (data) => {
-      setProfile(data.data.data)
+      const profile = data.data.data
+      setProfile(profile)
+      saveProfileToLS(profile)
       setIsAuthenticated(true)
       navigate(config.routes.home)
     },
