@@ -8,11 +8,11 @@ import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import { registerAccount } from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-import schema, { RegisterFormDataType } from 'src/utils/rules'
+import schema, { Schema } from 'src/utils/rules'
 import { ErrorResponse } from 'src/types/auth.type'
 import useTitle from 'src/hooks/useTitle'
 
-type FormData = RegisterFormDataType
+type FormData = Pick<Schema, 'email' | 'first_name' | 'last_name' | 'password' | 'confirm_password'>
 
 function Register() {
   useTitle('Đăng ký')
@@ -39,11 +39,20 @@ function Register() {
       onError: (error) => {
         if (isAxiosBadRequestError<ErrorResponse>(error)) {
           const formError = error.response?.data
-          if (formError && formError.error_key === 'ErrEmailExist') {
-            setError('email', {
-              message: formError.message,
-              type: 'server'
-            })
+          if (formError) {
+            if (formError.error_key === 'ErrEmailExist') {
+              setError('email', {
+                message: formError.message,
+                type: 'server'
+              })
+            }
+
+            if (formError.error_key === 'InvalidPasswordFormat') {
+              setError('password', {
+                message: formError.message,
+                type: 'server'
+              })
+            }
           }
         }
       }
