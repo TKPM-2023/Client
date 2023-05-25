@@ -16,8 +16,6 @@ function Header() {
     clearLS()
   }
 
-  console.log(profile)
-
   return (
     <header className='bg-header'>
       <div className='container'>
@@ -177,6 +175,7 @@ function Header() {
               </svg>
             </Popover>
 
+            {/* User dropdown */}
             {isAuthenticated && (
               <Popover
                 as='li'
@@ -190,7 +189,18 @@ function Header() {
                     >
                       Tài khoản của tôi
                     </Link>
+
                     <div className='border-b border-gray-200'></div>
+
+                    <Link
+                      to={config.routes.admin}
+                      className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
+                    >
+                      Trang quản trị
+                    </Link>
+
+                    <div className='border-b border-gray-200'></div>
+
                     <button
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                       onClick={handleLogout}
@@ -201,11 +211,7 @@ function Header() {
                 }
               >
                 <div className='w-6'>
-                  <img
-                    src='https://scontent.fsgn5-14.fna.fbcdn.net/v/t39.30808-6/332294296_872079104071978_8443506191486236265_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=ncdA72EMyS0AX-ioKAG&_nc_ht=scontent.fsgn5-14.fna&oh=00_AfAYQR8aHfxBXitFgHxw-s0MdAyHLeEtXnSJjI_exNg8LQ&oe=646D891D'
-                    alt='avatar'
-                    className='w-full rounded-full object-cover'
-                  />
+                  <img src={images.avatar} alt='avatar' className='w-full rounded-full object-cover' />
                 </div>
                 <span>{profile?.first_name + ' ' + profile?.last_name}</span>
               </Popover>

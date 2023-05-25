@@ -13,19 +13,17 @@ const schema = yup
     password: yup
       .string()
       .required('Mật khẩu là bắt buộc')
-      .min(5, 'Độ dài từ 5 - 160 ký tự')
-      .max(160, 'Độ dài từ 5 - 160 ký tự'),
+      .min(8, 'Độ dài từ 8 - 160 ký tự')
+      .max(160, 'Độ dài từ 8 - 160 ký tự'),
     confirm_password: yup
       .string()
       .required('Nhập lại mật khẩu là bắt buộc')
       .oneOf([yup.ref('password')], 'Mật khẩu nhập lại không khớp')
-      .min(5, 'Độ dài từ 5 - 160 ký tự')
-      .max(160, 'Độ dài từ 5 - 160 ký tự')
+      .min(8, 'Độ dài từ 8 - 160 ký tự')
+      .max(160, 'Độ dài từ 8 - 160 ký tự')
   })
   .required()
 
-type Schema = yup.InferType<typeof schema>
-export type LoginFormDataType = Omit<Schema, 'first_name' | 'last_name' | 'confirm_password'>
-export type RegisterFormDataType = Schema
+export type Schema = yup.InferType<typeof schema>
 
 export default schema

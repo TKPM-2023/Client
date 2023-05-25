@@ -32,15 +32,15 @@ function Popover({
   renderPopover,
   children
 }: Props) {
-  const [isOpen, setIsOpen] = useState(initialOpen)
+  const [isOpen, setIsOpen] = useState(initialOpen || false)
   const arrowRef = useRef<SVGSVGElement | null>(null)
 
   const { refs, floatingStyles, context, middlewareData } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
+    placement,
     middleware: [flip(), shift(), arrow({ element: arrowRef }), offset(6)],
-    whileElementsMounted: autoUpdate,
-    placement
+    whileElementsMounted: autoUpdate
   })
 
   const hover = useHover(context, {
@@ -53,9 +53,9 @@ function Popover({
     <Element ref={refs.setReference} {...getReferenceProps()} className={className}>
       {children}
 
-      <AnimatePresence>
-        {isOpen && (
-          <FloatingPortal>
+      <FloatingPortal>
+        <AnimatePresence>
+          {isOpen && (
             <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
@@ -68,9 +68,9 @@ function Popover({
                 {renderPopover}
               </motion.div>
             </div>
-          </FloatingPortal>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </FloatingPortal>
     </Element>
   )
 }

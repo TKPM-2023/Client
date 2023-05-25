@@ -8,16 +8,15 @@ import config from 'src/config'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import { getProfile, loginAccount } from 'src/apis/auth.api'
-import schema, { LoginFormDataType } from 'src/utils/rules'
+import schema, { Schema } from 'src/utils/rules'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/auth.type'
 import { AppContext } from 'src/contexts/app.context'
-import { User } from 'src/types/user.type'
 import useTitle from 'src/hooks/useTitle'
 import { saveProfileToLS } from 'src/utils/auth'
 
-type FormData = LoginFormDataType
-const loginSchema = schema.omit(['first_name', 'last_name', 'confirm_password'])
+type FormData = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password'])
 
 function Login() {
   useTitle('Đăng nhập')
