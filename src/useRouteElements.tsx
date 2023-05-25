@@ -1,14 +1,20 @@
+import { useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 
+import config from './config'
+import { AppContext } from './contexts/app.context'
+
+import AuthLayout from './layouts/AuthLayout'
+import MainLayout from './layouts/MainLayout'
+import Profile from './components/Profile'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import AuthLayout from './layouts/AuthLayout'
-import config from './config'
-import { useContext } from 'react'
-import { AppContext } from './contexts/app.context'
-import MainLayout from './layouts/MainLayout'
-import Profile from './components/Profile'
+import Admin from './pages/Admin'
+import Dashboard from './pages/Admin/Dashboard'
+import UserManagement from './pages/Admin/contents/UserManagement'
+import ProductManagement from './pages/Admin/contents/ProductManagement'
+import CategoryManagement from './pages/Admin/contents/CategoryManagement'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -37,6 +43,16 @@ function useRouteElements() {
           path: '',
           element: <MainLayout />,
           children: [{ path: config.routes.profile, element: <Profile /> }]
+        },
+        {
+          path: config.routes.admin,
+          element: <Admin />,
+          children: [
+            { element: <Dashboard />, index: true },
+            { path: config.routes.manageUsers, element: <UserManagement /> },
+            { path: config.routes.manageProducts, element: <ProductManagement /> },
+            { path: config.routes.manageCategories, element: <CategoryManagement /> }
+          ]
         }
       ]
     },
