@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 
-import config from './config'
+import routes from './constants/routes'
 import { AppContext } from './contexts/app.context'
 
 import AuthLayout from './layouts/AuthLayout'
@@ -19,13 +19,13 @@ import CategoryManagement from './pages/Admin/contents/CategoryManagement'
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
 
-  return isAuthenticated ? <Outlet /> : <Navigate to={config.routes.login} />
+  return isAuthenticated ? <Outlet /> : <Navigate to={routes.login} />
 }
 
 function RejectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
 
-  return isAuthenticated ? <Navigate to={config.routes.home} /> : <Outlet />
+  return isAuthenticated ? <Navigate to={routes.home} /> : <Outlet />
 }
 
 function useRouteElements() {
@@ -33,7 +33,7 @@ function useRouteElements() {
     {
       path: '',
       element: <MainLayout />,
-      children: [{ path: config.routes.home, element: <Home /> }]
+      children: [{ path: routes.home, element: <Home /> }]
     },
     {
       path: '',
@@ -42,16 +42,16 @@ function useRouteElements() {
         {
           path: '',
           element: <MainLayout />,
-          children: [{ path: config.routes.profile, element: <Profile /> }]
+          children: [{ path: routes.profile, element: <Profile /> }]
         },
         {
-          path: config.routes.admin,
+          path: routes.admin,
           element: <Admin />,
           children: [
             { element: <Dashboard />, index: true },
-            { path: config.routes.manageUsers, element: <UserManagement /> },
-            { path: config.routes.manageProducts, element: <ProductManagement /> },
-            { path: config.routes.manageCategories, element: <CategoryManagement /> }
+            { path: routes.manageUsers, element: <UserManagement /> },
+            { path: routes.manageProducts, element: <ProductManagement /> },
+            { path: routes.manageCategories, element: <CategoryManagement /> }
           ]
         }
       ]
@@ -64,8 +64,8 @@ function useRouteElements() {
           path: '',
           element: <AuthLayout />,
           children: [
-            { path: config.routes.login, element: <Login /> },
-            { path: config.routes.register, element: <Register /> }
+            { path: routes.login, element: <Login /> },
+            { path: routes.register, element: <Register /> }
           ]
         }
       ]

@@ -5,7 +5,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 function Button({ type, className, children, disabled, isLoading, ...rest }: Props) {
-  const newClassName = disabled ? className + ' brightness-90 cursor-not-allowed' : className
+  let newClassName = disabled ? className + ' brightness-90 cursor-not-allowed' : className
+  newClassName += ' inline-flex items-center justify-center'
   return (
     <button type={type} className={newClassName} disabled={disabled} {...rest}>
       {isLoading && (

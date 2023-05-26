@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 
-import config from 'src/config'
+import routes from 'src/constants/routes'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import { registerAccount } from 'src/apis/auth.api'
@@ -34,7 +34,7 @@ function Register() {
   const onSubmit = handleSubmit((data) => {
     registerMutation.mutate(data, {
       onSuccess: () => {
-        navigate(config.routes.login)
+        navigate(routes.login)
       },
       onError: (error) => {
         if (isAxiosBadRequestError<ErrorResponse>(error)) {
@@ -118,7 +118,7 @@ function Register() {
           </Button>
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>
-            <Link to={config.routes.login} className='text-red-500'>
+            <Link to={routes.login} className='text-red-500'>
               Đăng nhập
             </Link>
           </div>

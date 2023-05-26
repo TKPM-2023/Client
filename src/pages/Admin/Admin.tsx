@@ -9,7 +9,12 @@ function Admin() {
   return (
     <div className='flex'>
       <Sidebar />
-      <Outlet />
+      <div className='grow'>
+        <div className='h-14 border'>Header</div>
+        <div className='p-5'>
+          <Outlet />
+        </div>
+      </div>
     </div>
   )
 }
