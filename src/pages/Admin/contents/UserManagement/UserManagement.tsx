@@ -1,15 +1,14 @@
-import { useId, useState } from 'react'
-import {
-  FloatingFocusManager,
-  FloatingOverlay,
-  FloatingPortal,
-  useClick,
-  useDismiss,
-  useFloating,
-  useInteractions,
-  useRole
-} from '@floating-ui/react'
+import { useEffect, useId, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import userRole from 'src/constants/users'
 import { User } from 'src/types/user.type'
+import useTitle from 'src/hooks/useTitle'
+import Input from 'src/components/Input'
+import Modal from 'src/components/Modal'
+import Button from 'src/components/Button'
+import images from 'src/assets/images'
+import Table from './Table'
 
 const users: User[] = [
   {
@@ -21,7 +20,9 @@ const users: User[] = [
     phone: '0123456789',
     role: 'user',
     status: 1,
-    updated_at: ''
+    updated_at: '',
+    avatar: '',
+    password: '123'
   },
   {
     id: '2',
@@ -32,7 +33,9 @@ const users: User[] = [
     phone: '0123456789',
     role: 'admin',
     status: 1,
-    updated_at: ''
+    updated_at: '',
+    avatar: '',
+    password: '456'
   },
   {
     id: '3',
@@ -43,248 +46,225 @@ const users: User[] = [
     phone: '0123456789',
     role: 'user',
     status: 1,
-    updated_at: ''
+    updated_at: '',
+    avatar: '',
+    password: '789'
   }
 ]
 
+type FormDataId = {
+  [key in keyof User]: string
+}
+
+const initialFormData: User = {
+  avatar: '',
+  email: '',
+  first_name: '',
+  last_name: '',
+  password: '',
+  phone: '',
+  role: 'user',
+  status: 1,
+  created_at: '',
+  id: '',
+  updated_at: ''
+}
+
 function UserManagement() {
-  const [isOpen, setIsOpen] = useState(false)
+  useTitle('Trang Quản Trị - Quản Lý Người Dùng')
 
-  const { refs, context } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen
+  // Form id
+  const formDataId: FormDataId = {
+    id: useId(),
+    first_name: useId(),
+    last_name: useId(),
+    email: useId(),
+    password: useId(),
+    phone: useId(),
+    role: useId(),
+    avatar: useId(),
+    status: useId(),
+    created_at: useId(),
+    updated_at: useId()
+  }
+
+  const [isOpenViewModal, setIsOpenViewModal] = useState(false)
+  const [dataUserView, setDataUserView] = useState<User | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm<User>({})
+
+  useEffect(() => {
+    if (dataUserView) {
+      setValue('id', dataUserView.id)
+      setValue('avatar', dataUserView.avatar)
+      setValue('email', dataUserView.email)
+      setValue('first_name', dataUserView.first_name)
+      setValue('last_name', dataUserView.last_name)
+      setValue('password', dataUserView.password)
+      setValue('phone', dataUserView.phone)
+      setValue('role', dataUserView.role)
+      setValue('status', dataUserView.status)
+      setValue('created_at', dataUserView.created_at)
+      setValue('updated_at', dataUserView.updated_at)
+    }
+  }, [dataUserView, setValue])
+
+  const handleClickViewButton = (user: User) => {
+    setDataUserView(user)
+    setIsOpenViewModal(true)
+  }
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
   })
-
-  const click = useClick(context)
-  const dismiss = useDismiss(context, {
-    outsidePressEvent: 'mousedown'
-  })
-  const role = useRole(context)
-
-  // Merge all the interactions into prop getters
-  const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role])
-
-  // Set up label and description ids
-  const headingId = useId()
-  const descriptionId = useId()
 
   return (
     <div>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
-        <table className='w-full text-left text-sm text-gray-500 dark:text-gray-400'>
-          <thead className='bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400'>
-            <tr>
-              <th scope='col' className='px-4 py-3'>
-                STT
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Tên
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Email
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Điện thoại
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Ngày tạo
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Vai trò
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Hành động
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => {
-              if (index % 2 === 0) {
-                return (
-                  <tr
-                    key={user.id}
-                    className='border-b bg-white hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-600'
-                  >
-                    <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>
-                      {index + 1}
-                    </th>
-                    <td className='px-4 py-2'>{user.first_name + ' ' + user.last_name}</td>
-                    <td className='px-4 py-2'>{user.email}</td>
-                    <td className='px-4 py-2'>{user.phone}</td>
-                    <td className='px-4 py-2'>{user.created_at}</td>
-                    <td className='px-4 py-2'>{user.role}</td>
-                    <td className='px-4 py-2'>
-                      <div className='flex items-center gap-2'>
-                        <button
-                          title='Xem'
-                          className='px-1 py-2 font-medium text-yellow-600 hover:underline dark:text-yellow-500'
-                        >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            fill='currentColor'
-                            className='h-4 w-4'
-                          >
-                            <path d='M12 15a3 3 0 100-6 3 3 0 000 6z' />
-                            <path
-                              fillRule='evenodd'
-                              d='M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        </button>
-
-                        <button
-                          title='Sửa'
-                          className='px-1 py-2 font-medium text-blue-600 hover:underline dark:text-blue-500'
-                        >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            strokeWidth={1.5}
-                            stroke='currentColor'
-                            className='h-4 w-4 fill-current'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
-                            />
-                          </svg>
-                        </button>
-
-                        <button
-                          title='Xóa'
-                          className='px-1 py-2 font-medium text-red-600 hover:underline dark:text-red-500'
-                        >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            strokeWidth={1.5}
-                            stroke='currentColor'
-                            className='h-4 w-4 fill-current'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              }
-
-              return (
-                <tr
-                  key={user.id}
-                  className='border-b bg-gray-50 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800'
-                >
-                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>{index + 1}</th>
-                  <td className='px-4 py-2'>{user.first_name + ' ' + user.last_name}</td>
-                  <td className='px-4 py-2'>{user.email}</td>
-                  <td className='px-4 py-2'>{user.phone}</td>
-                  <td className='px-4 py-2'>{user.created_at}</td>
-                  <td className='px-4 py-2'>{user.role}</td>
-                  <td className='px-4 py-2'>
-                    <div className='flex items-center gap-2'>
-                      <button
-                        title='Xem'
-                        className='px-1 py-2 font-medium text-yellow-600 hover:underline dark:text-yellow-500'
-                      >
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 24 24'
-                          fill='currentColor'
-                          className='h-4 w-4'
-                        >
-                          <path d='M12 15a3 3 0 100-6 3 3 0 000 6z' />
-                          <path
-                            fillRule='evenodd'
-                            d='M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      </button>
-
-                      <button
-                        title='Sửa'
-                        className='px-1 py-2 font-medium text-blue-600 hover:underline dark:text-blue-500'
-                      >
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 24 24'
-                          strokeWidth={1.5}
-                          stroke='currentColor'
-                          className='h-4 w-4 fill-current'
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
-                          />
-                        </svg>
-                      </button>
-
-                      <button
-                        title='Xóa'
-                        className='px-1 py-2 font-medium text-red-600 hover:underline dark:text-red-500'
-                      >
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 24 24'
-                          strokeWidth={1.5}
-                          stroke='currentColor'
-                          className='h-4 w-4 fill-current'
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <Table users={users} handleClickViewButton={handleClickViewButton} />
       </div>
 
-      <button ref={refs.setReference} {...getReferenceProps()}>
-        Delete balloon
-      </button>
-      <FloatingPortal>
-        {isOpen && (
-          <FloatingOverlay className='flex items-center justify-center bg-black/80' lockScroll>
-            <FloatingFocusManager context={context}>
-              <div
-                className='m-4 rounded-md bg-white p-4'
-                ref={refs.setFloating}
-                aria-labelledby={headingId}
-                aria-describedby={descriptionId}
-                {...getFloatingProps()}
+      {/* View modal */}
+      <Modal
+        type='VIEW'
+        headingTitle='Xem người dùng'
+        isOpen={isOpenViewModal}
+        setIsOpen={setIsOpenViewModal}
+        onSubmit={onSubmit}
+      >
+        <div className='py-4'>
+          <div className='grid grid-cols-12 gap-3'>
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.id} className='text-sm font-medium'>
+                ID
+              </label>
+              <Input id={formDataId.id} className='mt-2' disabled register={register} name='id' />
+            </div>
+
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.first_name} className='text-sm font-medium'>
+                Họ và tên đệm
+              </label>
+              <Input id={formDataId.first_name} className='mt-2' disabled register={register} name='first_name' />
+            </div>
+
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.last_name} className='text-sm font-medium'>
+                Tên
+              </label>
+              <Input id={formDataId.last_name} className='mt-2' disabled register={register} name='last_name' />
+            </div>
+          </div>
+
+          <div className='grid grid-cols-12 gap-3'>
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.email} className='text-sm font-medium'>
+                Email
+              </label>
+              <Input id={formDataId.email} className='mt-2' disabled register={register} name='email' />
+            </div>
+
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.password} className='text-sm font-medium'>
+                Mật khẩu
+              </label>
+              <Input
+                type='password'
+                id={formDataId.password}
+                className='mt-2'
+                disabled
+                register={register}
+                name='password'
+              />
+            </div>
+
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.phone} className='text-sm font-medium'>
+                Số điện thoại
+              </label>
+              <Input id={formDataId.phone} className='mt-2' disabled register={register} name='phone' />
+            </div>
+          </div>
+
+          <div className='grid grid-cols-12 gap-3'>
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.role} className='text-sm font-medium'>
+                Vai trò
+              </label>
+              <select
+                id={formDataId.role}
+                className='mt-2 w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
+                disabled
+                {...register('role')}
               >
-                <h2 id={headingId}>Delete balloon</h2>
-                <p id={descriptionId}>This action cannot be undone.</p>
-                <button
-                  onClick={() => {
-                    console.log('Deleted.')
-                    setIsOpen(false)
-                  }}
-                >
-                  Confirm
-                </button>
-                <button onClick={() => setIsOpen(false)}>Cancel</button>
-              </div>
-            </FloatingFocusManager>
-          </FloatingOverlay>
-        )}
-      </FloatingPortal>
+                <option value={userRole.user}>Người dùng</option>
+                <option value={userRole.admin}>Quản trị</option>
+              </select>
+            </div>
+
+            <div className='col-span-12 lg:col-span-4'>
+              <label htmlFor={formDataId.status} className='text-sm font-medium'>
+                Trạng thái
+              </label>
+              <Input id={formDataId.status} className='mt-2' disabled register={register} name='status' />
+            </div>
+
+            <div className='col-span-6 lg:col-span-2'>
+              <label htmlFor={formDataId.created_at} className='text-sm font-medium'>
+                Ngày tạo
+              </label>
+              <Input id={formDataId.created_at} className='mt-2' disabled register={register} name='created_at' />
+            </div>
+
+            <div className='col-span-6 lg:col-span-2'>
+              <label htmlFor={formDataId.updated_at} className='text-sm font-medium'>
+                Ngày cập nhật
+              </label>
+              <Input id={formDataId.updated_at} className='mt-2' disabled register={register} name='updated_at' />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor={formDataId.avatar}
+              className='mt-3 inline-flex cursor-not-allowed select-none items-center justify-center gap-1 rounded bg-cyan-400 px-3 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-cyan-500 active:bg-cyan-600'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='relative top-[1px] h-4 w-4'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              <span>Tải lên ảnh mới</span>
+            </label>
+
+            <Input
+              id={formDataId.avatar}
+              type='file'
+              accept='image/png, image/jpeg'
+              errorClassName='none'
+              hidden
+              disabled
+            />
+
+            <div className='mt-3 flex h-40 items-center justify-center rounded border px-4 py-3'>
+              <span className='text-sm text-gray-400'>Preview image</span>
+              {/* <img src={images.avatar} className='h-full' alt='Preview avatar' /> */}
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

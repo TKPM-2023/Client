@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import config from 'src/config'
+import routes from 'src/constants/routes'
 import images from 'src/assets/images'
 import Popover from '../Popover'
 import { AppContext } from 'src/contexts/app.context'
@@ -20,7 +20,7 @@ function Header() {
     <header className='bg-header'>
       <div className='container'>
         <nav className='flex h-20 justify-between py-2.5'>
-          <Link to={config.routes.home} className='flex w-40 items-center lg:w-56'>
+          <Link to={routes.home} className='flex w-40 items-center lg:w-56'>
             <img src={images.logo} alt='Logo' className='w-full object-cover' />
           </Link>
           <ul className='flex items-center gap-4'>
@@ -30,17 +30,17 @@ function Header() {
               renderPopover={
                 <div className='flex min-w-[260px] gap-6 rounded-sm bg-white p-4 shadow-md'>
                   <div>
-                    <p className='py-2.5 pr-3 text-xs font-semibold uppercase text-black'>Nón xe đạp</p>
+                    <p className='py-2.5 pr-3 text-sm font-semibold uppercase text-black'>Nón xe đạp</p>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón xe đạp ROC
                     </Link>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón xe đạp Royal
@@ -48,17 +48,17 @@ function Header() {
                   </div>
 
                   <div>
-                    <p className='py-2.5 pr-3 text-xs font-semibold uppercase text-black'>Nón nửa đầu</p>
+                    <p className='py-2.5 pr-3 text-sm font-semibold uppercase text-black'>Nón nửa đầu</p>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón nửa đầu có kính
                     </Link>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón nửa đầu không kính
@@ -66,17 +66,17 @@ function Header() {
                   </div>
 
                   <div>
-                    <p className='py-2.5 pr-3 text-xs font-semibold uppercase text-black'>Nón bảo hiểm 3/4</p>
+                    <p className='py-2.5 pr-3 text-sm font-semibold uppercase text-black'>Nón bảo hiểm 3/4</p>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón 3/4 có kính
                     </Link>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón 3/4 không kính
@@ -84,17 +84,17 @@ function Header() {
                   </div>
 
                   <div>
-                    <p className='py-2.5 pr-3 text-xs font-semibold uppercase text-black'>Nón bảo hiểm fullface</p>
+                    <p className='py-2.5 pr-3 text-sm font-semibold uppercase text-black'>Nón bảo hiểm fullface</p>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Fullface trên 1.5 triệu
                     </Link>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Fullface dưới 1.5 triệu
@@ -102,17 +102,17 @@ function Header() {
                   </div>
 
                   <div>
-                    <p className='py-2.5 pr-3 text-xs font-semibold uppercase text-black'>Nón trẻ em</p>
+                    <p className='py-2.5 pr-3 text-sm font-semibold uppercase text-black'>Nón trẻ em</p>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón trẻ em không kính
                     </Link>
                     <div className='border-b border-gray-200'></div>
                     <Link
-                      to={config.routes.home}
+                      to={routes.home}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Nón trẻ em có kính
@@ -140,21 +140,21 @@ function Header() {
               renderPopover={
                 <div className='min-w-[260px] rounded-sm bg-white px-4 py-2 shadow-md'>
                   <Link
-                    to={config.routes.home}
+                    to={routes.home}
                     className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                   >
                     Kính
                   </Link>
                   <div className='border-b border-gray-200'></div>
                   <Link
-                    to={config.routes.home}
+                    to={routes.home}
                     className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                   >
                     Găng tay
                   </Link>
                   <div className='border-b border-gray-200'></div>
                   <Link
-                    to={config.routes.home}
+                    to={routes.home}
                     className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                   >
                     Khác
@@ -184,7 +184,7 @@ function Header() {
                 renderPopover={
                   <div className='min-w-[200px] rounded-sm bg-white px-4 py-2 shadow-md'>
                     <Link
-                      to={config.routes.profile}
+                      to={routes.profile}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Tài khoản của tôi
@@ -193,7 +193,7 @@ function Header() {
                     <div className='border-b border-gray-200'></div>
 
                     <Link
-                      to={config.routes.admin}
+                      to={routes.admin}
                       className='block py-2.5 pr-3 text-sm font-medium capitalize text-black/70 hover:text-black'
                     >
                       Trang quản trị
@@ -220,13 +220,13 @@ function Header() {
             {!isAuthenticated && (
               <li className='flex items-center gap-1'>
                 <Link
-                  to={config.routes.login}
+                  to={routes.login}
                   className='flex items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:opacity-70'
                 >
                   Đăng nhập
                 </Link>
                 <Link
-                  to={config.routes.register}
+                  to={routes.register}
                   className='flex items-center gap-1 px-2 py-4 text-sm font-semibold uppercase text-white transition duration-300 hover:opacity-70'
                 >
                   Đăng ký

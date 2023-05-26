@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 
-import config from 'src/config'
+import routes from 'src/constants/routes'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import { getProfile, loginAccount } from 'src/apis/auth.api'
@@ -46,7 +46,7 @@ function Login() {
       setProfile(profile)
       saveProfileToLS(profile)
       setIsAuthenticated(true)
-      navigate(config.routes.home)
+      navigate(routes.home)
     },
     onError: (error) => {
       console.log(error)
@@ -114,7 +114,7 @@ function Login() {
 
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>
-            <Link to={config.routes.register} className='text-red-500'>
+            <Link to={routes.register} className='text-red-500'>
               Đăng ký
             </Link>
           </div>

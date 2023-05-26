@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Link, NavLink } from 'react-router-dom'
-import config from 'src/config'
+import routes from 'src/constants/routes'
 
 function Sidebar() {
   return (
@@ -12,7 +12,7 @@ function Sidebar() {
       <ul>
         <li>
           <NavLink
-            to={config.routes.admin}
+            to={routes.admin}
             end={true}
             className={({ isActive }) =>
               classNames('flex items-center gap-2 py-3.5 text-black transition-colors hover:text-cyan-600', {
@@ -42,7 +42,7 @@ function Sidebar() {
 
         <li>
           <NavLink
-            to={config.routes.manageUsers}
+            to={routes.manageUsers}
             className={({ isActive }) =>
               classNames('flex items-center gap-2 py-3.5 text-black transition-colors hover:text-cyan-600', {
                 'text-cyan-600': isActive
@@ -63,7 +63,7 @@ function Sidebar() {
 
         <li>
           <NavLink
-            to={config.routes.manageProducts}
+            to={routes.manageProducts}
             className={({ isActive }) =>
               classNames('flex items-center gap-2 py-3.5 text-black transition-colors hover:text-cyan-600', {
                 'text-cyan-600': isActive
@@ -93,7 +93,7 @@ function Sidebar() {
 
         <li>
           <NavLink
-            to={config.routes.manageCategories}
+            to={routes.manageCategories}
             className={({ isActive }) =>
               classNames('flex items-center gap-2 py-3.5 text-black transition-colors hover:text-cyan-600', {
                 'text-cyan-600': isActive
