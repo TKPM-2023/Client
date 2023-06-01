@@ -6,10 +6,10 @@ import { useMutation } from '@tanstack/react-query'
 import routes from 'src/constants/routes'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
-import { registerAccount } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import schema, { Schema } from 'src/utils/rules'
-import { ErrorResponse } from 'src/types/auth.type'
+import { ErrorResponse } from 'src/types/utils.type'
 import useTitle from 'src/hooks/useTitle'
 
 type FormData = Pick<Schema, 'email' | 'first_name' | 'last_name' | 'password' | 'confirm_password'>
@@ -28,7 +28,7 @@ function Register() {
   })
 
   const registerMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {

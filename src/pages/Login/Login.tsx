@@ -7,10 +7,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import routes from 'src/constants/routes'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
-import { getProfile, loginAccount } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import schema, { Schema } from 'src/utils/rules'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-import { ErrorResponse } from 'src/types/auth.type'
+import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import useTitle from 'src/hooks/useTitle'
 import { saveProfileToLS } from 'src/utils/auth'
@@ -34,12 +34,12 @@ function Login() {
   })
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: FormData) => loginAccount(body)
+    mutationFn: (body: FormData) => authApi.loginAccount(body)
   })
 
   const profileQuery = useQuery({
     queryKey: ['profile'],
-    queryFn: ({ signal }) => getProfile({ signal }),
+    queryFn: ({ signal }) => authApi.getProfile({ signal }),
     enabled: loginAccountMutation.isSuccess,
     onSuccess: (data) => {
       const profile = data.data.data
