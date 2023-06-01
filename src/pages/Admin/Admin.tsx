@@ -10,8 +10,8 @@ function Admin() {
     <div className='flex'>
       <Sidebar />
       <div className='grow'>
-        <div className='h-14 border'>Header</div>
-        <div className='p-5'>
+        <div className='h-14 border-b border-b-gray-200'>Header</div>
+        <div className='py-5'>
           <Outlet />
         </div>
       </div>

@@ -9,6 +9,7 @@ import Modal from 'src/components/Modal'
 import Button from 'src/components/Button'
 import images from 'src/assets/images'
 import Table from './Table'
+import classNames from 'classnames'
 
 const users: User[] = [
   {
@@ -88,8 +89,9 @@ function UserManagement() {
     updated_at: useId()
   }
 
-  const [isOpenViewModal, setIsOpenViewModal] = useState(false)
+  const [isOpenModalManage, setIsOpenModalManage] = useState(false)
   const [dataUserView, setDataUserView] = useState<User | null>(null)
+  const [dataUserEdit, setDataUserEdit] = useState<User | null>(null)
 
   const {
     register,
@@ -99,24 +101,37 @@ function UserManagement() {
   } = useForm<User>({})
 
   useEffect(() => {
-    if (dataUserView) {
-      setValue('id', dataUserView.id)
-      setValue('avatar', dataUserView.avatar)
-      setValue('email', dataUserView.email)
-      setValue('first_name', dataUserView.first_name)
-      setValue('last_name', dataUserView.last_name)
-      setValue('password', dataUserView.password)
-      setValue('phone', dataUserView.phone)
-      setValue('role', dataUserView.role)
-      setValue('status', dataUserView.status)
-      setValue('created_at', dataUserView.created_at)
-      setValue('updated_at', dataUserView.updated_at)
+    const dataUser = dataUserEdit || dataUserView
+    if (dataUser) {
+      setValue('id', dataUser.id)
+      setValue('avatar', dataUser.avatar)
+      setValue('email', dataUser.email)
+      setValue('first_name', dataUser.first_name)
+      setValue('last_name', dataUser.last_name)
+      setValue('password', dataUser.password)
+      setValue('phone', dataUser.phone)
+      setValue('role', dataUser.role)
+      setValue('status', dataUser.status)
+      setValue('created_at', dataUser.created_at)
+      setValue('updated_at', dataUser.updated_at)
     }
-  }, [dataUserView, setValue])
+  }, [dataUserView, dataUserEdit, setValue])
+
+  useEffect(() => {
+    if (isOpenModalManage === false) {
+      setDataUserView(null)
+      setDataUserEdit(null)
+    }
+  }, [isOpenModalManage])
 
   const handleClickViewButton = (user: User) => {
     setDataUserView(user)
-    setIsOpenViewModal(true)
+    setIsOpenModalManage(true)
+  }
+
+  const handleClickEditButton = (user: User) => {
+    setDataUserEdit(user)
+    setIsOpenModalManage(true)
   }
 
   const onSubmit = handleSubmit((data) => {
@@ -125,16 +140,35 @@ function UserManagement() {
 
   return (
     <div>
-      <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
-        <Table users={users} handleClickViewButton={handleClickViewButton} />
+      <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
+        <div className='text-xl font-semibold capitalize text-white'>Quản lý người dùng</div>
+        <div className='px-4'>
+          <button className='flex items-center justify-center gap-1 rounded bg-white px-3 py-2 text-sm font-medium text-black transition-colors duration-200 hover:bg-white/80 active:bg-white/75'>
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-4 w-4'>
+              <path
+                fillRule='evenodd'
+                d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z'
+                clipRule='evenodd'
+              />
+            </svg>
+
+            <span>Thêm người dùng</span>
+          </button>
+        </div>
       </div>
+
+      <Table
+        users={users}
+        handleClickViewButton={handleClickViewButton}
+        handleClickEditButton={handleClickEditButton}
+      />
 
       {/* View modal */}
       <Modal
-        type='VIEW'
+        type={dataUserEdit ? 'EDIT' : 'VIEW'}
         headingTitle='Xem người dùng'
-        isOpen={isOpenViewModal}
-        setIsOpen={setIsOpenViewModal}
+        isOpen={isOpenModalManage}
+        setIsOpen={setIsOpenModalManage}
         onSubmit={onSubmit}
       >
         <div className='py-4'>
@@ -150,14 +184,26 @@ function UserManagement() {
               <label htmlFor={formDataId.first_name} className='text-sm font-medium'>
                 Họ và tên đệm
               </label>
-              <Input id={formDataId.first_name} className='mt-2' disabled register={register} name='first_name' />
+              <Input
+                id={formDataId.first_name}
+                className='mt-2'
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
+                register={register}
+                name='first_name'
+              />
             </div>
 
             <div className='col-span-12 lg:col-span-4'>
               <label htmlFor={formDataId.last_name} className='text-sm font-medium'>
                 Tên
               </label>
-              <Input id={formDataId.last_name} className='mt-2' disabled register={register} name='last_name' />
+              <Input
+                id={formDataId.last_name}
+                className='mt-2'
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
+                register={register}
+                name='last_name'
+              />
             </div>
           </div>
 
@@ -166,7 +212,13 @@ function UserManagement() {
               <label htmlFor={formDataId.email} className='text-sm font-medium'>
                 Email
               </label>
-              <Input id={formDataId.email} className='mt-2' disabled register={register} name='email' />
+              <Input
+                id={formDataId.email}
+                className='mt-2'
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
+                register={register}
+                name='email'
+              />
             </div>
 
             <div className='col-span-12 lg:col-span-4'>
@@ -177,7 +229,7 @@ function UserManagement() {
                 type='password'
                 id={formDataId.password}
                 className='mt-2'
-                disabled
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
                 register={register}
                 name='password'
               />
@@ -187,7 +239,13 @@ function UserManagement() {
               <label htmlFor={formDataId.phone} className='text-sm font-medium'>
                 Số điện thoại
               </label>
-              <Input id={formDataId.phone} className='mt-2' disabled register={register} name='phone' />
+              <Input
+                id={formDataId.phone}
+                className='mt-2'
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
+                register={register}
+                name='phone'
+              />
             </div>
           </div>
 
@@ -199,7 +257,7 @@ function UserManagement() {
               <select
                 id={formDataId.role}
                 className='mt-2 w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
-                disabled
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
                 {...register('role')}
               >
                 <option value={userRole.user}>Người dùng</option>
@@ -211,7 +269,13 @@ function UserManagement() {
               <label htmlFor={formDataId.status} className='text-sm font-medium'>
                 Trạng thái
               </label>
-              <Input id={formDataId.status} className='mt-2' disabled register={register} name='status' />
+              <Input
+                id={formDataId.status}
+                className='mt-2'
+                disabled={Boolean(dataUserView && dataUserEdit === null)}
+                register={register}
+                name='status'
+              />
             </div>
 
             <div className='col-span-6 lg:col-span-2'>
@@ -232,7 +296,13 @@ function UserManagement() {
           <div>
             <label
               htmlFor={formDataId.avatar}
-              className='mt-3 inline-flex cursor-not-allowed select-none items-center justify-center gap-1 rounded bg-cyan-400 px-3 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-cyan-500 active:bg-cyan-600'
+              className={classNames(
+                'mt-3 inline-flex select-none items-center justify-center gap-1 rounded bg-cyan-400 px-3 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-cyan-500 active:bg-cyan-600',
+                {
+                  'cursor-not-allowed': Boolean(dataUserView && dataUserEdit === null),
+                  'cursor-pointer': !(dataUserView && dataUserEdit === null)
+                }
+              )}
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -255,7 +325,7 @@ function UserManagement() {
               accept='image/png, image/jpeg'
               errorClassName='none'
               hidden
-              disabled
+              disabled={Boolean(dataUserView && dataUserEdit === null)}
             />
 
             <div className='mt-3 flex h-40 items-center justify-center rounded border px-4 py-3'>
