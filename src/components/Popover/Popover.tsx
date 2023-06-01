@@ -20,6 +20,7 @@ interface Props {
   renderPopover: React.ReactNode
   className?: string
   as?: ElementType
+  offsetValue?: number
   initialOpen?: boolean
   placement?: Placement
 }
@@ -27,6 +28,7 @@ interface Props {
 function Popover({
   as: Element = 'div',
   placement = 'bottom',
+  offsetValue = 6,
   className,
   initialOpen = false,
   renderPopover,
@@ -39,7 +41,7 @@ function Popover({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement,
-    middleware: [flip(), shift(), arrow({ element: arrowRef }), offset(6)],
+    middleware: [flip(), shift(), arrow({ element: arrowRef }), offset(offsetValue)],
     whileElementsMounted: autoUpdate
   })
 
