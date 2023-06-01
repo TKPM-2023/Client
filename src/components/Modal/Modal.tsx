@@ -50,7 +50,7 @@ function Modal({ type, headingTitle, children, isOpen, setIsOpen, onSubmit }: Pr
           <FloatingOverlay className='flex items-center justify-center bg-black/80' lockScroll>
             <FloatingFocusManager context={context}>
               <div
-                className='m-4 rounded-md bg-white'
+                className='m-4 max-h-[calc(100vh-40px)] overflow-y-scroll rounded-md bg-white'
                 ref={refs.setFloating}
                 aria-labelledby={headingId}
                 aria-describedby={descriptionId}

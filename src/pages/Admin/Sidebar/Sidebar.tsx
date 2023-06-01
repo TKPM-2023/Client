@@ -4,7 +4,7 @@ import routes from 'src/constants/routes'
 
 function Sidebar() {
   return (
-    <nav className='h-screen min-w-[14rem] shrink-0 overflow-hidden border px-4'>
+    <nav className='flex h-screen min-w-[14rem] shrink-0 flex-col overflow-hidden border px-4'>
       <h1 className='text-sn py-6 text-center font-semibold uppercase'>Trang quản trị</h1>
 
       <div className='h-[1px] bg-gray-200'></div>
@@ -123,6 +123,16 @@ function Sidebar() {
           </NavLink>
         </li>
       </ul>
+
+      <Link
+        to={routes.home}
+        className='mb-12 mt-auto flex items-center justify-center gap-1 rounded bg-slate-600 px-3 py-2 text-sm font-medium capitalize text-white shadow-sm transition-colors duration-200 hover:bg-slate-500 dark:bg-white dark:text-black dark:hover:bg-white/80'
+      >
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-4 w-4'>
+          <path d='M9.195 18.44c1.25.713 2.805-.19 2.805-1.629v-2.34l6.945 3.968c1.25.714 2.805-.188 2.805-1.628V8.688c0-1.44-1.555-2.342-2.805-1.628L12 11.03v-2.34c0-1.44-1.555-2.343-2.805-1.629l-7.108 4.062c-1.26.72-1.26 2.536 0 3.256l7.108 4.061z' />
+        </svg>
+        Trở về trang chủ
+      </Link>
     </nav>
   )
 }
