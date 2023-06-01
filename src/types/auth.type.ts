@@ -6,10 +6,3 @@ export type LoginResponse = {
     token: string
   }
 }
-
-export type ErrorResponse = {
-  error_key: string
-  log: string
-  message: string
-  status_code: number
-}
