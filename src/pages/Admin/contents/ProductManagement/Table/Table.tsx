@@ -1,12 +1,12 @@
-import { User } from 'src/types/user.type'
+import { Product } from 'src/types/product.type'
 
 interface Props {
-  users: User[]
-  handleClickViewButton: (user: User) => void
-  handleClickEditButton: (user: User) => void
+  products: Product[]
+  handleClickViewButton?: (product: Product) => void
+  handleClickEditButton?: (product: Product) => void
 }
 
-function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
+function Table({ products = [], handleClickViewButton, handleClickEditButton }: Props) {
   return (
     <div className='px-5'>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
@@ -23,13 +23,13 @@ function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
                 Email
               </th>
               <th scope='col' className='px-4 py-3'>
-                Điện thoại
+                Số lượng
               </th>
               <th scope='col' className='px-4 py-3'>
-                Ngày tạo
+                Đơn giá
               </th>
               <th scope='col' className='px-4 py-3'>
-                Vai trò
+                Trạng thái
               </th>
               <th scope='col' className='px-4 py-3'>
                 Hành động
@@ -37,27 +37,27 @@ function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => {
+            {products.map((product, index) => {
               if (index % 2 === 0) {
                 return (
                   <tr
-                    key={user.id}
+                    key={product.id}
                     className='border-b bg-white hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-600'
                   >
                     <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>
                       {index + 1}
                     </th>
-                    <td className='px-4 py-2'>{user.first_name + ' ' + user.last_name}</td>
-                    <td className='px-4 py-2'>{user.email}</td>
-                    <td className='px-4 py-2'>{user.phone}</td>
-                    <td className='px-4 py-2'>{user.created_at}</td>
-                    <td className='px-4 py-2'>{user.role}</td>
+                    <td className='px-4 py-2'>{product.name}</td>
+                    <td className='px-4 py-2'>{product.quantity}</td>
+                    <td className='px-4 py-2'>{product.price}</td>
+                    <td className='px-4 py-2'>{product.created_at}</td>
+                    <td className='px-4 py-2'>{product.status}</td>
                     <td className='px-4 py-2'>
                       <div className='flex items-center gap-2'>
                         <button
                           title='Xem'
                           className='px-1 py-2 font-medium text-yellow-600 transition-colors duration-200 hover:text-yellow-700 hover:underline dark:text-yellow-500'
-                          onClick={() => handleClickViewButton(user)}
+                          onClick={() => handleClickViewButton(product)}
                         >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -77,7 +77,7 @@ function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
                         <button
                           title='Sửa'
                           className='px-1 py-2 font-medium text-blue-600 transition-colors duration-200 hover:text-blue-700 hover:underline dark:text-blue-500 hover:dark:text-blue-600'
-                          onClick={() => handleClickEditButton(user)}
+                          onClick={() => handleClickEditButton(product)}
                         >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -120,21 +120,21 @@ function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
 
               return (
                 <tr
-                  key={user.id}
+                  key={product.id}
                   className='border-b bg-gray-50 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 hover:dark:bg-gray-600'
                 >
                   <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>{index + 1}</th>
-                  <td className='px-4 py-2'>{user.first_name + ' ' + user.last_name}</td>
-                  <td className='px-4 py-2'>{user.email}</td>
-                  <td className='px-4 py-2'>{user.phone}</td>
-                  <td className='px-4 py-2'>{user.created_at}</td>
-                  <td className='px-4 py-2'>{user.role}</td>
+                  <td className='px-4 py-2'>{product.name}</td>
+                  <td className='px-4 py-2'>{product.quantity}</td>
+                  <td className='px-4 py-2'>{product.price}</td>
+                  <td className='px-4 py-2'>{product.created_at}</td>
+                  <td className='px-4 py-2'>{product.status}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>
                       <button
                         title='Xem'
                         className='px-1 py-2 font-medium text-yellow-600 transition-colors duration-200 hover:text-yellow-700 hover:underline dark:text-yellow-500 hover:dark:text-yellow-600'
-                        onClick={() => handleClickViewButton(user)}
+                        onClick={() => handleClickViewButton(product)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -154,7 +154,7 @@ function Table({ users, handleClickViewButton, handleClickEditButton }: Props) {
                       <button
                         title='Sửa'
                         className='px-1 py-2 font-medium text-blue-600 transition-colors duration-200 hover:text-blue-700 hover:underline dark:text-blue-500 hover:dark:text-blue-600'
-                        onClick={() => handleClickEditButton(user)}
+                        onClick={() => handleClickEditButton(product)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'

@@ -1,86 +1,23 @@
-import { useEffect, useId, useState } from 'react'
-import { useForm } from 'react-hook-form'
-
-import userRole from 'src/constants/users'
-import { User } from 'src/types/user.type'
 import useTitle from 'src/hooks/useTitle'
-import Input from 'src/components/Input'
-import Modal from 'src/components/Modal'
-import Button from 'src/components/Button'
-import images from 'src/assets/images'
 import Table from './Table'
-import classNames from 'classnames'
-
-type FormDataId = {
-  [key in keyof User]: string
-}
+import { useQuery } from '@tanstack/react-query'
+import productApi from 'src/apis/product.api'
+import { ProductListConfig } from 'src/types/product.type'
 
 function ProductManagement() {
   useTitle('Trang Quản Trị - Quản Lý Sản Phẩm')
 
-  // Form id
-  const formDataId: FormDataId = {
-    id: useId(),
-    first_name: useId(),
-    last_name: useId(),
-    email: useId(),
-    password: useId(),
-    phone: useId(),
-    role: useId(),
-    avatar: useId(),
-    status: useId(),
-    created_at: useId(),
-    updated_at: useId()
+  const params: ProductListConfig = {
+    limit: 5,
+    status: 1
   }
 
-  const [isOpenModalManage, setIsOpenModalManage] = useState(false)
-  const [dataUserView, setDataUserView] = useState<User | null>(null)
-  const [dataUserEdit, setDataUserEdit] = useState<User | null>(null)
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors }
-  } = useForm<User>({})
-
-  useEffect(() => {
-    const dataUser = dataUserEdit || dataUserView
-    if (dataUser) {
-      setValue('id', dataUser.id)
-      setValue('avatar', dataUser.avatar)
-      setValue('email', dataUser.email)
-      setValue('first_name', dataUser.first_name)
-      setValue('last_name', dataUser.last_name)
-      setValue('password', dataUser.password)
-      setValue('phone', dataUser.phone)
-      setValue('role', dataUser.role)
-      setValue('status', dataUser.status)
-      setValue('created_at', dataUser.created_at)
-      setValue('updated_at', dataUser.updated_at)
-    }
-  }, [dataUserView, dataUserEdit, setValue])
-
-  useEffect(() => {
-    if (isOpenModalManage === false) {
-      setDataUserView(null)
-      setDataUserEdit(null)
-    }
-  }, [isOpenModalManage])
-
-  const handleClickViewButton = (user: User) => {
-    setDataUserView(user)
-    setIsOpenModalManage(true)
-  }
-
-  const handleClickEditButton = (user: User) => {
-    setDataUserEdit(user)
-    setIsOpenModalManage(true)
-  }
-
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
+  const { data: productsData } = useQuery({
+    queryKey: ['products', params],
+    queryFn: () => productApi.getProducts(params as ProductListConfig)
   })
+
+  console.log(productsData)
 
   return (
     <div>
@@ -101,7 +38,7 @@ function ProductManagement() {
         </div>
       </div>
 
-      <Table users={[]} handleClickViewButton={handleClickViewButton} handleClickEditButton={handleClickEditButton} />
+      <Table products={[]} />
 
       {/* View modal */}
       {/* <Modal

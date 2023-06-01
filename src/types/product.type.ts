@@ -33,7 +33,7 @@ export type ProductList = {
 }
 
 export interface ProductListConfig {
-  page?: number | string
+  limit?: number | string
   status?: 1 | 0
   category_id?: string
 }
