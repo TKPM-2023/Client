@@ -1,41 +1,39 @@
+import { Product } from './product.type'
 import { StatusParams } from './utils.type'
 
-export type Product = {
+export interface Category {
   id: string
   status: StatusParams
   created_at: string
   updated_at: string
   name: string
   description: string
-  price: number
-  quantity: number
-  images: {
+  icon: {
     id: number
     url: string
     width: number
     height: number
-  }[]
-  total_rating: number
-  category_id: string
+  }
+  total_product: number
+  products: Product[]
 }
 
-export type ProductList = {
-  data: Product[]
+export interface CategoryList {
+  data: Category[]
   paging: {
-    page: number
-    limit: number
-    total: number
+    page?: number
+    limit?: number
+    total?: number
     cursor?: string
     next_cursor?: string
   }
   filter: {
     status?: StatusParams
-    category_id?: number
   }
 }
 
-export interface ProductListConfig {
+export interface CategoryListConfig {
   limit?: number
   status?: StatusParams
-  category_id?: string
+  cursor?: string
 }

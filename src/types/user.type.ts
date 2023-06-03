@@ -1,6 +1,8 @@
+import { StatusParams } from './utils.type'
+
 export type User = {
   id: string
-  status: number
+  status: StatusParams
   created_at: string
   updated_at: string
   email: string
