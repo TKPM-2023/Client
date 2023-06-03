@@ -1,15 +1,20 @@
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
-import routes from 'src/constants/routes'
+import { Link, To } from 'react-router-dom'
 
-interface Props {
-  pageSize?: number
+interface Props<TQueryConfig> {
+  pageSize: number
+  queryConfig: TQueryConfig
+  to: (page: number) => To
 }
 
 const RANGE = 2
 
-function Pagination({ pageSize = 5 }: Props) {
-  const page = 1
+function Pagination<TQueryConfig extends { page?: number | string }>({
+  pageSize,
+  queryConfig,
+  to
+}: Props<TQueryConfig>) {
+  const page = Number(queryConfig.page) || 1
 
   const renderPagination = () => {
     let dotAfter = false
@@ -62,9 +67,7 @@ function Pagination({ pageSize = 5 }: Props) {
         return (
           <Link
             key={index}
-            to={{
-              pathname: routes.home
-            }}
+            to={to(pageNumber)}
             className={classNames(
               'mx-1 flex w-10 cursor-pointer items-center justify-center rounded border bg-white px-3 py-2 shadow-sm',
               {
@@ -87,9 +90,7 @@ function Pagination({ pageSize = 5 }: Props) {
         </div>
       ) : (
         <Link
-          to={{
-            pathname: routes.home
-          }}
+          to={to(page - 1)}
           className='mx-2 flex cursor-pointer items-center justify-center rounded border bg-white px-3 py-2 shadow-sm'
         >
           Trước
@@ -99,9 +100,7 @@ function Pagination({ pageSize = 5 }: Props) {
 
       {page < pageSize ? (
         <Link
-          to={{
-            pathname: routes.home
-          }}
+          to={to(page + 1)}
           className='mx-2 flex cursor-pointer items-center justify-center rounded border bg-white px-3 py-2 shadow-sm'
         >
           Sau

@@ -1,8 +1,6 @@
-import { StatusParams } from './utils.type'
-
 export type Product = {
   id: string
-  status: StatusParams
+  status: number
   created_at: string
   updated_at: string
   name: string
@@ -29,13 +27,15 @@ export type ProductList = {
     next_cursor?: string
   }
   filter: {
-    status?: StatusParams
-    category_id?: number
+    status?: number
+    category_id?: string
+    page?: number | string
   }
 }
 
 export interface ProductListConfig {
-  limit?: number
-  status?: StatusParams
+  limit?: number | string
+  page?: number | string
+  status?: number
   category_id?: string
 }

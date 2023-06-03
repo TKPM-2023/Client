@@ -1,15 +1,22 @@
 import classNames from 'classnames'
 import { formatDate, formatNumber } from 'src/utils/utils'
-import { ProductType } from '../ProductManagement'
+import { ProductType, QueryConfig } from '../ProductManagement'
 import Pagination from 'src/components/Pagination'
+import routes from 'src/constants/routes'
+import { createSearchParams } from 'react-router-dom'
 
 interface Props {
-  products?: ProductType[]
+  products: ProductType[]
+  pageSize: number
+  queryConfig: QueryConfig
   handleClickViewButton: (product: ProductType) => void
   handleClickEditButton?: (product: ProductType) => void
 }
 
-function Table({ products = [], handleClickViewButton, handleClickEditButton }: Props) {
+function Table({ products, pageSize, queryConfig, handleClickViewButton, handleClickEditButton }: Props) {
+  const page = Number(queryConfig.page)
+  const limit = Number(queryConfig.limit)
+
   return (
     <div className='px-5'>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
@@ -52,7 +59,9 @@ function Table({ products = [], handleClickViewButton, handleClickEditButton }: 
                     'bg-white dark:bg-gray-900': index % 2 === 0
                   })}
                 >
-                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>{index + 1}</th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>
+                    {limit * (page - 1) + index + 1}
+                  </th>
                   <td className='px-4 py-2'>{product.name}</td>
                   <td className='px-4 py-2'>{formatNumber(product.price)}</td>
                   <td className='px-4 py-2'>{formatNumber(product.quantity)}</td>
@@ -128,7 +137,14 @@ function Table({ products = [], handleClickViewButton, handleClickEditButton }: 
         </table>
       </div>
 
-      <Pagination pageSize={5} />
+      <Pagination
+        pageSize={pageSize}
+        queryConfig={queryConfig}
+        to={(page: number) => ({
+          pathname: `${routes.home}/${routes.admin}/${routes.manageProducts}`,
+          search: createSearchParams({ ...queryConfig, page: page.toString() }).toString()
+        })}
+      />
     </div>
   )
 }

@@ -1,9 +1,8 @@
 import { Product } from './product.type'
-import { StatusParams } from './utils.type'
 
 export interface Category {
   id: string
-  status: StatusParams
+  status: number
   created_at: string
   updated_at: string
   name: string
@@ -28,12 +27,13 @@ export interface CategoryList {
     next_cursor?: string
   }
   filter: {
-    status?: StatusParams
+    status?: number
   }
 }
 
 export interface CategoryListConfig {
-  limit?: number
-  status?: StatusParams
+  limit?: number | string
+  status?: number
   cursor?: string
+  page?: number | string
 }

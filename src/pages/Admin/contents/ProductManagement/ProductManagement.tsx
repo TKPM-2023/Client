@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import useTitle from 'src/hooks/useTitle'
 import { useQuery } from '@tanstack/react-query'
+import { isUndefined, omitBy } from 'lodash'
+
 import productApi from 'src/apis/product.api'
 import Table from './Table'
 import Modal from 'src/components/Modal'
@@ -8,34 +10,46 @@ import Input from 'src/components/Input'
 import categoryApi from 'src/apis/category.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import { CategoryListConfig } from 'src/types/category.type'
+import { useSearchParams } from 'react-router-dom'
+import status from 'src/constants/status'
+import useQueryParams from 'src/hooks/useQueryParams'
 
 export interface ProductType extends Product {
   category_name: string
 }
 
+export type QueryConfig = {
+  [key in keyof ProductListConfig]: string
+}
+
 function ProductManagement() {
   useTitle('Trang Quản Trị - Quản Lý Sản Phẩm')
 
-  const productParams: ProductListConfig = {
-    limit: 5,
-    status: 1
-  }
+  const queryParams = useQueryParams()
+  const queryConfig: QueryConfig = omitBy(
+    {
+      page: queryParams.page || '1',
+      limit: queryParams.limit || '5',
+      status: queryParams.status || '1',
+      category_id: queryParams.category_id
+    },
+    isUndefined
+  )
 
-  const categoryParams: CategoryListConfig = {
-    status: 1
-  }
   const { data: categoryData } = useQuery({
-    queryKey: ['categories', categoryParams],
-    queryFn: () => categoryApi.getCategories(categoryParams)
+    queryKey: ['categories', { status: status.inStore }],
+    queryFn: () => categoryApi.getCategories({ status: status.inStore })
   })
   const { data: productData } = useQuery({
-    queryKey: ['products', productParams],
-    queryFn: () => productApi.getProducts(productParams)
+    queryKey: ['products', queryConfig],
+    queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
+    keepPreviousData: true
   })
 
   const [isShowViewModal, setIsShowViewModal] = useState<boolean>(false)
   const [viewProductData, setViewProductData] = useState<Product | null>(null)
 
+  const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const products = useMemo(() => {
     const categories = categoryData?.data.data
     const _products = productData?.data.data
@@ -52,6 +66,8 @@ function ProductManagement() {
     setIsShowViewModal(true)
     setViewProductData(product)
   }
+
+  if (!products || products.length === 0) return null
 
   return (
     <div>
@@ -72,7 +88,7 @@ function ProductManagement() {
         </div>
       </div>
 
-      <Table products={products} handleClickViewButton={openViewModal} />
+      <Table products={products} pageSize={pageSize} queryConfig={queryConfig} handleClickViewButton={openViewModal} />
 
       {/* View modal */}
       <Modal type='VIEW' headingTitle='Xem sản phẩm' isOpen={isShowViewModal} setIsOpen={setIsShowViewModal}>
