@@ -20,7 +20,7 @@ interface Props {
   onSubmit?: React.FormEventHandler<HTMLFormElement>
 }
 
-function Modal({ type, headingTitle, children, isOpen, setIsOpen, onSubmit }: Props) {
+function Modal({ headingTitle, children, isOpen, setIsOpen }: Props) {
   const { refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen
@@ -74,36 +74,7 @@ function Modal({ type, headingTitle, children, isOpen, setIsOpen, onSubmit }: Pr
 
                 <div className='h-[1px] bg-gray-200'></div>
 
-                <div className='w-[calc(100vw-80px)] max-w-[60rem] px-6'>
-                  <form onSubmit={onSubmit}>
-                    {children}
-
-                    <div className='h-[1px] bg-gray-200'></div>
-
-                    <div className='flex items-center justify-end gap-1 px-4 py-3'>
-                      <Button
-                        type='button'
-                        onClick={() => setIsOpen(false)}
-                        className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-pink-200 group-hover:from-pink-500 group-hover:to-orange-400 dark:text-white dark:focus:ring-pink-800'
-                      >
-                        <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-                          Thoát
-                        </span>
-                      </Button>
-
-                      {type !== 'VIEW' && (
-                        <Button
-                          type='submit'
-                          className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
-                        >
-                          <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-                            Đồng ý
-                          </span>
-                        </Button>
-                      )}
-                    </div>
-                  </form>
-                </div>
+                <div className='w-[calc(100vw-80px)] max-w-[60rem] px-6'>{children}</div>
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>
