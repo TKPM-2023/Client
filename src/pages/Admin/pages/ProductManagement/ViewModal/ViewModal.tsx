@@ -84,7 +84,7 @@ function ViewModal({ product, categories, isOpen, setIsOpen }: Props) {
                     </div>
                   ))
                 ) : (
-                  <span className='text-sm text-gray-400'>Preview Image</span>
+                  <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>
                 )}
               </div>
             </div>

@@ -13,7 +13,6 @@ import Modal from 'src/components/Modal'
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { Upload } from 'src/types/upload.type'
-import { ToUndefined } from 'src/types/utils.type'
 import {
   MAX_PRODUCT_DESCRIPTION_CHARACTERS,
   MAX_PRODUCT_NAME_CHARACTERS,
@@ -22,7 +21,6 @@ import {
 } from 'src/utils/rules'
 
 interface Props {
-  product: Product | null
   categories: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -31,7 +29,7 @@ interface Props {
 type FormData = Omit<ProductSchema, 'images'>
 const schema = productSchema.omit(['images'])
 
-function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
+function CreateModal({ categories, isOpen, setIsOpen }: Props) {
   const queryClient = useQueryClient()
   const imagesInputId = useId()
 
@@ -39,8 +37,8 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
     mutationFn: uploadApi.upload
   })
 
-  const updateProductMutation = useMutation({
-    mutationFn: (body: ToUndefined<Product>) => productApi.updateProduct((product as Product).id, body)
+  const createProductMutation = useMutation({
+    mutationFn: productApi.createProduct
   })
 
   const {
@@ -52,7 +50,14 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
     handleSubmit,
     reset
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      category_id: '',
+      description: '',
+      name: '',
+      price: 0,
+      quantity: 0
+    }
   })
 
   const description = watch('description')
@@ -76,16 +81,6 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
   }, [imageFiles])
 
   useEffect(() => {
-    if (isOpen && product) {
-      setValue('category_id', product.category_id)
-      setValue('description', product.description)
-      setValue('name', product.name)
-      setValue('price', product.price)
-      setValue('quantity', product.quantity)
-    }
-  }, [isOpen, product, setValue])
-
-  useEffect(() => {
     if (!isOpen) {
       previewImages && Array.from(previewImages).forEach((imageUrl) => URL.revokeObjectURL(imageUrl))
       setImageFiles(null)
@@ -101,43 +96,35 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
   }
 
   const onSubmit = handleSubmit(async (data) => {
-    let images: Upload[] | undefined = []
-    if (imageFiles && imageFiles.length > 0) {
-      const imageFilesArray = Array.from(imageFiles)
-      for (const imageFile of imageFilesArray) {
-        const formData = new FormData()
-        formData.append('file', imageFile)
-        formData.append('folder', 'product')
-
-        const imageData = await uploadImageMutation.mutateAsync(formData)
-        images.push(imageData.data.data)
-      }
+    if (!imageFiles || imageFiles.length === 0) {
+      toast.error('Vui lòng tải lên hình ảnh')
+      return
     }
 
-    if (images.length === 0) images = product?.images
+    const images: Upload[] | undefined = []
+    const imageFilesArray = Array.from(imageFiles)
+    for (const imageFile of imageFilesArray) {
+      const formData = new FormData()
+      formData.append('file', imageFile)
+      formData.append('folder', 'product')
+      const imageData = await uploadImageMutation.mutateAsync(formData)
+      images.push(imageData.data.data)
+    }
 
     const _data = { ...data, images }
-    await updateProductMutation.mutateAsync(_data)
-    toast.success('Cập nhật sản phẩm thành công', {
+    await createProductMutation.mutateAsync(_data)
+    toast.success('Thêm sản phẩm thành công', {
       autoClose: 1000
     })
-
     await queryClient.invalidateQueries({ queryKey: ['products'] })
-
     setIsOpen(false)
   })
 
-  if (!product) return null
   return (
-    <Modal headingTitle='Sửa thông tin sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal headingTitle='Thêm sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
       <form onSubmit={onSubmit}>
         <div className='py-4'>
           <div className='grid grid-cols-12 gap-3'>
-            <div className='col-span-12'>
-              <div className='text-sm font-medium'>ID</div>
-              <Input className='mt-2' disabled value={product?.id} />
-            </div>
-
             <div className='relative col-span-12'>
               <div className='text-sm font-medium'>Tên</div>
               <Input className='mt-2' name='name' register={register} errorMessage={errors.name?.message} />
@@ -200,16 +187,6 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
               </div>
             </div>
 
-            <div className='col-span-3'>
-              <div className='text-sm font-medium'>Trạng thái</div>
-              <Input className='mt-2' disabled value={product?.status} />
-            </div>
-
-            <div className='col-span-3'>
-              <div className='text-sm font-medium'>Tổng đánh giá</div>
-              <Input className='mt-2' disabled value={product?.total_rating} />
-            </div>
-
             <div className='col-span-12'>
               <label
                 htmlFor={imagesInputId}
@@ -227,7 +204,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
                     clipRule='evenodd'
                   />
                 </svg>
-                <span>Tải lên ảnh mới</span>
+                <span>Tải lên hình ảnh</span>
               </label>
 
               <Input
@@ -241,15 +218,6 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
                 onChange={handleChangeImageFiles}
               />
               <div className='mt-3 flex min-h-[160px] flex-wrap items-center justify-center gap-2 rounded border px-4 py-1'>
-                {!previewImages &&
-                  product.images &&
-                  product.images.length > 0 &&
-                  product.images.map((image) => (
-                    <div key={image.id} className='h-[150px] w-[140px] border'>
-                      <img className='h-full w-full object-cover' src={image.url} alt={`${product.name} ${image.id}`} />
-                    </div>
-                  ))}
-
                 {previewImages &&
                   previewImages.length > 0 &&
                   previewImages.map((image) => (
@@ -258,7 +226,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
                     </div>
                   ))}
 
-                {!previewImages && !product.images && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
+                {!previewImages && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
               </div>
             </div>
           </div>
@@ -280,10 +248,10 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
           <Button
             type='submit'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
-            disabled={updateProductMutation.isLoading || uploadImageMutation.isLoading}
+            disabled={createProductMutation.isLoading || uploadImageMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-              {updateProductMutation.isLoading ||
+              {createProductMutation.isLoading ||
                 (uploadImageMutation.isLoading && (
                   <svg
                     aria-hidden='true'
@@ -312,4 +280,4 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
   )
 }
 
-export default EditModal
+export default CreateModal

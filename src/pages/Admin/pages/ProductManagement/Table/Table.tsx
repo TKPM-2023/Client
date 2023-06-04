@@ -39,9 +39,6 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
                 Thể loại
               </th>
               <th scope='col' className='px-4 py-3'>
-                Trạng thái
-              </th>
-              <th scope='col' className='px-4 py-3'>
                 Ngày khởi tạo
               </th>
               <th scope='col' className='px-4 py-3'>
@@ -66,7 +63,6 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
                   <td className='px-4 py-2'>{formatNumber(product.price)}</td>
                   <td className='px-4 py-2'>{formatNumber(product.quantity)}</td>
                   <td className='px-4 py-2'>{product.category_name}</td>
-                  <td className='px-4 py-2'>{product.status}</td>
                   <td className='px-4 py-2'>{formatDate(product.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>

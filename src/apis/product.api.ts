@@ -1,6 +1,7 @@
 import { Product, ProductList, ProductListConfig } from 'src/types/product.type'
 import { SuccessResponse, ToUndefined } from 'src/types/utils.type'
 import http from 'src/utils/http'
+import { ProductSchema } from 'src/utils/rules'
 
 const URL = 'admin/products'
 
@@ -11,7 +12,7 @@ const productApi = {
   getProductDetail: (id: string) => {
     return http.get<SuccessResponse<Product>>(`${URL}/${id}`)
   },
-  createProduct: (body: Product) => {
+  createProduct: (body: ProductSchema) => {
     return http.post<SuccessResponse<string>>(URL, body)
   },
   updateProduct: (id: string, body: ToUndefined<Product>) => {
