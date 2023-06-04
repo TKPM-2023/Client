@@ -1,3 +1,5 @@
+import { Upload } from './upload.type'
+
 export type Product = {
   id: string
   status: number
@@ -7,12 +9,7 @@ export type Product = {
   description: string
   price: number
   quantity: number
-  images: {
-    id: number
-    url: string
-    width: number
-    height: number
-  }[]
+  images: Upload[]
   total_rating: number
   category_id: string
 }

@@ -1,4 +1,5 @@
 import { Product } from './product.type'
+import { Upload } from './upload.type'
 
 export interface Category {
   id: string
@@ -7,12 +8,7 @@ export interface Category {
   updated_at: string
   name: string
   description: string
-  icon: {
-    id: number
-    url: string
-    width: number
-    height: number
-  }
+  icon: Upload
   total_product: number
   products: Product[]
 }

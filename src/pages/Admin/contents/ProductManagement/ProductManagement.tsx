@@ -6,18 +6,14 @@ import { useForm } from 'react-hook-form'
 
 import productApi from 'src/apis/product.api'
 import Table from './Table'
-import Modal from 'src/components/Modal'
-import Input from 'src/components/Input'
 import categoryApi from 'src/apis/category.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
-import { CategoryListConfig } from 'src/types/category.type'
-import { useSearchParams } from 'react-router-dom'
 import status from 'src/constants/status'
 import useQueryParams from 'src/hooks/useQueryParams'
-import classNames from 'classnames'
-import Button from 'src/components/Button'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ProductSchema, productSchema } from 'src/utils/rules'
+import ViewModal from './ViewModal'
+import { Category } from 'src/types/category.type'
+import EditModal from './EditModal'
 
 export interface ProductType extends Product {
   category_name: string
@@ -51,22 +47,13 @@ function ProductManagement() {
     keepPreviousData: true
   })
 
-  const {
-    formState: { errors },
-    register,
-    setValue,
-    getValues,
-    handleSubmit
-  } = useForm<ProductSchema>({
-    resolver: yupResolver(productSchema)
-  })
-
-  const [isShowViewModal, setIsShowViewModal] = useState<boolean>(false)
+  const [isOpenViewModal, setIsOpenViewModal] = useState<boolean>(false)
   const [viewProductData, setViewProductData] = useState<Product | null>(null)
+  const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false)
+  const [editProductData, setEditProductData] = useState<Product | null>(null)
 
   const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const categories = categoryData?.data.data
-  const images = getValues('images')
   const products = useMemo(() => {
     const categories = categoryData?.data.data
     const _products = productData?.data.data
@@ -79,27 +66,15 @@ function ProductManagement() {
     return []
   }, [categoryData, productData])
 
-  useEffect(() => {
-    if (viewProductData) {
-      setValue('category_id', viewProductData.category_id)
-      setValue('description', viewProductData.description)
-      setValue('images', viewProductData.images)
-      setValue('name', viewProductData.name)
-      setValue('price', viewProductData.price)
-      setValue('quantity', viewProductData.quantity)
-    }
-  }, [viewProductData, setValue])
-
   const handleClickViewButton = (product: Product) => {
-    setIsShowViewModal(true)
+    setIsOpenViewModal(true)
     setViewProductData(product)
   }
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
-  })
-
-  console.log(images)
+  const handleClickEditButton = (product: Product) => {
+    setIsOpenEditModal(true)
+    setEditProductData(product)
+  }
 
   if (!products || products.length === 0) return null
   return (
@@ -126,10 +101,25 @@ function ProductManagement() {
         pageSize={pageSize}
         queryConfig={queryConfig}
         handleClickViewButton={handleClickViewButton}
+        handleClickEditButton={handleClickEditButton}
+      />
+
+      <ViewModal
+        isOpen={isOpenViewModal}
+        setIsOpen={setIsOpenViewModal}
+        product={viewProductData}
+        categories={categories as Category[]}
+      />
+
+      <EditModal
+        isOpen={isOpenEditModal}
+        setIsOpen={setIsOpenEditModal}
+        product={editProductData}
+        categories={categories as Category[]}
       />
 
       {/* View modal */}
-      <Modal type='VIEW' headingTitle='Xem sản phẩm' isOpen={isShowViewModal} setIsOpen={setIsShowViewModal}>
+      {/* <Modal headingTitle='Xem sản phẩm' isOpen={isOpenViewModal} setIsOpen={setIsOpenViewModal}>
         <form onSubmit={onSubmit}>
           <div className='py-4'>
             <div className='grid grid-cols-12 gap-3'>
@@ -243,6 +233,7 @@ function ProductManagement() {
             <Button
               type='button'
               className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-pink-200 group-hover:from-pink-500 group-hover:to-orange-400 dark:text-white dark:focus:ring-pink-800'
+              onClick={handleCloseViewModal}
             >
               <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
                 Thoát
@@ -259,7 +250,7 @@ function ProductManagement() {
             </Button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
     </div>
   )
 }

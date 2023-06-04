@@ -10,7 +10,7 @@ interface Props {
   pageSize: number
   queryConfig: QueryConfig
   handleClickViewButton: (product: ProductType) => void
-  handleClickEditButton?: (product: ProductType) => void
+  handleClickEditButton: (product: ProductType) => void
 }
 
 function Table({ products, pageSize, queryConfig, handleClickViewButton, handleClickEditButton }: Props) {
@@ -141,7 +141,7 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
         pageSize={pageSize}
         queryConfig={queryConfig}
         to={(page: number) => ({
-          pathname: `${routes.home}/${routes.admin}/${routes.manageProducts}`,
+          pathname: `${routes.home}${routes.admin}/${routes.manageProducts}`,
           search: createSearchParams({ ...queryConfig, page: page.toString() }).toString()
         })}
       />

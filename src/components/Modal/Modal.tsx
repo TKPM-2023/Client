@@ -9,10 +9,8 @@ import {
   useInteractions,
   useRole
 } from '@floating-ui/react'
-import Button from '../Button'
 
 interface Props {
-  type?: string
   headingTitle: string
   children: React.ReactNode
   isOpen: boolean
