@@ -1,46 +1,41 @@
-import { InputHTMLAttributes } from 'react'
-import { FieldPath, FieldValues, UseFormRegister } from 'react-hook-form'
+import { ForwardedRef, InputHTMLAttributes, forwardRef, useState } from 'react'
 
-interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
-  className?: string
-  inputClassName?: string
-  errorClassName?: string
+export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
-  name?: FieldPath<TFieldValues>
-  register?: UseFormRegister<TFieldValues>
+  classNameInput?: string
+  classNameError?: string
 }
 
-function InputNumber<TFieldValues extends FieldValues>({
-  name,
-  errorMessage,
-  className,
-  inputClassName = 'w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400',
-  errorClassName = 'min-h-[1rem] text-xs text-red-500',
-  disabled,
-  onChange,
-  register,
-  ...rest
-}: Props<TFieldValues>) {
-  const registerResult = register && name ? register(name) : null
+function InputNumber(
+  {
+    value = '',
+    errorMessage,
+    className,
+    classNameInput = 'w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm',
+    classNameError = 'ml-2 mt-1 min-h-[1.25rem] text-sm text-red-600',
+    onChange,
+    ...rest
+  }: InputNumberProps,
+  ref: ForwardedRef<HTMLInputElement>
+) {
+  const [localValue, setLocalValue] = useState<string>(value as string)
 
-  if (disabled) {
-    Object.keys(rest).forEach((key) => {
-      if (key.startsWith('on') && typeof rest[key as keyof typeof rest] === 'function') {
-        delete rest[key as keyof typeof rest]
-      }
-    })
-
-    inputClassName += ' cursor-not-allowed'
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    if (/^\d+$/.test(value) || value === '') {
+      // Thực thi onChange callback từ bên ngoài truyền vào props
+      onChange && onChange(event)
+      // Cập nhật localValue state
+      setLocalValue(value)
+    }
   }
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {}
 
   return (
     <div className={className}>
-      <input {...rest} {...registerResult} className={inputClassName} disabled={disabled} onChange={handleChange} />
-      <div className={errorClassName}>{errorMessage}</div>
+      <input ref={ref} value={value || localValue} onChange={handleChange} className={classNameInput} {...rest} />
+      <div className={classNameError}>{errorMessage}</div>
     </div>
   )
 }
 
-export default InputNumber
+export default forwardRef(InputNumber)

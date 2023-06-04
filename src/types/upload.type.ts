@@ -3,4 +3,5 @@ export interface Upload {
   url: string
   width: number
   height: number
+  cloud_name: string
 }

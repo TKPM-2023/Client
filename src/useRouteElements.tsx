@@ -11,10 +11,10 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Admin from './pages/Admin'
-import Dashboard from './pages/Admin/Dashboard'
-import UserManagement from './pages/Admin/contents/UserManagement'
-import ProductManagement from './pages/Admin/contents/ProductManagement'
-import CategoryManagement from './pages/Admin/contents/CategoryManagement'
+import Dashboard from './pages/Admin/components/Dashboard'
+import UserManagement from './pages/Admin/pages/UserManagement'
+import ProductManagement from './pages/Admin/pages/ProductManagement'
+import CategoryManagement from './pages/Admin/pages/CategoryManagement'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)

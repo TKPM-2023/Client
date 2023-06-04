@@ -24,11 +24,28 @@ const schema = yup
   })
   .required()
 
+export const MAX_PRODUCT_NAME_CHARACTERS = 160
+export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 300
 export const productSchema = yup.object({
-  name: yup.string().required('Tên là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
-  description: yup.string().required('Mô tả là bắt buộc').max(300, 'Độ dài tối đa là 300 ký tự'),
-  price: yup.number().required('Đơn giá là bắt buộc'),
-  quantity: yup.number().required('Số lượng là bắt buộc'),
+  name: yup
+    .string()
+    .required('Tên là bắt buộc')
+    .max(MAX_PRODUCT_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_NAME_CHARACTERS} ký tự`),
+  description: yup
+    .string()
+    .required('Mô tả là bắt buộc')
+    .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
+  quantity: yup
+    .number()
+    .typeError('Số lượng là bắt buộc')
+    .required('Số lượng là bắt buộc')
+    .min(1, 'Số lượng tối thiểu 1'),
+  price: yup
+    .number()
+    .typeError('Đơn giá là bắt buộc')
+    .required('Đơn giá là bắt buộc')
+    .min(1000, 'Đơn giá tối thiểu 1.000 dồng')
+    .max(999999, 'Đơn giá tối đa 999.999 dồng'),
   category_id: yup.string().required('Thể loại là bắt buộc'),
   images: yup
     .array(

@@ -14,7 +14,6 @@ const createHttpInstance = () => {
     headers: {
       'Content-Type': 'application/json'
     }
-    // withCredentials: true
   })
 
   // Add a request interceptor
@@ -42,17 +41,13 @@ const createHttpInstance = () => {
       return response
     },
     function (error) {
-      if (error.response?.status !== HttpStatusCode.BadRequest) {
+      if (error.config.url !== 'authenticate' && error.config.url !== 'register') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data: any | undefined = error.response?.data
         const errorMessage = data?.message || error.message
         toast.error(errorMessage)
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data: any | undefined = error.response?.data
+
         if (data.error_key === 'ErrInvalidToken') {
-          const errorMessage = data?.message || error.message
-          toast.error(errorMessage)
           access_token = ''
           clearLS()
         }

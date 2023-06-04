@@ -1,4 +1,3 @@
-import { useId } from 'react'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import Modal from 'src/components/Modal'
@@ -13,8 +12,6 @@ interface Props {
 }
 
 function ViewModal({ product, categories, isOpen, setIsOpen }: Props) {
-  const imagesInputId = useId()
-
   if (!product) return null
   return (
     <Modal headingTitle='Xem sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -82,12 +79,8 @@ function ViewModal({ product, categories, isOpen, setIsOpen }: Props) {
               <div className='mt-3 flex min-h-[160px] flex-wrap items-center justify-center gap-2 rounded border px-4'>
                 {product.images && product.images.length > 0 ? (
                   product.images.map((image) => (
-                    <div key={image.url} className='h-[150px] w-[140px]'>
-                      <img
-                        className='h-full w-full object-cover'
-                        src={image.url}
-                        alt={`${image.width}px ${image.height}px`}
-                      />
+                    <div key={image.url} className='h-[150px] w-[140px] border'>
+                      <img className='h-full w-full object-cover' src={image.url} alt={`${product.name}-${image.id}`} />
                     </div>
                   ))
                 ) : (
