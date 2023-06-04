@@ -12,3 +12,5 @@ export type SuccessResponse<Data> = {
 export type ToUndefined<T> = {
   [P in keyof T]?: ToUndefined<T[P]>
 }
+
+export type StatusParams = 0 | 1

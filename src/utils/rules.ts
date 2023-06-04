@@ -24,6 +24,41 @@ const schema = yup
   })
   .required()
 
+export const MAX_PRODUCT_NAME_CHARACTERS = 160
+export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 300
+export const productSchema = yup.object({
+  name: yup
+    .string()
+    .required('Tên là bắt buộc')
+    .max(MAX_PRODUCT_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_NAME_CHARACTERS} ký tự`),
+  description: yup
+    .string()
+    .required('Mô tả là bắt buộc')
+    .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
+  quantity: yup
+    .number()
+    .typeError('Số lượng là bắt buộc')
+    .required('Số lượng là bắt buộc')
+    .min(1, 'Số lượng tối thiểu 1'),
+  price: yup
+    .number()
+    .typeError('Đơn giá là bắt buộc')
+    .required('Đơn giá là bắt buộc')
+    .min(1000, 'Đơn giá tối thiểu 1.000 dồng')
+    .max(999999, 'Đơn giá tối đa 999.999 dồng'),
+  category_id: yup.string().required('Thể loại là bắt buộc'),
+  images: yup
+    .array(
+      yup.object({
+        url: yup.string().required(),
+        width: yup.number().required(),
+        height: yup.number().required()
+      })
+    )
+    .required('Hình ảnh là bắt buộc')
+})
+
 export type Schema = yup.InferType<typeof schema>
+export type ProductSchema = yup.InferType<typeof productSchema>
 
 export default schema

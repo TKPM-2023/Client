@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 
 import useTitle from 'src/hooks/useTitle'
-import Sidebar from './Sidebar'
+import Sidebar from './components/Sidebar'
 
 function Admin() {
   useTitle('Trang Quản Trị')

@@ -1,6 +1,6 @@
 import axios, { HttpStatusCode } from 'axios'
 import { toast } from 'react-toastify'
-import { getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+import { clearLS, getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
 import { LoginResponse } from 'src/types/auth.type'
 
 const API_URL = import.meta.env.VITE_API_URL as string
@@ -11,7 +11,9 @@ const createHttpInstance = () => {
   const http = axios.create({
     baseURL: API_URL,
     timeout: 10000,
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json'
+    }
   })
 
   // Add a request interceptor
@@ -39,12 +41,18 @@ const createHttpInstance = () => {
       return response
     },
     function (error) {
-      if (error.response?.status !== HttpStatusCode.BadRequest) {
+      if (error.config.url !== 'authenticate' && error.config.url !== 'register') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data: any | undefined = error.response?.data
         const errorMessage = data?.message || error.message
         toast.error(errorMessage)
+
+        if (data.error_key === 'ErrInvalidToken') {
+          access_token = ''
+          clearLS()
+        }
       }
+
       return Promise.reject(error)
     }
   )
