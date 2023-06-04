@@ -19,7 +19,7 @@ const productApi = {
     return http.patch<SuccessResponse<boolean>>(`${URL}/${id}`, body)
   },
   deleteProduct: (id: string) => {
-    return http.patch<SuccessResponse<boolean>>(`${URL}/${id}`)
+    return http.delete<SuccessResponse<boolean>>(`${URL}/${id}`)
   }
 }
 

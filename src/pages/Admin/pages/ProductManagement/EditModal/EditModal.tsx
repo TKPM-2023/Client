@@ -20,6 +20,7 @@ import {
   ProductSchema,
   productSchema
 } from 'src/utils/rules'
+import classNames from 'classnames'
 
 interface Props {
   product: Product | null
@@ -141,7 +142,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
             <div className='relative col-span-12'>
               <div className='text-sm font-medium'>Tên</div>
               <Input className='mt-2' name='name' register={register} errorMessage={errors.name?.message} />
-              <div className='absolute bottom-0 right-0 text-xs text-gray-500 '>
+              <div className={classNames('absolute bottom-0 right-0 text-xs text-gray-500')}>
                 {name?.length + '/' + MAX_PRODUCT_NAME_CHARACTERS}
               </div>
             </div>
@@ -271,6 +272,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
             type='button'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-pink-200 group-hover:from-pink-500 group-hover:to-orange-400 dark:text-white dark:focus:ring-pink-800'
             onClick={() => setIsOpen(false)}
+            disabled={updateProductMutation.isLoading || uploadImageMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
               Thoát

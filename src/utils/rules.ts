@@ -24,8 +24,8 @@ const schema = yup
   })
   .required()
 
-export const MAX_PRODUCT_NAME_CHARACTERS = 160
-export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 300
+export const MAX_PRODUCT_NAME_CHARACTERS = 60
+export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 120
 export const productSchema = yup.object({
   name: yup
     .string()

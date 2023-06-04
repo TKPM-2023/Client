@@ -15,6 +15,7 @@ import ViewModal from './ViewModal'
 import { Category } from 'src/types/category.type'
 import EditModal from './EditModal'
 import CreateModal from './CreateModal'
+import ConfirmDeleteModal from './ConfirmDeleteModal'
 
 export interface ProductType extends Product {
   category_name: string
@@ -53,6 +54,8 @@ function ProductManagement() {
   const [viewProductData, setViewProductData] = useState<Product | null>(null)
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false)
   const [editProductData, setEditProductData] = useState<Product | null>(null)
+  const [isOpenConfirmDeleteModal, setIsOpenConfirmDeleteModal] = useState<boolean>(false)
+  const [deleteProductData, setDeleteProductData] = useState<Product | null>(null)
 
   const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const categories = categoryData?.data.data
@@ -76,6 +79,11 @@ function ProductManagement() {
   const handleClickEditButton = (product: Product) => {
     setIsOpenEditModal(true)
     setEditProductData(product)
+  }
+
+  const handleClickDeleteButton = (product: Product) => {
+    setIsOpenConfirmDeleteModal(true)
+    setDeleteProductData(product)
   }
 
   const openCreateModal = () => {
@@ -111,6 +119,7 @@ function ProductManagement() {
         queryConfig={queryConfig}
         handleClickViewButton={handleClickViewButton}
         handleClickEditButton={handleClickEditButton}
+        handleClickDeleteButton={handleClickDeleteButton}
       />
 
       <ViewModal
@@ -128,6 +137,12 @@ function ProductManagement() {
       />
 
       <CreateModal isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} categories={categories as Category[]} />
+
+      <ConfirmDeleteModal
+        isOpen={isOpenConfirmDeleteModal}
+        setIsOpen={setIsOpenConfirmDeleteModal}
+        product={deleteProductData}
+      />
     </div>
   )
 }
