@@ -9,8 +9,10 @@ import {
   useInteractions,
   useRole
 } from '@floating-ui/react'
+import classNames from 'classnames'
 
 interface Props {
+  size?: string
   headingTitle: string
   children: React.ReactNode
   isOpen: boolean
@@ -18,7 +20,7 @@ interface Props {
   onSubmit?: React.FormEventHandler<HTMLFormElement>
 }
 
-function Modal({ headingTitle, children, isOpen, setIsOpen }: Props) {
+function Modal({ size, headingTitle, children, isOpen, setIsOpen }: Props) {
   const { refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen
@@ -48,7 +50,7 @@ function Modal({ headingTitle, children, isOpen, setIsOpen }: Props) {
           <FloatingOverlay className='flex items-center justify-center bg-black/80' lockScroll>
             <FloatingFocusManager context={context}>
               <div
-                className='m-4 max-h-[calc(100vh-40px)] overflow-y-scroll rounded-md bg-white'
+                className='m-4 max-h-[calc(100vh-40px)] min-h-[200px] overflow-auto overflow-x-hidden rounded-md bg-white'
                 ref={refs.setFloating}
                 aria-labelledby={headingId}
                 aria-describedby={descriptionId}
@@ -72,7 +74,13 @@ function Modal({ headingTitle, children, isOpen, setIsOpen }: Props) {
 
                 <div className='h-[1px] bg-gray-200'></div>
 
-                <div className='w-[calc(100vw-80px)] max-w-[60rem] px-6'>{children}</div>
+                <div
+                  className={classNames('w-[calc(100vw-80px)] max-w-[60rem] px-6', {
+                    'max-w-[30rem]': size === 'sm'
+                  })}
+                >
+                  {children}
+                </div>
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>

@@ -11,9 +11,17 @@ interface Props {
   queryConfig: QueryConfig
   handleClickViewButton: (product: ProductType) => void
   handleClickEditButton: (product: ProductType) => void
+  handleClickDeleteButton: (product: ProductType) => void
 }
 
-function Table({ products, pageSize, queryConfig, handleClickViewButton, handleClickEditButton }: Props) {
+function Table({
+  products,
+  pageSize,
+  queryConfig,
+  handleClickViewButton,
+  handleClickEditButton,
+  handleClickDeleteButton
+}: Props) {
   const page = Number(queryConfig.page)
   const limit = Number(queryConfig.limit)
 
@@ -37,9 +45,6 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
               </th>
               <th scope='col' className='px-4 py-3'>
                 Thể loại
-              </th>
-              <th scope='col' className='px-4 py-3'>
-                Trạng thái
               </th>
               <th scope='col' className='px-4 py-3'>
                 Ngày khởi tạo
@@ -66,7 +71,6 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
                   <td className='px-4 py-2'>{formatNumber(product.price)}</td>
                   <td className='px-4 py-2'>{formatNumber(product.quantity)}</td>
                   <td className='px-4 py-2'>{product.category_name}</td>
-                  <td className='px-4 py-2'>{product.status}</td>
                   <td className='px-4 py-2'>{formatDate(product.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>
@@ -113,6 +117,7 @@ function Table({ products, pageSize, queryConfig, handleClickViewButton, handleC
                       <button
                         title='Xóa'
                         className='px-1 py-2 font-medium text-red-600 transition-colors duration-200 hover:text-red-700 hover:underline dark:text-red-500 hover:dark:text-red-600'
+                        onClick={() => handleClickDeleteButton(product)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'

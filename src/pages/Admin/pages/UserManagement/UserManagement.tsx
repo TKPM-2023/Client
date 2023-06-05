@@ -329,7 +329,7 @@ function UserManagement() {
             />
 
             <div className='mt-3 flex h-40 items-center justify-center rounded border px-4 py-3'>
-              <span className='text-sm text-gray-400'>Preview image</span>
+              <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>
               {/* <img src={images.avatar} className='h-full' alt='Preview avatar' /> */}
             </div>
           </div>
