@@ -47,7 +47,7 @@ function Table({
                 Thể loại
               </th>
               <th scope='col' className='px-4 py-3'>
-                Ngày khởi tạo
+                Ngày tạo
               </th>
               <th scope='col' className='px-4 py-3'>
                 Hành động

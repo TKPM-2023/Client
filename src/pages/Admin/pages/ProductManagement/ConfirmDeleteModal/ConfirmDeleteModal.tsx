@@ -10,10 +10,10 @@ interface Props {
   product: Product | null
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  handleRefetchData: () => void
 }
 
-function ConfirmDeleteModal({ product, isOpen, setIsOpen }: Props) {
-  const queryClient = useQueryClient()
+function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: Props) {
   const deleteProductMutation = useMutation({
     mutationFn: productApi.deleteProduct
   })
@@ -26,10 +26,8 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen }: Props) {
         toast.success('Xóa sản phẩm thành công', {
           autoClose: 1000
         })
+        handleRefetchData()
         setIsOpen(false)
-        queryClient.invalidateQueries({
-          queryKey: ['products']
-        })
       }
     })
   }

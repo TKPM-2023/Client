@@ -13,7 +13,7 @@ import { isAxiosBadRequestError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import useTitle from 'src/hooks/useTitle'
-import { saveProfileToLS } from 'src/utils/auth'
+import { setProfileToLS } from 'src/utils/auth'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
@@ -44,7 +44,7 @@ function Login() {
     onSuccess: (data) => {
       const profile = data.data.data
       setProfile(profile)
-      saveProfileToLS(profile)
+      setProfileToLS(profile)
       setIsAuthenticated(true)
       navigate(routes.home)
     },

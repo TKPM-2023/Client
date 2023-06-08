@@ -75,8 +75,9 @@ function Modal({ size, headingTitle, children, isOpen, setIsOpen }: Props) {
                 <div className='h-[1px] bg-gray-200'></div>
 
                 <div
-                  className={classNames('w-[calc(100vw-80px)] max-w-[60rem] px-6', {
-                    'max-w-[30rem]': size === 'sm'
+                  className={classNames('w-[calc(100vw-80px)] px-6', {
+                    'max-w-[30rem]': size === 'sm',
+                    'max-w-[60rem]': size !== 'sm'
                   })}
                 >
                   {children}
