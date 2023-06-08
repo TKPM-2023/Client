@@ -114,7 +114,7 @@ function Login() {
 
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>
-            <Link to={`${routes.home}${routes.register}`} className='text-red-500'>
+            <Link to={routes.register} className='text-red-500'>
               Đăng ký
             </Link>
           </div>

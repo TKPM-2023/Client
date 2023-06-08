@@ -146,7 +146,7 @@ function Table({
         pageSize={pageSize}
         queryConfig={queryConfig}
         to={(page: number) => ({
-          pathname: `${routes.home}${routes.admin}/${routes.manageProducts}`,
+          pathname: routes.manageProducts,
           search: createSearchParams({ ...queryConfig, page: page.toString() }).toString()
         })}
       />
