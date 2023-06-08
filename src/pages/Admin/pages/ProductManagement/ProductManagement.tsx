@@ -1,18 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
-import useTitle from 'src/hooks/useTitle'
+import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { isUndefined, omitBy } from 'lodash'
-import { useForm } from 'react-hook-form'
+import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
 
+import useTitle from 'src/hooks/useTitle'
 import productApi from 'src/apis/product.api'
 import Table from './Table'
 import categoryApi from 'src/apis/category.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import status from 'src/constants/status'
 import useQueryParams from 'src/hooks/useQueryParams'
-import { yupResolver } from '@hookform/resolvers/yup'
 import ViewModal from './ViewModal'
-import { Category } from 'src/types/category.type'
 import EditModal from './EditModal'
 import CreateModal from './CreateModal'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
@@ -43,7 +41,7 @@ function ProductManagement() {
     queryKey: ['categories', { status: status.inStore }],
     queryFn: () => categoryApi.getCategories({ status: status.inStore })
   })
-  const { data: productData } = useQuery({
+  const { data: productData, refetch } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
     keepPreviousData: true
@@ -90,11 +88,15 @@ function ProductManagement() {
     setIsOpenCreateModal(true)
   }
 
+  const handleRefetchData = () => {
+    refetch()
+  }
+
   if (!products || products.length === 0) return null
   return (
     <div>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
-        <div className='text-xl font-semibold capitalize text-white'>Quản lý sản phẩm</div>
+        <h1 className='text-xl font-semibold capitalize text-white'>Quản lý sản phẩm</h1>
         <div className='px-4'>
           <button
             onClick={openCreateModal}
@@ -126,22 +128,29 @@ function ProductManagement() {
         isOpen={isOpenViewModal}
         setIsOpen={setIsOpenViewModal}
         product={viewProductData}
-        categories={categories as Category[]}
+        categories={categories}
       />
 
       <EditModal
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
-        product={editProductData}
-        categories={categories as Category[]}
+        product={editProductData as Product}
+        categories={categories}
+        handleRefetchData={handleRefetchData}
       />
 
-      <CreateModal isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} categories={categories as Category[]} />
+      <CreateModal
+        isOpen={isOpenCreateModal}
+        setIsOpen={setIsOpenCreateModal}
+        categories={categories}
+        handleRefetchData={handleRefetchData}
+      />
 
       <ConfirmDeleteModal
         isOpen={isOpenConfirmDeleteModal}
         setIsOpen={setIsOpenConfirmDeleteModal}
         product={deleteProductData}
+        handleRefetchData={handleRefetchData}
       />
     </div>
   )

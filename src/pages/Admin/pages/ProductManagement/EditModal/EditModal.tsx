@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
 import productApi from 'src/apis/product.api'
@@ -13,7 +13,6 @@ import Modal from 'src/components/Modal'
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { Upload } from 'src/types/upload.type'
-import { ToUndefined } from 'src/types/utils.type'
 import {
   MAX_PRODUCT_DESCRIPTION_CHARACTERS,
   MAX_PRODUCT_NAME_CHARACTERS,
@@ -21,27 +20,23 @@ import {
   productSchema
 } from 'src/utils/rules'
 import classNames from 'classnames'
+import InputFile from 'src/components/InputFile'
 
 interface Props {
-  product: Product | null
-  categories: Category[]
+  product: Product
+  categories?: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  handleRefetchData: () => void
 }
 
-type FormData = Omit<ProductSchema, 'images'>
-const schema = productSchema.omit(['images'])
-
-function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
-  const queryClient = useQueryClient()
-  const imagesInputId = useId()
-
+function EditModal({ product, categories, isOpen, setIsOpen, handleRefetchData }: Props) {
   const uploadImageMutation = useMutation({
     mutationFn: uploadApi.upload
   })
 
   const updateProductMutation = useMutation({
-    mutationFn: (body: ToUndefined<Product>) => productApi.updateProduct((product as Product).id, body)
+    mutationFn: (body: ProductSchema) => productApi.updateProduct(product.id, body)
   })
 
   const {
@@ -52,28 +47,34 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
     watch,
     handleSubmit,
     reset
-  } = useForm<FormData>({
-    resolver: yupResolver(schema)
+  } = useForm<ProductSchema>({
+    resolver: yupResolver(productSchema),
+    defaultValues: {
+      category_id: '',
+      description: '',
+      name: '',
+      price: 0,
+      quantity: 0,
+      images: []
+    }
   })
 
   const description = watch('description')
   const name = watch('name')
+  const images = watch('images')
 
   const [imageFiles, setImageFiles] = useState<FileList | null>(null)
   const previewImages = useMemo<string[] | null>(() => {
     if (!imageFiles || imageFiles.length === 0) return null
 
     const filesArr = Array.from(imageFiles)
-    const imageTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const urls = []
     for (const file of filesArr) {
-      if (imageTypes.includes(file.type)) {
-        const url = URL.createObjectURL(file)
-        urls.push(url)
-      }
+      const url = URL.createObjectURL(file)
+      urls.push(url)
     }
 
-    return urls.length > 0 ? urls : null
+    return urls
   }, [imageFiles])
 
   useEffect(() => {
@@ -81,6 +82,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
       setValue('category_id', product.category_id)
       setValue('description', product.description)
       setValue('name', product.name)
+      setValue('images', product.images || [])
       setValue('price', product.price)
       setValue('quantity', product.quantity)
     }
@@ -94,15 +96,12 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
     }
   }, [isOpen, previewImages, reset])
 
-  const handleChangeImageFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (files && files.length > 0) {
-      setImageFiles(files)
-    }
+  const onFileChange = (files: FileList) => {
+    setImageFiles(files)
   }
 
   const onSubmit = handleSubmit(async (data) => {
-    let images: Upload[] | undefined = []
+    const images: Upload[] = []
     if (imageFiles && imageFiles.length > 0) {
       const imageFilesArray = Array.from(imageFiles)
       for (const imageFile of imageFilesArray) {
@@ -115,16 +114,18 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
       }
     }
 
-    if (images.length === 0) images = product?.images
+    const _data = { ...data }
+    if (images.length > 0) {
+      _data.images = images
+      setValue('images', images)
+    }
 
-    const _data = { ...data, images }
     await updateProductMutation.mutateAsync(_data)
     toast.success('Cập nhật sản phẩm thành công', {
       autoClose: 1000
     })
 
-    await queryClient.invalidateQueries({ queryKey: ['products'] })
-
+    handleRefetchData()
     setIsOpen(false)
   })
 
@@ -212,41 +213,14 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
             </div>
 
             <div className='col-span-12'>
-              <label
-                htmlFor={imagesInputId}
-                className='mt-3 inline-flex cursor-pointer select-none items-center justify-center gap-1 rounded bg-cyan-400 px-3 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-cyan-500 active:bg-cyan-600'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='relative top-[1px] h-4 w-4'
-                >
-                  <path
-                    fillRule='evenodd'
-                    d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-                <span>Tải lên ảnh mới</span>
-              </label>
+              <InputFile title='Tải lên ảnh mới' onFileChange={onFileChange} />
 
-              <Input
-                id={imagesInputId}
-                type='file'
-                multiple
-                accept='image/png, image/jpeg, image/jpg'
-                errorClassName='none'
-                hidden
-                name='images'
-                onChange={handleChangeImageFiles}
-              />
               <div className='mt-3 flex min-h-[160px] flex-wrap items-center justify-center gap-2 rounded border px-4 py-1'>
                 {!previewImages &&
-                  product.images &&
-                  product.images.length > 0 &&
-                  product.images.map((image) => (
-                    <div key={image.id} className='h-[150px] w-[140px] border'>
+                  images &&
+                  images.length > 0 &&
+                  images.map((image) => (
+                    <div key={image.url} className='h-[150px] w-[140px] border'>
                       <img className='h-full w-full object-cover' src={image.url} alt={`${product.name} ${image.id}`} />
                     </div>
                   ))}
@@ -259,7 +233,7 @@ function EditModal({ product, categories, isOpen, setIsOpen }: Props) {
                     </div>
                   ))}
 
-                {!previewImages && !product.images && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
+                {!previewImages && !images && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
 import productApi from 'src/apis/product.api'
@@ -11,7 +11,6 @@ import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import Modal from 'src/components/Modal'
 import { Category } from 'src/types/category.type'
-import { Product } from 'src/types/product.type'
 import { Upload } from 'src/types/upload.type'
 import {
   MAX_PRODUCT_DESCRIPTION_CHARACTERS,
@@ -19,20 +18,16 @@ import {
   ProductSchema,
   productSchema
 } from 'src/utils/rules'
+import InputFile from 'src/components/InputFile'
 
 interface Props {
-  categories: Category[]
+  categories?: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  handleRefetchData: () => void
 }
 
-type FormData = Omit<ProductSchema, 'images'>
-const schema = productSchema.omit(['images'])
-
-function CreateModal({ categories, isOpen, setIsOpen }: Props) {
-  const queryClient = useQueryClient()
-  const imagesInputId = useId()
-
+function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props) {
   const uploadImageMutation = useMutation({
     mutationFn: uploadApi.upload
   })
@@ -45,18 +40,18 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
     control,
     formState: { errors },
     register,
-    setValue,
     watch,
     handleSubmit,
     reset
-  } = useForm<FormData>({
-    resolver: yupResolver(schema),
+  } = useForm<ProductSchema>({
+    resolver: yupResolver(productSchema),
     defaultValues: {
       category_id: '',
       description: '',
       name: '',
       price: 0,
-      quantity: 0
+      quantity: 0,
+      images: []
     }
   })
 
@@ -68,16 +63,13 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
     if (!imageFiles || imageFiles.length === 0) return null
 
     const filesArr = Array.from(imageFiles)
-    const imageTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const urls = []
     for (const file of filesArr) {
-      if (imageTypes.includes(file.type)) {
-        const url = URL.createObjectURL(file)
-        urls.push(url)
-      }
+      const url = URL.createObjectURL(file)
+      urls.push(url)
     }
 
-    return urls.length > 0 ? urls : null
+    return urls
   }, [imageFiles])
 
   useEffect(() => {
@@ -88,11 +80,8 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
     }
   }, [isOpen, previewImages, reset])
 
-  const handleChangeImageFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (files && files.length > 0) {
-      setImageFiles(files)
-    }
+  const onFileChange = (files: FileList) => {
+    setImageFiles(files)
   }
 
   const onSubmit = handleSubmit(async (data) => {
@@ -101,7 +90,7 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
       return
     }
 
-    const images: Upload[] | undefined = []
+    const images: Upload[] = []
     const imageFilesArray = Array.from(imageFiles)
     for (const imageFile of imageFilesArray) {
       const formData = new FormData()
@@ -116,7 +105,7 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
     toast.success('Thêm sản phẩm thành công', {
       autoClose: 1000
     })
-    await queryClient.invalidateQueries({ queryKey: ['products'] })
+    handleRefetchData()
     setIsOpen(false)
   })
 
@@ -188,35 +177,8 @@ function CreateModal({ categories, isOpen, setIsOpen }: Props) {
             </div>
 
             <div className='col-span-12'>
-              <label
-                htmlFor={imagesInputId}
-                className='mt-3 inline-flex cursor-pointer select-none items-center justify-center gap-1 rounded bg-cyan-400 px-3 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-cyan-500 active:bg-cyan-600'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='relative top-[1px] h-4 w-4'
-                >
-                  <path
-                    fillRule='evenodd'
-                    d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-                <span>Tải lên hình ảnh</span>
-              </label>
+              <InputFile title='Tải lên hình ảnh' onFileChange={onFileChange} />
 
-              <Input
-                id={imagesInputId}
-                type='file'
-                multiple
-                accept='image/png, image/jpeg, image/jpg'
-                errorClassName='none'
-                hidden
-                name='images'
-                onChange={handleChangeImageFiles}
-              />
               <div className='mt-3 flex min-h-[160px] flex-wrap items-center justify-center gap-2 rounded border px-4 py-1'>
                 {previewImages &&
                   previewImages.length > 0 &&

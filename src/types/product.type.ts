@@ -9,8 +9,8 @@ export type Product = {
   description: string
   price: number
   quantity: number
-  images: Upload[]
-  total_rating: number
+  images?: Upload[]
+  total_rating?: number
   category_id: string
 }
 

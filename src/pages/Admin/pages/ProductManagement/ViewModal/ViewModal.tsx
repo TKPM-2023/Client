@@ -6,7 +6,7 @@ import { Product } from 'src/types/product.type'
 
 interface Props {
   product: Product | null
-  categories: Category[]
+  categories?: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
