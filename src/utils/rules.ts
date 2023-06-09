@@ -23,6 +23,8 @@ const schema = yup
       .max(160, 'Độ dài từ 8 - 160 ký tự')
   })
   .required()
+export type Schema = yup.InferType<typeof schema>
+export default schema
 
 export const MAX_PRODUCT_NAME_CHARACTERS = 60
 export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 120
@@ -58,7 +60,27 @@ export const productSchema = yup.object({
     .required('Hình ảnh là bắt buộc')
 })
 
-export type Schema = yup.InferType<typeof schema>
 export type ProductSchema = yup.InferType<typeof productSchema>
 
-export default schema
+export const MAX_CATEGORY_NAME_CHARACTERS = 60
+export const MAX_CATEGORY_DESCRIPTION_CHARACTERS = 120
+export const categorySchema = yup.object({
+  name: yup
+    .string()
+    .required('Tên là bắt buộc')
+    .max(MAX_PRODUCT_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_NAME_CHARACTERS} ký tự`),
+  description: yup
+    .string()
+    .required('Mô tả là bắt buộc')
+    .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
+  icon: yup
+    .object({
+      id: yup.number().required(),
+      url: yup.string().required(),
+      width: yup.number().required(),
+      height: yup.number().required()
+    })
+    .required('Biểu tượng là bắt buộc')
+})
+
+export type CategorySchema = yup.InferType<typeof categorySchema>

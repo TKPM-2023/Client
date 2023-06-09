@@ -5,7 +5,7 @@ import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 
 interface Props {
-  product: Product | null
+  product: Product
   categories?: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -50,13 +50,13 @@ function ViewModal({ product, categories, isOpen, setIsOpen }: Props) {
               <div className='text-sm font-medium'>Thể loại</div>
               <select
                 className='mt-2 w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
-                defaultValue={product.description}
+                defaultValue={product.category_id}
               >
                 <option value='' disabled>
                   -- Thể loại --
                 </option>
                 {categories?.map((category) => (
-                  <option key={category.id} defaultValue={category.id}>
+                  <option key={category.id} value={category.id}>
                     {category.name}
                   </option>
                 ))}

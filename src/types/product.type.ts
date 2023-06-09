@@ -33,6 +33,6 @@ export type ProductList = {
 export interface ProductListConfig {
   limit?: number | string
   page?: number | string
-  status?: number
+  status?: number | string
   category_id?: string
 }
