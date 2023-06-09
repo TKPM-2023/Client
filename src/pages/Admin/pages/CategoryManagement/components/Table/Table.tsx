@@ -1,21 +1,22 @@
 import classNames from 'classnames'
-import { formatDate, formatNumber } from 'src/utils/utils'
-import { ProductType, QueryConfig } from '../ProductManagement'
-import Pagination from 'src/components/Pagination'
-import routes from 'src/constants/routes'
 import { createSearchParams } from 'react-router-dom'
+import routes from 'src/constants/routes'
+import Pagination from 'src/components/Pagination'
+import { formatDate } from 'src/utils/utils'
+import { Category } from 'src/types/category.type'
+import { QueryConfig } from '../../CategoryManagement'
 
 interface Props {
-  products: ProductType[]
+  categories: Category[]
   pageSize: number
   queryConfig: QueryConfig
-  handleClickViewButton: (product: ProductType) => void
-  handleClickEditButton: (product: ProductType) => void
-  handleClickDeleteButton: (product: ProductType) => void
+  handleClickViewButton: (category: Category) => void
+  handleClickEditButton: (category: Category) => void
+  handleClickDeleteButton: (category: Category) => void
 }
 
 function Table({
-  products,
+  categories,
   pageSize,
   queryConfig,
   handleClickViewButton,
@@ -38,13 +39,16 @@ function Table({
                 Tên
               </th>
               <th scope='col' className='px-4 py-3'>
-                Đơn giá
+                Mô tả
               </th>
               <th scope='col' className='px-4 py-3'>
-                Số lượng
+                Số lượng sản phẩm
               </th>
               <th scope='col' className='px-4 py-3'>
-                Thể loại
+                Biểu tượng
+              </th>
+              <th scope='col' className='px-4 py-3'>
+                Trạng thái
               </th>
               <th scope='col' className='px-4 py-3'>
                 Ngày tạo
@@ -55,10 +59,10 @@ function Table({
             </tr>
           </thead>
           <tbody>
-            {products.map((product, index) => {
+            {categories.map((category, index) => {
               return (
                 <tr
-                  key={product.id}
+                  key={category.id}
                   className={classNames('border-b hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-600', {
                     'bg-gray-50 dark:bg-gray-800': index % 2 !== 0,
                     'bg-white dark:bg-gray-900': index % 2 === 0
@@ -67,17 +71,24 @@ function Table({
                   <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>
                     {limit * (page - 1) + index + 1}
                   </th>
-                  <td className='px-4 py-2'>{product.name}</td>
-                  <td className='px-4 py-2'>{formatNumber(product.price)}</td>
-                  <td className='px-4 py-2'>{formatNumber(product.quantity)}</td>
-                  <td className='px-4 py-2'>{product.category_name}</td>
-                  <td className='px-4 py-2'>{formatDate(product.created_at)}</td>
+                  <td className='px-4 py-2'>{category.name}</td>
+                  <td className='px-4 py-2'>{category.description}</td>
+                  <td className='px-4 py-2'>{category.total_product}</td>
+                  <td className='px-4 py-2'>
+                    <img
+                      src={category.icon?.url}
+                      alt={category.name}
+                      className='h-8 w-8 rounded-full border object-cover'
+                    />
+                  </td>
+                  <td className='px-4 py-2'>{category.status}</td>
+                  <td className='px-4 py-2'>{formatDate(category.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>
                       <button
                         title='Xem'
                         className='px-1 py-2 font-medium text-yellow-600 transition-colors duration-200 hover:text-yellow-700 hover:underline dark:text-yellow-500'
-                        onClick={() => handleClickViewButton(product)}
+                        onClick={() => handleClickViewButton(category)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -97,7 +108,7 @@ function Table({
                       <button
                         title='Sửa'
                         className='px-1 py-2 font-medium text-blue-600 transition-colors duration-200 hover:text-blue-700 hover:underline dark:text-blue-500 hover:dark:text-blue-600'
-                        onClick={() => handleClickEditButton(product)}
+                        onClick={() => handleClickEditButton(category)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -117,7 +128,7 @@ function Table({
                       <button
                         title='Xóa'
                         className='px-1 py-2 font-medium text-red-600 transition-colors duration-200 hover:text-red-700 hover:underline dark:text-red-500 hover:dark:text-red-600'
-                        onClick={() => handleClickDeleteButton(product)}
+                        onClick={() => handleClickDeleteButton(category)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -146,8 +157,8 @@ function Table({
         pageSize={pageSize}
         queryConfig={queryConfig}
         to={(page: number) => ({
-          pathname: routes.manageProducts,
-          search: createSearchParams({ ...queryConfig, page: page.toString() }).toString()
+          pathname: routes.manageCategories,
+          search: createSearchParams({ ...queryConfig, page: String(page) }).toString()
         })}
       />
     </div>

@@ -8,17 +8,17 @@ export interface Category {
   updated_at: string
   name: string
   description: string
-  icon: Upload
+  icon?: Upload
   total_product: number
-  products: Product[]
+  products?: Product[]
 }
 
 export interface CategoryList {
   data: Category[]
   paging: {
-    page?: number
-    limit?: number
-    total?: number
+    page: number
+    limit: number
+    total: number
     cursor?: string
     next_cursor?: string
   }
@@ -29,7 +29,7 @@ export interface CategoryList {
 
 export interface CategoryListConfig {
   limit?: number | string
-  status?: number
+  status?: number | string
   cursor?: string
   page?: number | string
 }

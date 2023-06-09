@@ -5,15 +5,15 @@ import omitBy from 'lodash/omitBy'
 
 import useTitle from 'src/hooks/useTitle'
 import productApi from 'src/apis/product.api'
-import Table from './Table'
+import Table from './components/Table'
 import categoryApi from 'src/apis/category.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import status from 'src/constants/status'
 import useQueryParams from 'src/hooks/useQueryParams'
-import ViewModal from './ViewModal'
-import EditModal from './EditModal'
-import CreateModal from './CreateModal'
-import ConfirmDeleteModal from './ConfirmDeleteModal'
+import ViewModal from './components/ViewModal'
+import EditModal from './components/EditModal'
+import CreateModal from './components/CreateModal'
+import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 
 export interface ProductType extends Product {
   category_name: string
@@ -24,7 +24,7 @@ export type QueryConfig = {
 }
 
 function ProductManagement() {
-  useTitle('Trang Quản Trị - Quản Lý Sản Phẩm')
+  useTitle(' Quản Lý Sản Phẩm')
 
   const queryParams = useQueryParams()
   const queryConfig: QueryConfig = omitBy(
@@ -127,7 +127,7 @@ function ProductManagement() {
       <ViewModal
         isOpen={isOpenViewModal}
         setIsOpen={setIsOpenViewModal}
-        product={viewProductData}
+        product={viewProductData as Product}
         categories={categories}
       />
 

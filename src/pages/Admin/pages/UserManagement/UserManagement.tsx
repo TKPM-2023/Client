@@ -72,7 +72,7 @@ const initialFormData: User = {
 }
 
 function UserManagement() {
-  useTitle('Trang Quản Trị - Quản Lý Người Dùng')
+  useTitle(' Quản Lý Người Dùng')
 
   // Form id
   const formDataId: FormDataId = {

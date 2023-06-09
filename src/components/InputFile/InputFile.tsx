@@ -4,17 +4,18 @@ import config from 'src/constants/config'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   title?: string
-  onFileChange?: (files: FileList) => void
+  onFilesChange?: (files: FileList) => void
+  onFileChange?: (file: File) => void
 }
 
-function InputFile({ title, onFileChange, ...rest }: Props) {
+function InputFile({ title, multiple, onFileChange, onFilesChange, ...rest }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleUpload = () => {
     fileInputRef.current?.click()
   }
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onMultipleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (files && files.length > 0) {
       let isValidFiles = true
@@ -29,7 +30,19 @@ function InputFile({ title, onFileChange, ...rest }: Props) {
         return
       }
 
-      onFileChange && onFileChange(files)
+      onFilesChange && onFilesChange(files)
+    }
+  }
+
+  const onSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      if (!file.type.includes('image/') || file.size > config.maxSizeUploadAvatar) {
+        toast.error('Dung lượng file tối đa 1 MB. Định dạng:.JPEG, .PNG')
+        return
+      }
+
+      onFileChange && onFileChange(file)
     }
   }
 
@@ -64,10 +77,10 @@ function InputFile({ title, onFileChange, ...rest }: Props) {
         {...rest}
         ref={fileInputRef}
         type='file'
-        multiple
+        multiple={multiple}
         accept='.jpg,.jpeg,.png'
         hidden
-        onChange={onChange}
+        onChange={multiple ? onMultipleChange : onSingleChange}
         onClick={onInputClick}
       />
     </Fragment>

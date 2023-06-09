@@ -15,6 +15,7 @@ import Dashboard from './pages/Admin/components/Dashboard'
 import UserManagement from './pages/Admin/pages/UserManagement'
 import ProductManagement from './pages/Admin/pages/ProductManagement'
 import CategoryManagement from './pages/Admin/pages/CategoryManagement'
+import NotFound from './pages/NotFound'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -69,6 +70,10 @@ function useRouteElements() {
           ]
         }
       ]
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
 
