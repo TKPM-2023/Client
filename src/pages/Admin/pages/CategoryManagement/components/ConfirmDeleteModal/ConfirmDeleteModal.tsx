@@ -1,27 +1,27 @@
 import { toast } from 'react-toastify'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
-import productApi from 'src/apis/product.api'
+import categoryApi from 'src/apis/category.api'
 import Button from 'src/components/Button'
 import Modal from 'src/components/Modal'
-import { Product } from 'src/types/product.type'
+import { Category } from 'src/types/category.type'
 
 interface Props {
-  product: Product | null
+  category: Category | null
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   handleRefetchData: () => void
 }
 
-function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: Props) {
-  const deleteProductMutation = useMutation({
-    mutationFn: productApi.deleteProduct
+function ConfirmDeleteModal({ category, isOpen, setIsOpen, handleRefetchData }: Props) {
+  const deleteCategoryMutation = useMutation({
+    mutationFn: categoryApi.deleteCategory
   })
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    deleteProductMutation.mutate(product?.id as string, {
+    deleteCategoryMutation.mutate(category?.id as string, {
       onSuccess: () => {
         toast.success('Xóa sản phẩm thành công', {
           autoClose: 1000
@@ -33,7 +33,7 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
   }
 
   return (
-    <Modal size='sm' headingTitle='Xóa sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal size='sm' headingTitle='Xóa thể loại' isOpen={isOpen} setIsOpen={setIsOpen}>
       <form onSubmit={onSubmit}>
         <div className='py-6'>
           <div className='flex items-center justify-center'>
@@ -53,9 +53,9 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
             </svg>
           </div>
           <div className='mt-3 text-center font-medium leading-6'>
-            Bạn có chắc chắn muốn xóa sản phẩm
+            Bạn có chắc chắn muốn xóa thể loại
             <br />
-            <span className='font-bold'> {product?.name} </span>?
+            <span className='font-bold'> {category?.name} </span>?
           </div>
         </div>
 
@@ -75,10 +75,10 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
           <Button
             type='submit'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
-            disabled={deleteProductMutation.isLoading}
+            disabled={deleteCategoryMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-              {deleteProductMutation.isLoading && (
+              {deleteCategoryMutation.isLoading && (
                 <svg
                   aria-hidden='true'
                   role='status'

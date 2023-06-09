@@ -38,7 +38,6 @@ function EditModal({ category, isOpen, setIsOpen, handleRefetchData }: Props) {
   })
 
   const {
-    control,
     formState: { errors },
     register,
     setValue,
@@ -58,10 +57,10 @@ function EditModal({ category, isOpen, setIsOpen, handleRefetchData }: Props) {
   const name = watch('name')
   const icon = watch('icon')
 
-  const [iconFile, setIconFile] = useState<File | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const previewImage = useMemo<string>(() => {
-    return iconFile ? URL.createObjectURL(iconFile) : ''
-  }, [iconFile])
+    return imageFile ? URL.createObjectURL(imageFile) : ''
+  }, [imageFile])
 
   useEffect(() => {
     if (isOpen && category) {
@@ -74,20 +73,20 @@ function EditModal({ category, isOpen, setIsOpen, handleRefetchData }: Props) {
   useEffect(() => {
     if (!isOpen) {
       previewImage && Array.from(previewImage).forEach((imageUrl) => URL.revokeObjectURL(imageUrl))
-      setIconFile(null)
+      setImageFile(null)
       reset()
     }
   }, [isOpen, previewImage, reset])
 
   const onFileChange = (file: File) => {
-    setIconFile(file)
+    setImageFile(file)
   }
 
   const onSubmit = handleSubmit(async (data) => {
     let icon: Upload | null = null
-    if (iconFile) {
+    if (imageFile) {
       const formData = new FormData()
-      formData.append('file', iconFile)
+      formData.append('file', imageFile)
       formData.append('folder', 'category')
 
       const iconData = await uploadImageMutation.mutateAsync(formData)
@@ -142,7 +141,12 @@ function EditModal({ category, isOpen, setIsOpen, handleRefetchData }: Props) {
               </div>
             </div>
 
-            <div className='col-span-3'>
+            <div className='col-span-6'>
+              <div className='text-sm font-medium'>Số lượng sản phẩm</div>
+              <Input className='mt-2' disabled value={category?.total_product} />
+            </div>
+
+            <div className='col-span-6'>
               <div className='text-sm font-medium'>Trạng thái</div>
               <Input className='mt-2' disabled value={category?.status} />
             </div>

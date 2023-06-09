@@ -2,107 +2,103 @@ import { toast } from 'react-toastify'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
-import productApi from 'src/apis/product.api'
+import categoryApi from 'src/apis/category.api'
 import uploadApi from 'src/apis/upload.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
-import InputNumber from 'src/components/InputNumber'
 import Modal from 'src/components/Modal'
 import { Category } from 'src/types/category.type'
 import { Upload } from 'src/types/upload.type'
 import {
   MAX_PRODUCT_DESCRIPTION_CHARACTERS,
   MAX_PRODUCT_NAME_CHARACTERS,
-  ProductSchema,
-  productSchema
+  CategorySchema,
+  categorySchema
 } from 'src/utils/rules'
 import InputFile from 'src/components/InputFile'
 
 interface Props {
-  categories?: Category[]
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   handleRefetchData: () => void
 }
 
-function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props) {
+function CreateModal({ isOpen, setIsOpen, handleRefetchData }: Props) {
   const uploadImageMutation = useMutation({
     mutationFn: uploadApi.upload
   })
 
-  const createProductMutation = useMutation({
-    mutationFn: productApi.createProduct
+  const createCategoryMutation = useMutation({
+    mutationFn: categoryApi.createCategory
   })
 
   const {
-    control,
     formState: { errors },
     register,
     watch,
     handleSubmit,
+    setValue,
     reset
-  } = useForm<ProductSchema>({
-    resolver: yupResolver(productSchema),
+  } = useForm<CategorySchema>({
+    resolver: yupResolver(categorySchema),
     defaultValues: {
-      category_id: '',
       description: '',
       name: '',
-      price: 0,
-      quantity: 0,
-      images: []
+      icon: {
+        height: 0,
+        width: 0,
+        id: 0,
+        url: ''
+      }
     }
   })
 
   const description = watch('description')
   const name = watch('name')
 
-  const [imageFiles, setImageFiles] = useState<FileList | null>(null)
-  const previewImages = useMemo<string[] | null>(() => {
-    if (!imageFiles || imageFiles.length === 0) return null
-
-    const filesArr = Array.from(imageFiles)
-    const urls = []
-    for (const file of filesArr) {
-      const url = URL.createObjectURL(file)
-      urls.push(url)
-    }
-
-    return urls
-  }, [imageFiles])
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const previewImage = useMemo<string>(() => {
+    return imageFile ? URL.createObjectURL(imageFile) : ''
+  }, [imageFile])
 
   useEffect(() => {
     if (!isOpen) {
-      previewImages && Array.from(previewImages).forEach((imageUrl) => URL.revokeObjectURL(imageUrl))
-      setImageFiles(null)
+      previewImage && Array.from(previewImage).forEach((imageUrl) => URL.revokeObjectURL(imageUrl))
+      setImageFile(null)
       reset()
     }
-  }, [isOpen, previewImages, reset])
+  }, [isOpen, previewImage, reset])
 
-  const onFileChange = (files: FileList) => {
-    setImageFiles(files)
+  const onFileChange = (file: File) => {
+    setImageFile(file)
   }
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!imageFiles || imageFiles.length === 0) {
+    if (!imageFile) {
       toast.error('Vui lòng tải lên hình ảnh')
       return
     }
+    let icon: Upload | null = null
 
-    const images: Upload[] = []
-    const imageFilesArray = Array.from(imageFiles)
-    for (const imageFile of imageFilesArray) {
+    if (imageFile) {
       const formData = new FormData()
       formData.append('file', imageFile)
-      formData.append('folder', 'product')
-      const imageData = await uploadImageMutation.mutateAsync(formData)
-      images.push(imageData.data.data)
+      formData.append('folder', 'category')
+
+      const iconData = await uploadImageMutation.mutateAsync(formData)
+      icon = iconData.data.data
     }
 
-    const _data = { ...data, images }
-    await createProductMutation.mutateAsync(_data)
-    toast.success('Thêm sản phẩm thành công', {
+    const _data = { ...data }
+    if (icon) {
+      _data.icon = icon
+      setValue('icon', icon)
+    }
+
+    await createCategoryMutation.mutateAsync(_data)
+    toast.success('Thêm thể loại thành công', {
       autoClose: 1000
     })
     handleRefetchData()
@@ -110,7 +106,7 @@ function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props
   })
 
   return (
-    <Modal headingTitle='Thêm sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal headingTitle='Thêm thể loại' isOpen={isOpen} setIsOpen={setIsOpen}>
       <form onSubmit={onSubmit}>
         <div className='py-4'>
           <div className='grid grid-cols-12 gap-3'>
@@ -136,59 +132,17 @@ function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props
               </div>
             </div>
 
-            <div className='col-span-6'>
-              <div className='text-sm font-medium'>Đơn giá</div>
-              <Controller
-                control={control}
-                name='price'
-                render={({ field }) => <InputNumber {...field} className='mt-2' errorMessage={errors.price?.message} />}
-              />
-            </div>
-
-            <div className='col-span-6'>
-              <div className='text-sm font-medium'>Số lượng</div>
-              <Controller
-                control={control}
-                name='quantity'
-                render={({ field }) => (
-                  <InputNumber {...field} className='mt-2' errorMessage={errors.quantity?.message} />
-                )}
-              />
-            </div>
-
-            <div className='col-span-6'>
-              <div className='text-sm font-medium'>Thể loại</div>
-              <div className='mt-2'>
-                <select
-                  className='w-full border border-gray-300 p-2 text-sm outline-none focus:border-gray-400'
-                  {...register('category_id')}
-                >
-                  <option value='' disabled>
-                    -- Thể loại --
-                  </option>
-                  {categories?.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-                <div className='min-h-[1rem] text-xs text-red-500'>{errors.category_id?.message}</div>
-              </div>
-            </div>
-
             <div className='col-span-12'>
               <InputFile title='Tải lên hình ảnh' onFileChange={onFileChange} />
 
               <div className='mt-3 flex min-h-[160px] flex-wrap items-center justify-center gap-2 rounded border px-4 py-1'>
-                {previewImages &&
-                  previewImages.length > 0 &&
-                  previewImages.map((image) => (
-                    <div key={image} className='h-[150px] w-[140px] border'>
-                      <img className='h-full w-full object-cover' src={image} alt={image} />
-                    </div>
-                  ))}
+                {previewImage && (
+                  <div key={previewImage} className='h-[150px] w-[140px] border'>
+                    <img className='h-full w-full object-cover' src={previewImage} alt='' />
+                  </div>
+                )}
 
-                {!previewImages && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
+                {!previewImage && <span className='text-sm text-gray-400'>Hình ảnh xem trước</span>}
               </div>
             </div>
           </div>
@@ -201,7 +155,7 @@ function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props
             type='button'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-pink-200 group-hover:from-pink-500 group-hover:to-orange-400 dark:text-white dark:focus:ring-pink-800'
             onClick={() => setIsOpen(false)}
-            disabled={createProductMutation.isLoading || uploadImageMutation.isLoading}
+            disabled={createCategoryMutation.isLoading || uploadImageMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
               Thoát
@@ -211,10 +165,10 @@ function CreateModal({ categories, isOpen, setIsOpen, handleRefetchData }: Props
           <Button
             type='submit'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
-            disabled={createProductMutation.isLoading || uploadImageMutation.isLoading}
+            disabled={createCategoryMutation.isLoading || uploadImageMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-              {createProductMutation.isLoading ||
+              {createCategoryMutation.isLoading ||
                 (uploadImageMutation.isLoading && (
                   <svg
                     aria-hidden='true'

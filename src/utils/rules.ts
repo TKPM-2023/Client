@@ -52,9 +52,9 @@ export const productSchema = yup.object({
   images: yup
     .array(
       yup.object({
-        url: yup.string().required(),
-        width: yup.number().required(),
-        height: yup.number().required()
+        url: yup.string(),
+        width: yup.number(),
+        height: yup.number()
       })
     )
     .required('Hình ảnh là bắt buộc')
@@ -75,10 +75,10 @@ export const categorySchema = yup.object({
     .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
   icon: yup
     .object({
-      id: yup.number().required(),
-      url: yup.string().required(),
-      width: yup.number().required(),
-      height: yup.number().required()
+      id: yup.number(),
+      url: yup.string(),
+      width: yup.number(),
+      height: yup.number()
     })
     .required('Biểu tượng là bắt buộc')
 })
