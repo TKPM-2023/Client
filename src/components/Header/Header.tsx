@@ -17,7 +17,7 @@ function Header() {
   }
 
   return (
-    <header className='z-1 sticky top-0 bg-header'>
+    <header className='top-0 z-10 bg-header'>
       <div className='container'>
         <nav className='py-1'>
           <ul className='flex items-center justify-end gap-4'>
