@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
 
-import useTitle from 'src/hooks/useTitle'
 import categoryApi from 'src/apis/category.api'
 import Table from './components/Table'
 import { Category, CategoryListConfig } from 'src/types/category.type'
@@ -13,14 +12,13 @@ import ViewModal from './components/ViewModal'
 import EditModal from './components/EditModal'
 import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
+import { Helmet } from 'react-helmet-async'
 
 export type QueryConfig = {
   [key in keyof CategoryListConfig]: string
 }
 
 function CategoryManagement() {
-  useTitle('Quản Lý Thể Loại')
-
   const queryParams = useQueryParams()
   const queryConfig: QueryConfig = omitBy(
     {
@@ -74,6 +72,10 @@ function CategoryManagement() {
   if (!categories || categories.length === 0) return null
   return (
     <div>
+      <Helmet>
+        <title>Trang Quản Trị | Quản Lí Thể Loại</title>
+        <meta name='description' content='Quản lí thể loại dành cho người quản trị' />
+      </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
         <h1 className='text-xl font-semibold capitalize text-white'>Quản lý thể loại</h1>
         <div className='px-4'>

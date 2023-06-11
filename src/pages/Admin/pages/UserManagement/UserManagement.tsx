@@ -3,13 +3,13 @@ import { useForm } from 'react-hook-form'
 
 import userRole from 'src/constants/users'
 import { User } from 'src/types/user.type'
-import useTitle from 'src/hooks/useTitle'
 import Input from 'src/components/Input'
 import Modal from 'src/components/Modal'
 import Button from 'src/components/Button'
 import images from 'src/assets/images'
 import Table from './Table'
 import classNames from 'classnames'
+import { Helmet } from 'react-helmet-async'
 
 const users: User[] = [
   {
@@ -72,8 +72,6 @@ const initialFormData: User = {
 }
 
 function UserManagement() {
-  useTitle(' Quản Lý Người Dùng')
-
   // Form id
   const formDataId: FormDataId = {
     id: useId(),
@@ -140,6 +138,10 @@ function UserManagement() {
 
   return (
     <div>
+      <Helmet>
+        <title>Trang Quản Trị | Quản Lí Người Dùng</title>
+        <meta name='description' content='Quản lí người dùng dành cho người quản trị' />
+      </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
         <div className='text-xl font-semibold capitalize text-white'>Quản lý người dùng</div>
         <div className='px-4'>

@@ -1,8 +1,15 @@
-import useTitle from 'src/hooks/useTitle'
+import { Helmet } from 'react-helmet-async'
 
 function Home() {
-  useTitle('Nón Trùm | Chuỗi Cửa Hàng Mũ Bảo Hiểm Đẹp')
-  return <div className='h-[400px]'>Home</div>
+  return (
+    <div className='h-[400px]'>
+      <Helmet>
+        <title>Nón Trùm | Trang chủ</title>
+        <meta name='description' content='Trang chủ' />
+      </Helmet>
+      Home
+    </div>
+  )
 }
 
 export default Home
