@@ -42,7 +42,7 @@ function ProductManagement() {
     queryFn: () => categoryApi.getCategories({ status: status.inStore })
   })
   const { data: productData, refetch } = useQuery({
-    queryKey: ['products', queryConfig],
+    queryKey: ['extendProducts', queryConfig],
     queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
     keepPreviousData: true
   })
@@ -57,17 +57,16 @@ function ProductManagement() {
 
   const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const categories = categoryData?.data.data
-  const products = useMemo(() => {
-    const categories = categoryData?.data.data
-    const _products = productData?.data.data
-    if (categories && _products) {
-      return _products.map((product) => {
+  const extendProducts = useMemo(() => {
+    const products = productData?.data.data
+    if (categories && products) {
+      return products.map((product) => {
         const categoryName = categories.find((category) => category.id === product.category_id)?.name as string
         return { ...product, category_name: categoryName }
       })
     }
     return []
-  }, [categoryData, productData])
+  }, [categories, productData])
 
   const handleClickViewButton = (product: Product) => {
     setIsOpenViewModal(true)
@@ -92,7 +91,7 @@ function ProductManagement() {
     refetch()
   }
 
-  if (!products || products.length === 0) return null
+  if (!extendProducts || extendProducts.length === 0) return null
   return (
     <div>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
@@ -116,7 +115,7 @@ function ProductManagement() {
       </div>
 
       <Table
-        products={products}
+        products={extendProducts}
         pageSize={pageSize}
         queryConfig={queryConfig}
         handleClickViewButton={handleClickViewButton}

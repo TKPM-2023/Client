@@ -1,6 +1,6 @@
 import axios, { HttpStatusCode } from 'axios'
 import { toast } from 'react-toastify'
-import { clearLS, getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+import { clearLS, getAccessTokenFromLS, setAccessTokenToLS } from './auth'
 import { LoginResponse } from 'src/types/auth.type'
 
 const API_URL = import.meta.env.VITE_API_URL as string
@@ -35,7 +35,7 @@ const createHttpInstance = () => {
       if (url === 'authenticate') {
         const data = response.data.data as LoginResponse
         access_token = data.access_token.token
-        saveAccessTokenToLS(access_token)
+        setAccessTokenToLS(access_token)
       }
 
       return response
