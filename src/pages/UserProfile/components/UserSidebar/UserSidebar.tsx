@@ -70,12 +70,21 @@ function UserSidebar() {
                   Thông tin chung
                 </ListItem>
               </NavLink>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Địa chỉ
-              </ListItem>
+              <NavLink
+                to={routes.userAddress}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Địa chỉ
+                </ListItem>
+              </NavLink>
               <NavLink
                 to={routes.changePassword}
                 className={({ isActive }) =>

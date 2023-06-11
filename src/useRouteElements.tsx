@@ -10,6 +10,7 @@ import MainLayout from './layouts/MainLayout'
 import UserProfile from './pages/UserProfile'
 import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
 import ChangePassword from './pages/UserProfile/pages/ChangePassword'
+import UserAddress from './pages/UserProfile/pages/UserAddress'
 //
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -59,6 +60,14 @@ function useRouteElements() {
                 {
                   path: routes.changePassword,
                   element: <ChangePassword />
+                },
+                {
+                  path: routes.userAddress,
+                  element: <UserAddress />
+                },
+                {
+                  path: routes.oders,
+                  element: <UserAddress />
                 }
               ]
             }
