@@ -1,5 +1,6 @@
-//import { Link, NavLink } from 'react-router-dom'
-//import routes from '../../../../constants/routes'
+import { NavLink } from 'react-router-dom'
+import classNames from 'classnames'
+import routes from '../../../../constants/routes'
 import React from 'react'
 import {
   Card,
@@ -53,24 +54,43 @@ function UserSidebar() {
           </ListItem>
           <AccordionBody className='py-1'>
             <List className='p-0'>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Thông tin chung
-              </ListItem>
+              <NavLink
+                to={routes.profile}
+                end={true}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Thông tin chung
+                </ListItem>
+              </NavLink>
               <ListItem>
                 <ListItemPrefix>
                   <div className='h-3 w-5'></div>
                 </ListItemPrefix>
                 Địa chỉ
               </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Đổi mật khẩu
-              </ListItem>
+              <NavLink
+                to={routes.changePassword}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Đổi mật khẩu
+                </ListItem>
+              </NavLink>
             </List>
           </AccordionBody>
         </Accordion>
