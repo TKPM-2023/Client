@@ -11,6 +11,7 @@ import UserProfile from './pages/UserProfile'
 import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
 import ChangePassword from './pages/UserProfile/pages/ChangePassword'
 import UserAddress from './pages/UserProfile/pages/UserAddress'
+import Orders from './pages/UserProfile/pages/Orders'
 //
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -67,7 +68,7 @@ function useRouteElements() {
                 },
                 {
                   path: routes.oders,
-                  element: <UserAddress />
+                  element: <Orders />
                 }
               ]
             }

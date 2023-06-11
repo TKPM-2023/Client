@@ -103,16 +103,21 @@ function UserSidebar() {
             </List>
           </AccordionBody>
         </Accordion>
-
-        <ListItem className='border-b-0 p-0 p-3'>
-          <ListItemPrefix>
-            <ShoppingBagIcon className='h-5 w-5' />
-          </ListItemPrefix>
-          <Typography color='blue-gray' className='mr-auto font-normal'>
-            Đơn mua
-          </Typography>
-        </ListItem>
-
+        <NavLink
+          to={routes.oders}
+          className={({ isActive }) =>
+            classNames('', {
+              'rounded-lg bg-gray-600 text-white': isActive
+            })
+          }
+        >
+          <ListItem className='border-b-0 p-0 p-3'>
+            <ListItemPrefix>
+              <ShoppingBagIcon className='h-5 w-5' />
+            </ListItemPrefix>
+            <Typography className='mr-auto font-normal'>Đơn mua</Typography>
+          </ListItem>
+        </NavLink>
         <ListItem>
           <ListItemPrefix>
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
