@@ -1,12 +1,14 @@
 import { Outlet } from 'react-router-dom'
 import UserSidebar from './components/UserSidebar'
-import useTitle from 'src/hooks/useTitle'
+import { Helmet } from 'react-helmet-async'
 
 function UserProfile() {
-  useTitle('Hồ sơ người dùng')
-
   return (
     <>
+      <Helmet>
+        <title>Nón Trùm | Hồ Sơ Người Dùng</title>
+        <meta name='description' content='Quản lí người dùng dành cho người quản trị' />
+      </Helmet>
       <div className='flex h-full min-h-fit w-full'>
         <div className='flex-auto'>
           <UserSidebar />
