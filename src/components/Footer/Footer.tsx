@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className='bg-neutral-200 py-16'>
+    <footer className='bg-neutral-200 relative z-10'>
       <div className='text-center text-xs text-gray-500'>
         <div>Công ty TNHH Shopee</div>
         <div className='mt-4'>
