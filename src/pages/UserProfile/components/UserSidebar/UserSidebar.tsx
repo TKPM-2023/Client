@@ -1,5 +1,6 @@
-//import { Link, NavLink } from 'react-router-dom'
-//import routes from '../../../../constants/routes'
+import { NavLink } from 'react-router-dom'
+import classNames from 'classnames'
+import routes from '../../../../constants/routes'
 import React from 'react'
 import {
   Card,
@@ -53,37 +54,70 @@ function UserSidebar() {
           </ListItem>
           <AccordionBody className='py-1'>
             <List className='p-0'>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Thông tin chung
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Địa chỉ
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <div className='h-3 w-5'></div>
-                </ListItemPrefix>
-                Đổi mật khẩu
-              </ListItem>
+              <NavLink
+                to={routes.profile}
+                end={true}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Thông tin chung
+                </ListItem>
+              </NavLink>
+              <NavLink
+                to={routes.userAddress}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Địa chỉ
+                </ListItem>
+              </NavLink>
+              <NavLink
+                to={routes.changePassword}
+                className={({ isActive }) =>
+                  classNames('', {
+                    'rounded-lg bg-gray-600 text-white': isActive
+                  })
+                }
+              >
+                <ListItem>
+                  <ListItemPrefix>
+                    <div className='h-3 w-5'></div>
+                  </ListItemPrefix>
+                  Đổi mật khẩu
+                </ListItem>
+              </NavLink>
             </List>
           </AccordionBody>
         </Accordion>
-
-        <ListItem className='border-b-0 p-0 p-3'>
-          <ListItemPrefix>
-            <ShoppingBagIcon className='h-5 w-5' />
-          </ListItemPrefix>
-          <Typography color='blue-gray' className='mr-auto font-normal'>
-            Đơn mua
-          </Typography>
-        </ListItem>
-
+        <NavLink
+          to={routes.oders}
+          className={({ isActive }) =>
+            classNames('', {
+              'rounded-lg bg-gray-600 text-white': isActive
+            })
+          }
+        >
+          <ListItem className='border-b-0 p-0 p-3'>
+            <ListItemPrefix>
+              <ShoppingBagIcon className='h-5 w-5' />
+            </ListItemPrefix>
+            <Typography className='mr-auto font-normal'>Đơn mua</Typography>
+          </ListItem>
+        </NavLink>
         <ListItem>
           <ListItemPrefix>
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
@@ -95,19 +129,27 @@ function UserSidebar() {
             <Chip value='14' size='sm' variant='ghost' color='blue-gray' className='rounded-full' />
           </ListItemSuffix>
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
-              <path
-                fillRule='evenodd'
-                d='M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z'
-                clipRule='evenodd'
-              />
-            </svg>
-          </ListItemPrefix>
-          Đánh giá
-        </ListItem>
-
+        <NavLink
+          to={routes.reviews}
+          className={({ isActive }) =>
+            classNames('', {
+              'rounded-lg bg-gray-600 text-white': isActive
+            })
+          }
+        >
+          <ListItem>
+            <ListItemPrefix>
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
+                <path
+                  fillRule='evenodd'
+                  d='M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z'
+                  clipRule='evenodd'
+                />
+              </svg>
+            </ListItemPrefix>
+            Đánh giá
+          </ListItem>
+        </NavLink>
         <ListItem>
           <ListItemPrefix>
             <PowerIcon className='h-5 w-5' />

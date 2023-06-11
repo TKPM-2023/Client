@@ -6,8 +6,14 @@ import { AppContext } from './contexts/app.context'
 
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
+// user profile
 import UserProfile from './pages/UserProfile'
 import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
+import ChangePassword from './pages/UserProfile/pages/ChangePassword'
+import UserAddress from './pages/UserProfile/pages/UserAddress'
+import Orders from './pages/UserProfile/pages/Orders'
+import Reviews from './pages/UserProfile/pages/Reviews'
+//
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -52,6 +58,22 @@ function useRouteElements() {
                 {
                   element: <GeneralInfor />,
                   index: true
+                },
+                {
+                  path: routes.changePassword,
+                  element: <ChangePassword />
+                },
+                {
+                  path: routes.userAddress,
+                  element: <UserAddress />
+                },
+                {
+                  path: routes.oders,
+                  element: <Orders />
+                },
+                {
+                  path: routes.reviews,
+                  element: <Reviews />
                 }
               ]
             }
