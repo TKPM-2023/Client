@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AppProvider from './contexts/app.context'
 import ErrorBoundary from './components/ErrorBoundary'
+import { HelmetProvider } from 'react-helmet-async'
 
 // Tắt tự động fetch api khi focus vào window
 const queryClient = new QueryClient({
@@ -23,9 +24,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AppProvider>
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
+          <HelmetProvider>
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
+          </HelmetProvider>
         </AppProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

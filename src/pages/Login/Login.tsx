@@ -12,14 +12,13 @@ import schema, { Schema } from 'src/utils/rules'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
-import useTitle from 'src/hooks/useTitle'
 import { setProfileToLS } from 'src/utils/auth'
+import { Helmet } from 'react-helmet-async'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 function Login() {
-  useTitle('Đăng nhập')
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
@@ -80,9 +79,13 @@ function Login() {
 
   return (
     <div className='grid grid-cols-1 gap-8 bg-primary px-8 py-28 lg:grid-cols-5'>
+      <Helmet>
+        <title>Nón Trùm | Đăng Nhập</title>
+        <meta name='description' content='Đăng nhập để truy cập vào Nón Trùm' />
+      </Helmet>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
         <form className='rounded bg-white px-8 py-6 shadow-md' noValidate onSubmit={onSubmit}>
-          <h3 className='text-xl'>Đăng nhập</h3>
+          <h1 className='text-xl'>Đăng nhập</h1>
 
           <div className='mt-6'>
             <Input<FormData>
