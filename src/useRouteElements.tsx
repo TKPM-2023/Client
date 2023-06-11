@@ -6,7 +6,8 @@ import { AppContext } from './contexts/app.context'
 
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
-import Profile from './components/Profile'
+import UserProfile from './pages/UserProfile'
+import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -43,7 +44,18 @@ function useRouteElements() {
         {
           path: '',
           element: <MainLayout />,
-          children: [{ path: routes.profile, element: <Profile /> }]
+          children: [
+            {
+              path: routes.profile,
+              element: <UserProfile />,
+              children: [
+                {
+                  element: <GeneralInfor />,
+                  index: true
+                }
+              ]
+            }
+          ]
         },
         {
           path: routes.admin,
