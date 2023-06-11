@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query'
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
 
-import useTitle from 'src/hooks/useTitle'
 import productApi from 'src/apis/product.api'
 import Table from './components/Table'
 import categoryApi from 'src/apis/category.api'
@@ -14,6 +13,7 @@ import ViewModal from './components/ViewModal'
 import EditModal from './components/EditModal'
 import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
+import { Helmet } from 'react-helmet-async'
 
 export interface ProductType extends Product {
   category_name: string
@@ -24,8 +24,6 @@ export type QueryConfig = {
 }
 
 function ProductManagement() {
-  useTitle(' Quản Lý Sản Phẩm')
-
   const queryParams = useQueryParams()
   const queryConfig: QueryConfig = omitBy(
     {
@@ -42,7 +40,7 @@ function ProductManagement() {
     queryFn: () => categoryApi.getCategories({ status: status.inStore })
   })
   const { data: productData, refetch } = useQuery({
-    queryKey: ['products', queryConfig],
+    queryKey: ['extendProducts', queryConfig],
     queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
     keepPreviousData: true
   })
@@ -57,17 +55,16 @@ function ProductManagement() {
 
   const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const categories = categoryData?.data.data
-  const products = useMemo(() => {
-    const categories = categoryData?.data.data
-    const _products = productData?.data.data
-    if (categories && _products) {
-      return _products.map((product) => {
+  const extendProducts = useMemo(() => {
+    const products = productData?.data.data
+    if (categories && products) {
+      return products.map((product) => {
         const categoryName = categories.find((category) => category.id === product.category_id)?.name as string
         return { ...product, category_name: categoryName }
       })
     }
     return []
-  }, [categoryData, productData])
+  }, [categories, productData])
 
   const handleClickViewButton = (product: Product) => {
     setIsOpenViewModal(true)
@@ -92,9 +89,13 @@ function ProductManagement() {
     refetch()
   }
 
-  if (!products || products.length === 0) return null
+  if (!extendProducts || extendProducts.length === 0) return null
   return (
     <div>
+      <Helmet>
+        <title>Trang Quản Trị | Quản Lí Sản Phẩm</title>
+        <meta name='description' content='Quản lí sản phẩm dành cho người quản trị' />
+      </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
         <h1 className='text-xl font-semibold capitalize text-white'>Quản lý sản phẩm</h1>
         <div className='px-4'>
@@ -116,7 +117,7 @@ function ProductManagement() {
       </div>
 
       <Table
-        products={products}
+        products={extendProducts}
         pageSize={pageSize}
         queryConfig={queryConfig}
         handleClickViewButton={handleClickViewButton}

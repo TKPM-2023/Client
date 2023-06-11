@@ -10,12 +10,11 @@ import authApi from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import schema, { Schema } from 'src/utils/rules'
 import { ErrorResponse } from 'src/types/utils.type'
-import useTitle from 'src/hooks/useTitle'
+import { Helmet } from 'react-helmet-async'
 
 type FormData = Pick<Schema, 'email' | 'first_name' | 'last_name' | 'password' | 'confirm_password'>
 
 function Register() {
-  useTitle('Đăng ký')
   const navigate = useNavigate()
 
   const {
@@ -61,9 +60,13 @@ function Register() {
 
   return (
     <div className='grid grid-cols-1 gap-8 bg-primary px-8 py-28 lg:grid-cols-5'>
+      <Helmet>
+        <title>Nón Trùm | Đăng Ký</title>
+        <meta name='description' content='Đăng ký tài khoản để sử dụng Nón Trùm' />
+      </Helmet>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
         <form className='rounded bg-white px-8 py-6 shadow-md' noValidate onSubmit={onSubmit}>
-          <h3 className='text-xl'>Đăng ký</h3>
+          <h1 className='text-xl'>Đăng ký</h1>
 
           <div className='mt-6'>
             <Input<FormData>
