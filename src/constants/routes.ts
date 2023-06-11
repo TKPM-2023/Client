@@ -7,7 +7,7 @@ const routes = {
   userAddress: '/profile/user-address',
   oders: '/profile/oders',
   carts: '/profile/carts',
-  previews: '/profile/previews',
+  reviews: '/profile/reviews',
   admin: '/admin',
   manageUsers: '/admin/manage-users',
   manageCategories: '/admin/manage-categories',

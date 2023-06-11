@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardBody, Typography, Button } from '@material-tailwind/react'
 
-function UserAddress() {
+function Orders() {
   return (
     <>
       <div className='bg-gray-300 p-16 pt-6'>
@@ -56,4 +56,4 @@ function UserAddress() {
   )
 }
 
-export default UserAddress
+export default Orders
