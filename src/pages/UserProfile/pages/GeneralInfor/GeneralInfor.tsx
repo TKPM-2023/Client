@@ -1,4 +1,80 @@
+import { useQuery } from '@tanstack/react-query'
+import { useState, useEffect, ChangeEvent } from 'react'
+import { Spinner } from '@material-tailwind/react'
+import EditInfor from './components/EditInfor'
+import authApi from 'src/apis/auth.api'
+import SomethingWrong from 'src/components/SomethingWrong'
+
+function formatDate(dateString: string | undefined) {
+  if (dateString) {
+    const date = new Date(dateString)
+
+    const day = String(date.getDate()).padStart(2, '0')
+
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+
+    const year = String(date.getFullYear())
+
+    return `${day}/${month}/${year}`
+  }
+}
+
+const defaultAvatar =
+  'https://secure.gravatar.com/avatar/16e53ab164d51b98d92eef41468cf71b/?s=48&d=https://images.binaryfortress.com/General/UnknownUser1024.png'
+
 function GeneralInfor() {
+  const abortController = new AbortController()
+  const signal = abortController.signal
+  const [isErrorLoading, setIsErrorLoading] = useState<boolean>(false)
+  const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+
+  const {
+    data: UserData,
+    isLoading,
+    isSuccess,
+    refetch
+  } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: () => authApi.getProfile({ signal }),
+    keepPreviousData: true
+  })
+
+  const userProfileData = UserData?.data.data
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (file) {
+      setSelectedImage(file)
+      const imageUrl = URL.createObjectURL(file)
+      setPreviewImage(imageUrl)
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsErrorLoading(true)
+    }, 5000)
+  }, [isErrorLoading])
+
+  const handleRefetchData = () => {
+    refetch()
+    setIsErrorLoading(false)
+  }
+
+  if (isLoading || !isSuccess) {
+    if (!isErrorLoading)
+      return (
+        <div className='flex h-full items-center justify-center bg-gray-300 p-16 pt-6'>
+          <Spinner className='h-12 w-12' />
+        </div>
+      )
+    else {
+      return <SomethingWrong handleRefetchData={handleRefetchData} />
+    }
+  }
+
   return (
     <>
       <div className='bg-gray-300 p-16 pt-6'>
@@ -27,15 +103,12 @@ function GeneralInfor() {
                 className='group absolute inset-x-0 top-0 mx-auto -mt-24 flex h-48 w-48 cursor-pointer items-center justify-center rounded-full bg-indigo-100 text-indigo-500 shadow-2xl hover:bg-gray-200'
                 htmlFor='file-upload'
               >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='block h-24 w-24 w-full transform opacity-100 transition duration-500 ease-in-out group-hover:opacity-50'
-                  viewBox='0 0 20 20'
-                  fill='currentColor'
-                >
-                  {' '}
-                  <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd' />
-                </svg>{' '}
+                <img
+                  src={previewImage ? previewImage : defaultAvatar}
+                  alt='Preview'
+                  className='block h-full w-full transform rounded-full object-cover opacity-100 transition duration-500 ease-in-out group-hover:opacity-50 '
+                />
+
                 <div className='absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 text-center transition duration-500 ease-in-out group-hover:block'>
                   <div className='text text-xl font-semibold text-gray-900'>
                     Thay ảnh{' '}
@@ -55,7 +128,13 @@ function GeneralInfor() {
                     </svg>
                   </div>{' '}
                 </div>
-                <input className='hidden h-1 w-1' id='file-upload' type='file' accept='image/*' />
+                <input
+                  className='hidden h-1 w-1'
+                  id='file-upload'
+                  type='file'
+                  accept='image/*'
+                  onChange={handleImageChange}
+                />
               </label>{' '}
             </div>{' '}
             <div className='mt-32 flex justify-between space-x-8 md:mt-0 md:justify-center'>
@@ -69,78 +148,14 @@ function GeneralInfor() {
               </button>{' '}
             </div>{' '}
           </div>{' '}
-          <div className='mt-20 border-b text-center'>
+          <div className='mt-20 text-center'>
             {' '}
-            <h1 className='text-4xl font-medium text-gray-700'>Ở đây chỉ là test</h1>{' '}
-            <p className='mt-3 font-light text-gray-600'>Tham gia vào 27/5/2023</p>{' '}
-            <div className='mt-8 flex justify-center text-start text-gray-500'>
-              <form className='w-4/5'>
-                <div className='mb-0 grid gap-6 md:grid-cols-2'>
-                  <div>
-                    <label
-                      htmlFor='first_name'
-                      className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'
-                    >
-                      Họ và tên lót
-                    </label>
-                    <input
-                      type='text'
-                      id='first_name'
-                      className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                      placeholder='John'
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor='last_name' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
-                      Tên
-                    </label>
-                    <input
-                      type='text'
-                      id='last_name'
-                      className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                      placeholder='Doe'
-                      required
-                    />
-                  </div>
-                  <div className='mb-6'>
-                    <label htmlFor='email' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
-                      Email
-                    </label>
-                    <input
-                      type='email'
-                      id='email'
-                      className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                      placeholder='john.doe@company.com'
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor='phone' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
-                      Số điện thoại
-                    </label>
-                    <input
-                      type='tel'
-                      id='phone'
-                      className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                      placeholder='123-45-678'
-                      pattern='[0-9]{3}-[0-9]{2}-[0-9]{3}'
-                      required
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>{' '}
+            <h1 className='text-4xl font-medium text-gray-700'>
+              {userProfileData?.first_name} {userProfileData?.last_name}
+            </h1>{' '}
+            <p className='mt-3 font-light text-gray-600'>Tham gia vào {formatDate(userProfileData?.created_at)}</p>{' '}
+            <EditInfor userProfileData={userProfileData} handleRefetchData={handleRefetchData} />
           </div>{' '}
-          <div className='mt-6 flex justify-center'>
-            {' '}
-            <button
-              type='submit'
-              className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto'
-            >
-              Lưu thay đổi
-            </button>
-          </div>
         </div>
       </div>
     </>
