@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios'
+import axios from 'axios'
 import { toast } from 'react-toastify'
 import { clearLS, getAccessTokenFromLS, setAccessTokenToLS } from './auth'
 import { LoginResponse } from 'src/types/auth.type'

@@ -46,8 +46,8 @@ class ErrorBoundary extends Component<Props, State> {
                 </svg>
               </div>
             </div>
-            <h1 className='mt-5 text-[36px] font-bold text-slate-800 lg:text-[50px]'>500 - Server error</h1>
-            <p className='mt-5 text-slate-600 lg:text-lg'>
+            <h1 className='mt-5 text-[36px] font-bold text-gray-800 lg:text-[50px]'>500 - Server error</h1>
+            <p className='mt-5 text-gray-800 lg:text-lg'>
               Oops something went wrong. Try to refresh this page or <br /> feel free to contact us if the problem
               presists.
             </p>
