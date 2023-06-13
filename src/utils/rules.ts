@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-const schema = yup
+export const userSchema = yup
   .object({
     email: yup
       .string()
@@ -20,11 +20,12 @@ const schema = yup
       .required('Nhập lại mật khẩu là bắt buộc')
       .oneOf([yup.ref('password')], 'Mật khẩu nhập lại không khớp')
       .min(8, 'Độ dài từ 8 - 160 ký tự')
-      .max(160, 'Độ dài từ 8 - 160 ký tự')
+      .max(160, 'Độ dài từ 8 - 160 ký tự'),
+    phone: yup.string().required('Số điện thoại là bắt buộc').max(20, 'Tối đa 20 kí tự'),
+    role: yup.string().oneOf(['user', 'admin'], 'Vai trò là bắt buộc')
   })
   .required()
-export type Schema = yup.InferType<typeof schema>
-export default schema
+export type UserSchema = yup.InferType<typeof userSchema>
 
 export const MAX_PRODUCT_NAME_CHARACTERS = 60
 export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 120
@@ -32,10 +33,12 @@ export const productSchema = yup.object({
   name: yup
     .string()
     .required('Tên là bắt buộc')
+    .min(5, 'Độ dài tối thiểu là 5 ký tự')
     .max(MAX_PRODUCT_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_NAME_CHARACTERS} ký tự`),
   description: yup
     .string()
     .required('Mô tả là bắt buộc')
+    .min(5, 'Độ dài tối thiểu là 5 ký tự')
     .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
   quantity: yup
     .number()
@@ -62,17 +65,19 @@ export const productSchema = yup.object({
 
 export type ProductSchema = yup.InferType<typeof productSchema>
 
-export const MAX_CATEGORY_NAME_CHARACTERS = 60
-export const MAX_CATEGORY_DESCRIPTION_CHARACTERS = 120
+export const MAX_CATEGORY_NAME_CHARACTERS = 600
+export const MAX_CATEGORY_DESCRIPTION_CHARACTERS = 1200
 export const categorySchema = yup.object({
   name: yup
     .string()
     .required('Tên là bắt buộc')
-    .max(MAX_PRODUCT_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_NAME_CHARACTERS} ký tự`),
+    .min(5, 'Độ dài tối thiểu là 5 ký tự')
+    .max(MAX_CATEGORY_NAME_CHARACTERS, `Độ dài tối đa là ${MAX_CATEGORY_NAME_CHARACTERS} ký tự`),
   description: yup
     .string()
     .required('Mô tả là bắt buộc')
-    .max(MAX_PRODUCT_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_PRODUCT_DESCRIPTION_CHARACTERS} ký tự`),
+    .min(5, 'Độ dài tối thiểu là 5 ký tự')
+    .max(MAX_CATEGORY_DESCRIPTION_CHARACTERS, `Độ dài tối đa là ${MAX_CATEGORY_DESCRIPTION_CHARACTERS} ký tự`),
   icon: yup
     .object({
       id: yup.number(),

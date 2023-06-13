@@ -126,7 +126,7 @@ function Sidebar() {
 
       <Link
         to={routes.home}
-        className='bg-slate-600 text-dark hover:bg-slate-500 mb-12 mt-auto flex items-center justify-center gap-1 rounded px-3 py-2 text-sm font-medium capitalize shadow-sm transition-colors duration-200 dark:bg-white dark:text-black dark:hover:bg-white/80'
+        className='mb-12 mt-auto flex items-center justify-center gap-1 rounded bg-cyan-600 px-3 py-2 text-sm font-medium capitalize text-white shadow-sm transition-colors duration-200 hover:bg-cyan-700 dark:bg-white dark:text-black dark:hover:bg-white/80'
       >
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-4 w-4'>
           <path d='M9.195 18.44c1.25.713 2.805-.19 2.805-1.629v-2.34l6.945 3.968c1.25.714 2.805-.188 2.805-1.628V8.688c0-1.44-1.555-2.342-2.805-1.628L12 11.03v-2.34c0-1.44-1.555-2.343-2.805-1.629l-7.108 4.062c-1.26.72-1.26 2.536 0 3.256l7.108 4.061z' />

@@ -8,11 +8,11 @@ import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import authApi from 'src/apis/auth.api'
 import { isAxiosBadRequestError } from 'src/utils/utils'
-import schema, { Schema } from 'src/utils/rules'
+import { userSchema, UserSchema } from 'src/utils/rules'
 import { ErrorResponse } from 'src/types/utils.type'
 import { Helmet } from 'react-helmet-async'
 
-type FormData = Pick<Schema, 'email' | 'first_name' | 'last_name' | 'password' | 'confirm_password'>
+type FormData = Pick<UserSchema, 'email' | 'first_name' | 'last_name' | 'password' | 'confirm_password'>
 
 function Register() {
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ function Register() {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(userSchema)
   })
 
   const registerMutation = useMutation({

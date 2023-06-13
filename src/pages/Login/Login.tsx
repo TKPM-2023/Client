@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -8,15 +8,15 @@ import routes from 'src/constants/routes'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import authApi from 'src/apis/auth.api'
-import schema, { Schema } from 'src/utils/rules'
+import { userSchema, UserSchema } from 'src/utils/rules'
 import { isAxiosBadRequestError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import { setProfileToLS } from 'src/utils/auth'
 import { Helmet } from 'react-helmet-async'
 
-type FormData = Pick<Schema, 'email' | 'password'>
-const loginSchema = schema.pick(['email', 'password'])
+type FormData = Pick<UserSchema, 'email' | 'password'>
+const loginSchema = userSchema.pick(['email', 'password'])
 
 function Login() {
   const queryClient = useQueryClient()
@@ -88,7 +88,7 @@ function Login() {
           <h1 className='text-xl'>Đăng nhập</h1>
 
           <div className='mt-6'>
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='email'
               name='email'
@@ -96,7 +96,7 @@ function Login() {
               register={register}
               errorMessage={errors.email?.message}
             />
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='password'
               name='password'
