@@ -1,4 +1,4 @@
-export type User = {
+export interface User {
   id: string
   status: number
   created_at: string
@@ -13,6 +13,27 @@ export type User = {
   first_name: string
   phone: string
   role: 'user' | 'admin'
+}
+
+export interface UserList {
+  data: User[]
+  paging: {
+    page: number
+    limit: number
+    total: number
+    cursor?: string
+    next_cursor?: string
+  }
+  filter: {
+    status?: number
+  }
+}
+
+export interface UserListConfig {
+  limit?: number | string
+  status?: number | string
+  cursor?: string
+  page?: number | string
 }
 
 export type Profile = Pick<

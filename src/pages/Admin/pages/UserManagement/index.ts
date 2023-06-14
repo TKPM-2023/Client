@@ -1,3 +1,3 @@
-import UserManagement from './UserManagement'
+import ProductManagement from './UserManagement'
 
-export default UserManagement
+export default ProductManagement

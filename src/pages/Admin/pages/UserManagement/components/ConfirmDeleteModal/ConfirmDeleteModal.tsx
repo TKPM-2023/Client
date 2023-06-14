@@ -1,29 +1,29 @@
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
 
-import productApi from 'src/apis/product.api'
+import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
 import Modal from 'src/components/Modal'
-import { Product } from 'src/types/product.type'
+import { User } from 'src/types/user.type'
 
 interface Props {
-  product: Product | null
+  user: User | null
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   handleRefetchData: () => void
 }
 
-function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: Props) {
-  const deleteProductMutation = useMutation({
-    mutationFn: productApi.deleteProduct
+function ConfirmDeleteModal({ user, isOpen, setIsOpen, handleRefetchData }: Props) {
+  const deleteUserMutation = useMutation({
+    mutationFn: userApi.deleteUser
   })
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    deleteProductMutation.mutate(product?.id as string, {
+    deleteUserMutation.mutate(user?.id as string, {
       onSuccess: () => {
-        toast.success('Xóa sản phẩm thành công', {
+        toast.success('Xóa người dùng thành công', {
           autoClose: 1000
         })
         handleRefetchData()
@@ -33,7 +33,7 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
   }
 
   return (
-    <Modal size='sm' headingTitle='Xóa sản phẩm' isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal size='sm' headingTitle='Xóa người dùng' isOpen={isOpen} setIsOpen={setIsOpen}>
       <form onSubmit={onSubmit}>
         <div className='py-6'>
           <div className='flex items-center justify-center'>
@@ -53,9 +53,9 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
             </svg>
           </div>
           <div className='mt-3 text-center font-medium leading-6'>
-            Bạn có chắc chắn muốn xóa sản phẩm
+            Bạn có chắc chắn muốn xóa người dùng
             <br />
-            <span className='font-bold'> {product?.name} </span>?
+            <span className='font-bold'> {user?.email} </span>?
           </div>
         </div>
 
@@ -75,10 +75,10 @@ function ConfirmDeleteModal({ product, isOpen, setIsOpen, handleRefetchData }: P
           <Button
             type='submit'
             className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
-            disabled={deleteProductMutation.isLoading}
+            disabled={deleteUserMutation.isLoading}
           >
             <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-              {deleteProductMutation.isLoading && (
+              {deleteUserMutation.isLoading && (
                 <svg
                   aria-hidden='true'
                   role='status'

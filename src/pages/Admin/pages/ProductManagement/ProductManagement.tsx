@@ -40,8 +40,8 @@ function ProductManagement() {
     queryFn: () => categoryApi.getCategories({ status: status.inStore })
   })
   const { data: productData, refetch } = useQuery({
-    queryKey: ['extendProducts', queryConfig],
-    queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
+    queryKey: ['products', queryConfig],
+    queryFn: () => productApi.getProducts(queryConfig),
     keepPreviousData: true
   })
 
@@ -89,7 +89,7 @@ function ProductManagement() {
     refetch()
   }
 
-  if (!extendProducts || extendProducts.length === 0) return null
+  if (!extendProducts || extendProducts.length === 0 || !categories || categories.length === 0) return null
   return (
     <div>
       <Helmet>
