@@ -16,4 +16,6 @@ export const formatNumber = (num: number) => {
   return Intl.NumberFormat('en-DE').format(num)
 }
 
-export const renderRole = (userRole: 'user' | 'admin') => (userRole === 'admin' ? 'Quản trị' : 'Người dùng')
+export const renderRole = (role: 'user' | 'admin') => (role === 'admin' ? 'Quản trị' : 'Người dùng')
+
+export const renderStatus = (status: 1 | 0) => (status === 1 ? 'Tồn tại' : 'Đã xóa')

@@ -1,6 +1,8 @@
+import { StatusParams } from './utils.type'
+
 export interface User {
   id: string
-  status: number
+  status: StatusParams
   created_at: string
   updated_at: string
   email: string
@@ -22,13 +24,14 @@ export interface UserList {
     next_cursor?: string
   }
   filter: {
-    status?: number
+    status?: StatusParams
   }
 }
 
 export interface UserListConfig {
   limit?: number | string
   status?: number | string
+  role?: string
   cursor?: string
   page?: number | string
 }

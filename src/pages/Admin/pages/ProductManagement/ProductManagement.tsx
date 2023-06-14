@@ -14,6 +14,7 @@ import EditModal from './components/EditModal'
 import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import { Helmet } from 'react-helmet-async'
+import Filter from '../../components/Filter'
 
 export interface ProductType extends Product {
   category_name: string
@@ -29,7 +30,7 @@ function ProductManagement() {
     {
       page: queryParams.page || '1',
       limit: queryParams.limit || '5',
-      status: queryParams.status || '1',
+      status: queryParams.status || String(status.inStore),
       category_id: queryParams.category_id
     },
     isUndefined
@@ -115,6 +116,8 @@ function ProductManagement() {
           </button>
         </div>
       </div>
+
+      <Filter queryConfig={queryConfig} />
 
       <Table
         products={extendProducts}

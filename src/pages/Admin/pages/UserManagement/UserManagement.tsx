@@ -12,6 +12,8 @@ import ViewModal from './components/ViewModal'
 import EditModal from './components/EditModal'
 import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
+import Filter from '../../components/Filter'
+import status from 'src/constants/status'
 
 export type QueryConfig = {
   [key in keyof UserListConfig]: string
@@ -22,8 +24,9 @@ function UserManagement() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || '5',
-      status: queryParams.status || '1'
+      limit: queryParams.limit || '2',
+      status: queryParams.status || String(status.inStore),
+      role: queryParams.role || ''
     },
     isUndefined
   )
@@ -94,6 +97,8 @@ function UserManagement() {
           </button>
         </div>
       </div>
+
+      <Filter queryConfig={queryConfig} hasRoleFilter={true} />
 
       <Table
         users={users}

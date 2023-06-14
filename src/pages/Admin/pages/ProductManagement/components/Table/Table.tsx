@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { formatDate, formatNumber } from 'src/utils/utils'
+import { formatDate, formatNumber, renderStatus } from 'src/utils/utils'
 import { ProductType, QueryConfig } from '../../ProductManagement'
 import Pagination from 'src/components/Pagination'
 import routes from 'src/constants/routes'
@@ -47,6 +47,9 @@ function Table({
                 Thể loại
               </th>
               <th scope='col' className='px-4 py-3'>
+                Trạng thái
+              </th>
+              <th scope='col' className='px-4 py-3'>
                 Ngày tạo
               </th>
               <th scope='col' className='px-4 py-3'>
@@ -71,6 +74,7 @@ function Table({
                   <td className='px-4 py-2'>{formatNumber(product.price)}</td>
                   <td className='px-4 py-2'>{formatNumber(product.quantity)}</td>
                   <td className='px-4 py-2'>{product.category_name}</td>
+                  <td className='px-4 py-2'>{renderStatus(product.status)}</td>
                   <td className='px-4 py-2'>{formatDate(product.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>

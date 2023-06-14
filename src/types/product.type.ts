@@ -1,8 +1,9 @@
 import { Upload } from './upload.type'
+import { StatusParams } from './utils.type'
 
 export type Product = {
   id: string
-  status: number
+  status: StatusParams
   created_at: string
   updated_at: string
   name: string
@@ -24,7 +25,7 @@ export type ProductList = {
     next_cursor?: string
   }
   filter: {
-    status?: number
+    status?: StatusParams
     category_id?: string
     page?: number | string
   }

@@ -13,6 +13,7 @@ import EditModal from './components/EditModal'
 import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import { Helmet } from 'react-helmet-async'
+import Filter from '../../components/Filter'
 
 export type QueryConfig = {
   [key in keyof CategoryListConfig]: string
@@ -24,7 +25,7 @@ function CategoryManagement() {
     {
       page: queryParams.page || '1',
       limit: queryParams.limit || '5',
-      status: queryParams.status || status.inStore
+      status: queryParams.status || String(status.inStore)
     },
     isUndefined
   )
@@ -95,6 +96,8 @@ function CategoryManagement() {
           </button>
         </div>
       </div>
+
+      <Filter queryConfig={queryConfig} />
 
       <Table
         categories={categories}

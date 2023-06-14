@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { formatDate, renderRole } from 'src/utils/utils'
+import { formatDate, renderRole, renderStatus } from 'src/utils/utils'
 import { QueryConfig } from '../../UserManagement'
 import Pagination from 'src/components/Pagination'
 import routes from 'src/constants/routes'
@@ -71,7 +71,7 @@ function Table({
                   <td className='px-4 py-2'>{user.email}</td>
                   <td className='px-4 py-2'>{user.first_name + ' ' + user.last_name}</td>
                   <td className='px-4 py-2'>{renderRole(user.role)}</td>
-                  <td className='px-4 py-2'>{user.status}</td>
+                  <td className='px-4 py-2'>{renderStatus(user.status)}</td>
                   <td className='px-4 py-2'>{formatDate(user.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>

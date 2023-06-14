@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { createSearchParams } from 'react-router-dom'
 import routes from 'src/constants/routes'
 import Pagination from 'src/components/Pagination'
-import { formatDate } from 'src/utils/utils'
+import { formatDate, renderStatus } from 'src/utils/utils'
 import { Category } from 'src/types/category.type'
 import { QueryConfig } from '../../CategoryManagement'
 
@@ -42,7 +42,7 @@ function Table({
                 Mô tả
               </th>
               <th scope='col' className='px-4 py-3'>
-                Số lượng sản phẩm
+                Số lượng
               </th>
               <th scope='col' className='px-4 py-3'>
                 Biểu tượng
@@ -81,7 +81,7 @@ function Table({
                       className='h-8 w-8 rounded-full border object-cover'
                     />
                   </td>
-                  <td className='px-4 py-2'>{category.status}</td>
+                  <td className='px-4 py-2'>{renderStatus(category.status)}</td>
                   <td className='px-4 py-2'>{formatDate(category.created_at)}</td>
                   <td className='px-4 py-2'>
                     <div className='flex items-center gap-2'>
