@@ -1,7 +1,7 @@
 import { User, UserList, UserListConfig } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
-import { UserSchema } from 'src/utils/rules'
+import { UserSchema, ProfileSchema } from 'src/utils/rules'
 
 const URL = 'admin/users'
 
@@ -17,7 +17,7 @@ const userApi = {
   ) => {
     return http.post<SuccessResponse<string>>(URL, body)
   },
-  updateUser: (id: string | undefined, body: UserSchema) => {
+  updateUser: (id: string | undefined, body: ProfileSchema) => {
     return http.patch<SuccessResponse<boolean>>(`${URL}/${id}`, body)
   },
   changePassword: (id: string | undefined, body: { password: string; new_password: string }) => {
