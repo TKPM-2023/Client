@@ -6,14 +6,14 @@ import userApi from 'src/apis/user.api'
 import uploadApi from 'src/apis/upload.api'
 import { Profile } from 'src/types/user.type'
 import { useEffect, useMemo } from 'react'
-import { userSchema, UserSchema } from 'src/utils/rules'
+import { profileSchema, ProfileSchema } from 'src/utils/rules'
 interface EditInforProps {
   userProfileData: Profile | undefined
   selectedImage: File | null
   handleRefetchData: () => void
 }
 
-function isNoChangeInfor(oldInfor: UserSchema, newInfor: UserSchema) {
+function isNoChangeInfor(oldInfor: ProfileSchema, newInfor: ProfileSchema) {
   return (
     oldInfor.first_name === newInfor.first_name &&
     oldInfor.email === newInfor.email &&
@@ -27,7 +27,7 @@ function EditInfor({ userProfileData, selectedImage, handleRefetchData }: EditIn
     mutationFn: uploadApi.upload
   })
   const updateUserProfileMutation = useMutation({
-    mutationFn: (body: UserSchema) => userApi.updateUser(userProfileData?.id, body),
+    mutationFn: (body: ProfileSchema) => userApi.updateUser(userProfileData?.id, body),
     onMutate(variables) {
       variables.email = variables.email === userProfileData?.email ? '' : variables.email
     },
@@ -44,7 +44,7 @@ function EditInfor({ userProfileData, selectedImage, handleRefetchData }: EditIn
       phone: userProfileData?.phone
     },
 
-    validationSchema: userSchema,
+    validationSchema: profileSchema,
 
     onSubmit: async (newInfor) => {
       if (selectedImage) {
