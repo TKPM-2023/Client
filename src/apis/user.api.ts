@@ -20,7 +20,7 @@ const userApi = {
   updateUser: (id: string | undefined, body: ProfileSchema) => {
     return http.patch<SuccessResponse<boolean>>(`${URL}/${id}`, body)
   },
-  changePassword: (id: string | undefined, body: { password: string; new_password: string }) => {
+  changePassword: (id: string, body: { password: string; new_password: string }) => {
     return http.patch<SuccessResponse<boolean>>(`${URL}/${id}/password`, body)
   },
   deleteUser: (id: string) => {
