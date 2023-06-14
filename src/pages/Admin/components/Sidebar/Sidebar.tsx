@@ -4,7 +4,7 @@ import routes from 'src/constants/routes'
 
 function Sidebar() {
   return (
-    <nav className='flex h-screen min-w-[14rem] shrink-0 flex-col overflow-hidden border px-4'>
+    <nav className='flex h-full min-w-[14rem] shrink-0 flex-col overflow-hidden border px-4'>
       <h1 className='text-sn py-6 text-center font-semibold uppercase'>Trang quản trị</h1>
 
       <div className='h-[1px] bg-gray-200'></div>
