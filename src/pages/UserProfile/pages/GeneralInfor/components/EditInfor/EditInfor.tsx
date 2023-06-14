@@ -1,29 +1,79 @@
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import { Spinner } from '@material-tailwind/react'
+import { toast } from 'react-toastify'
+import { useMutation } from '@tanstack/react-query'
+import userApi from 'src/apis/user.api'
+import uploadApi from 'src/apis/upload.api'
 import { Profile } from 'src/types/user.type'
-
+import { useEffect, useMemo } from 'react'
+import { userSchema, UserSchema } from 'src/utils/rules'
 interface EditInforProps {
   userProfileData: Profile | undefined
+  selectedImage: File | null
   handleRefetchData: () => void
 }
 
-function EditInfor({ userProfileData, handleRefetchData }: EditInforProps) {
+function isNoChangeInfor(oldInfor: UserSchema, newInfor: UserSchema) {
+  return (
+    oldInfor.first_name === newInfor.first_name &&
+    oldInfor.email === newInfor.email &&
+    oldInfor.phone === newInfor.phone &&
+    oldInfor.last_name === newInfor.last_name
+  )
+}
+
+function EditInfor({ userProfileData, selectedImage, handleRefetchData }: EditInforProps) {
+  const uploadImageMutation = useMutation({
+    mutationFn: uploadApi.upload
+  })
+  const updateUserProfileMutation = useMutation({
+    mutationFn: (body: UserSchema) => userApi.updateUser(userProfileData?.id, body),
+    onMutate(variables) {
+      variables.email = variables.email === userProfileData?.email ? '' : variables.email
+    },
+    onSuccess: () => {
+      toast.success('Cập nhật thông tin thành công')
+    }
+  })
+
   const formik = useFormik({
     initialValues: {
-      ...userProfileData
+      first_name: userProfileData?.first_name,
+      last_name: userProfileData?.last_name,
+      email: userProfileData?.email,
+      phone: userProfileData?.phone
     },
 
-    validationSchema: Yup.object({
-      firt_name: Yup.string().min(3, 'Name with at least 3 character'),
-      email: Yup.string().required('Please fill in the email address field'),
-      phone: Yup.string().required('Please fill in the phone field')
-    }),
+    validationSchema: userSchema,
 
-    onSubmit: (newInfor) => {
-      console.log(newInfor)
+    onSubmit: async (newInfor) => {
+      if (selectedImage) {
+        const formData = new FormData()
+        formData.append('file', selectedImage as File)
+        formData.append('folder', 'avatar')
+        const imageData = await uploadImageMutation.mutateAsync(formData)
+        const { cloud_name, ...rest } = imageData.data.data
+        await updateUserProfileMutation.mutateAsync({ ...newInfor, avatar: { ...rest } })
+      } else await updateUserProfileMutation.mutateAsync(newInfor)
       handleRefetchData()
     }
   })
+  const isSimilarInfor = useMemo(() => {
+    if (isNoChangeInfor(formik.values, { ...userProfileData }) && !selectedImage) {
+      return true
+    } else return false
+  }, [formik.values, selectedImage])
+
+  useEffect(() => {
+    if (userProfileData) {
+      formik.setValues({
+        first_name: userProfileData.first_name || '',
+        last_name: userProfileData.last_name || '',
+        email: userProfileData.email || '',
+        phone: userProfileData.phone || ''
+      })
+    }
+  }, [userProfileData, updateUserProfileMutation.isSuccess])
 
   return (
     <>
@@ -83,7 +133,6 @@ function EditInfor({ userProfileData, handleRefetchData }: EditInforProps) {
                 className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                 value={formik.values.phone}
                 onChange={formik.handleChange}
-                //pattern='[0-9]{3}-[0-9]{2}-[0-9]{3}'
                 required
               />
             </div>
@@ -95,9 +144,12 @@ function EditInfor({ userProfileData, handleRefetchData }: EditInforProps) {
         <button
           type='submit'
           form='edit-user-form'
-          className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto'
+          disabled={isSimilarInfor}
+          className={`w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto ${
+            isSimilarInfor ? 'pointer-events-none bg-gray-500' : ''
+          }`}
         >
-          Lưu thay đổi
+          {updateUserProfileMutation.isLoading ? <Spinner /> : 'Lưu thay đổi'}
         </button>
       </div>
     </>

@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect, ChangeEvent } from 'react'
 import { Spinner } from '@material-tailwind/react'
+import config from 'src/constants/config'
 import EditInfor from './components/EditInfor'
 import authApi from 'src/apis/auth.api'
 import SomethingWrong from 'src/components/SomethingWrong'
+import { toast } from 'react-toastify'
 
 function formatDate(dateString: string | undefined) {
   if (dateString) {
@@ -41,22 +43,27 @@ function GeneralInfor() {
   })
 
   const userProfileData = UserData?.data.data
+  const userAvatar: string = userProfileData?.avatar ? userProfileData.avatar.url : defaultAvatar
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
-    if (file) {
+    if (file && file.size <= config.maxSizeUploadAvatar) {
       setSelectedImage(file)
       const imageUrl = URL.createObjectURL(file)
       setPreviewImage(imageUrl)
+    } else {
+      toast.error('Dung lượng tải lên tối đa 1MB')
     }
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsErrorLoading(true)
-    }, 5000)
-  }, [isErrorLoading])
+    if (!isSuccess) {
+      setTimeout(() => {
+        setIsErrorLoading(true)
+      }, 5000)
+    }
+  }, [isErrorLoading, isSuccess])
 
   const handleRefetchData = () => {
     refetch()
@@ -104,7 +111,7 @@ function GeneralInfor() {
                 htmlFor='file-upload'
               >
                 <img
-                  src={previewImage ? previewImage : defaultAvatar}
+                  src={previewImage ? previewImage : userAvatar}
                   alt='Preview'
                   className='block h-full w-full transform rounded-full object-cover opacity-100 transition duration-500 ease-in-out group-hover:opacity-50 '
                 />
@@ -142,9 +149,12 @@ function GeneralInfor() {
                 {' '}
                 Kết nối
               </button>{' '}
-              <button className='transform rounded bg-red-700 px-4 py-2 font-medium uppercase text-white shadow transition hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-lg'>
+              <button
+                onClick={handleRefetchData}
+                className='transform rounded bg-red-700 px-4 py-2 font-medium uppercase text-white shadow transition hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-lg'
+              >
                 {' '}
-                Xóa Tài khoản
+                Hủy thay đổi
               </button>{' '}
             </div>{' '}
           </div>{' '}
@@ -154,7 +164,11 @@ function GeneralInfor() {
               {userProfileData?.first_name} {userProfileData?.last_name}
             </h1>{' '}
             <p className='mt-3 font-light text-gray-600'>Tham gia vào {formatDate(userProfileData?.created_at)}</p>{' '}
-            <EditInfor userProfileData={userProfileData} handleRefetchData={handleRefetchData} />
+            <EditInfor
+              userProfileData={userProfileData}
+              handleRefetchData={handleRefetchData}
+              selectedImage={selectedImage}
+            />
           </div>{' '}
         </div>
       </div>
