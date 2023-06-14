@@ -1,9 +1,10 @@
 import { Product } from './product.type'
 import { Upload } from './upload.type'
+import { StatusParams } from './utils.type'
 
 export interface Category {
   id: string
-  status: number
+  status: StatusParams
   created_at: string
   updated_at: string
   name: string
@@ -23,7 +24,7 @@ export interface CategoryList {
     next_cursor?: string
   }
   filter: {
-    status?: number
+    status?: StatusParams
   }
 }
 
