@@ -43,3 +43,9 @@ export type Profile = Pick<
   User,
   'id' | 'created_at' | 'email' | 'first_name' | 'last_name' | 'phone' | 'role' | 'status' | 'updated_at' | 'avatar'
 >
+
+export type AddressType = {
+  name: string
+  phone: string
+  address: string
+}
