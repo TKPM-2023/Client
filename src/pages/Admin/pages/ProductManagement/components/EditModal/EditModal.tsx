@@ -108,7 +108,6 @@ function EditModal({ product, categories, isOpen, setIsOpen, handleRefetchData }
         const formData = new FormData()
         formData.append('file', imageFile)
         formData.append('folder', 'product')
-
         const imageData = await uploadImageMutation.mutateAsync(formData)
         images.push(imageData.data.data)
       }

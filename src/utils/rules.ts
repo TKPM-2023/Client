@@ -89,3 +89,21 @@ export const categorySchema = yup.object({
 })
 
 export type CategorySchema = yup.InferType<typeof categorySchema>
+
+export const userSchema = yup.object({
+  first_name: yup.string().required('Tên là bắt buộc').optional(),
+  last_name: yup.string().required('Mô tả là bắt buộc').optional(),
+  email: yup.string().required('Mô tả là bắt buộc').email().optional(),
+  phone: yup.string().optional(),
+  role: yup.string().optional(),
+  avatar: yup
+    .object({
+      id: yup.number(),
+      url: yup.string(),
+      width: yup.number(),
+      height: yup.number()
+    })
+    .optional()
+})
+
+export type UserSchema = yup.InferType<typeof userSchema>
