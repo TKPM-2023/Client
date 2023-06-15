@@ -1,5 +1,18 @@
 import { Upload } from './upload.type'
 import { StatusParams } from './utils.type'
+import { User } from './user.type'
+
+export type RatingType = {
+  id: string
+  status: StatusParams
+  created_at: string
+  updated_at: string
+  point: number
+  comment: string
+  user_id: string
+  product_id: string
+  User: User
+}
 
 export type Product = {
   id: string
@@ -13,6 +26,7 @@ export type Product = {
   images?: Upload[]
   total_rating?: number
   category_id: string
+  ratings?: RatingType[]
 }
 
 export type ProductList = {
