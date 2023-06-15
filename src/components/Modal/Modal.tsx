@@ -47,7 +47,7 @@ function Modal({ size, headingTitle, children, isOpen, setIsOpen }: Props) {
 
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay className='flex items-center justify-center bg-black/80' lockScroll>
+          <FloatingOverlay className='z-10 flex items-center justify-center bg-black/80' lockScroll>
             <FloatingFocusManager context={context}>
               <div
                 className='m-4 max-h-[calc(100vh-40px)] min-h-[200px] overflow-auto overflow-x-hidden rounded-md bg-white'
