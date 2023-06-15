@@ -1,11 +1,16 @@
 import { Card, CardHeader, CardBody, Typography, Button, CardFooter, Rating } from '@material-tailwind/react'
-import { Product } from 'src/types/product.type'
+import Pagination from 'src/components/Pagination'
+import { Product, ProductListConfig } from 'src/types/product.type'
+import routes from 'src/constants/routes'
+import { createSearchParams } from 'react-router-dom'
 
 interface ListProductProps {
   products: Product[]
+  productQueryConfig: ProductListConfig
+  pageSize: number
 }
 
-function ListProduct({ products }: ListProductProps) {
+function ListProduct({ products, productQueryConfig, pageSize }: ListProductProps) {
   return (
     <div className='ml-16 flex flex-wrap items-center gap-x-8 gap-y-6'>
       {products?.map((product) => (
@@ -42,6 +47,16 @@ function ListProduct({ products }: ListProductProps) {
           </CardFooter>
         </Card>
       ))}
+      <div className='flex w-full justify-center'>
+        <Pagination
+          pageSize={pageSize}
+          queryConfig={productQueryConfig}
+          to={(page: number) => ({
+            pathname: routes.home,
+            search: createSearchParams({ page: page.toString() }).toString()
+          })}
+        />
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Typography } from '@material-tailwind/react'
 import { useQuery } from '@tanstack/react-query'
+import useQueryParams from 'src/hooks/useQueryParams'
 
 import HomeCarousel from './components/HomeCarousel'
 import HomeCategory from './components/HomeCategory'
@@ -13,33 +14,31 @@ import { Category, CategoryListConfig } from 'src/types/category.type'
 import { Product, ProductListConfig } from 'src/types/product.type'
 
 function Home() {
+  const queryParams = useQueryParams()
   const categoryQueryConfig: CategoryListConfig = {
     limit: '10'
   }
   const productQueryConfig: ProductListConfig = {
     status: String(status.inStore),
-    limit: '12'
+    limit: '8',
+    page: queryParams.page || '1'
   }
 
-  const { data: categoryData, refetch: refetchCategory } = useQuery({
+  const { data: categoryData } = useQuery({
     queryKey: ['categories', categoryQueryConfig],
     queryFn: () => categoryApi.getCategories(categoryQueryConfig),
     keepPreviousData: true
   })
 
-  const { data: productData, refetch: refetchProduct } = useQuery({
+  const { data: productData } = useQuery({
     queryKey: ['products', productQueryConfig],
     queryFn: () => productApi.getProducts(productQueryConfig),
     keepPreviousData: true
   })
 
+  const pageSize = productData ? Math.ceil(productData.data.paging.total / productData.data.paging.limit) : 1
   const categories = categoryData?.data.data
   const products = productData?.data.data
-
-  const handlefecth = () => {
-    refetchCategory()
-    refetchProduct()
-  }
 
   return (
     <>
@@ -61,7 +60,7 @@ function Home() {
             </Typography>
           </div>
           <div>
-            <ListProduct products={products as Product[]} />
+            <ListProduct products={products as Product[]} productQueryConfig={productQueryConfig} pageSize={pageSize} />
           </div>
         </div>
       </div>
