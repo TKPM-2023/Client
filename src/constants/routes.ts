@@ -11,7 +11,9 @@ const routes = {
   admin: '/admin',
   manageUsers: '/admin/manage-users',
   manageCategories: '/admin/manage-categories',
-  manageProducts: '/admin/manage-products'
+  manageProducts: '/admin/manage-products',
+  detailProduct: '/product/:id',
+  categoryApi: '/category/:id'
 } as const
 
 export default routes

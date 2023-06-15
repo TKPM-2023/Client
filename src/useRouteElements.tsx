@@ -22,6 +22,7 @@ import Dashboard from './pages/Admin/components/Dashboard'
 import UserManagement from './pages/Admin/pages/UserManagement'
 import ProductManagement from './pages/Admin/pages/ProductManagement'
 import CategoryManagement from './pages/Admin/pages/CategoryManagement'
+import DetailProduct from './pages/DetailProduct'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute() {
@@ -41,7 +42,10 @@ function useRouteElements() {
     {
       path: '',
       element: <MainLayout />,
-      children: [{ path: routes.home, element: <Home /> }]
+      children: [
+        { path: routes.home, element: <Home /> },
+        { path: routes.detailProduct, element: <DetailProduct /> }
+      ]
     },
     {
       path: '',

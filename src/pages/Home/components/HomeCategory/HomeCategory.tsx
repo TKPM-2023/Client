@@ -10,7 +10,7 @@ function HomeCategory({ categories }: HomeCategoryProps) {
   return (
     <div className='mb-8 mt-6 flex justify-center gap-14'>
       {categories?.map((category) => (
-        <Link to={`/product/detail/${category.id}`} key={category.id}>
+        <Link to={`/category/${category.id}`} key={category.id}>
           <Card className='h-[72px] w-[72px] p-4'>
             <Avatar src={category.icon?.url} alt='avatar' variant='rounded' className='h-full w-full object-fill' />
           </Card>
