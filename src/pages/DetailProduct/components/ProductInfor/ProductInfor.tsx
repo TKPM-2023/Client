@@ -1,47 +1,106 @@
-import { Card, CardHeader, CardBody, Typography, Button, Rating } from '@material-tailwind/react'
+import { Card, CardHeader, CardBody, Typography, Button, Rating, Dialog, DialogBody } from '@material-tailwind/react'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { Product } from 'src/types/product.type'
 import { useState } from 'react'
+import useCalAveragePoint from 'src/hooks/useCalAveragePoint'
 
-const MAX = 10
+interface Props {
+  product: Product
+}
 
-function ProductInfor() {
+function ProductInfor({ product }: Props) {
+  const calAveragePoint = useCalAveragePoint(product)
   const [quantityOrder, setQuantityOrder] = useState<number>(1)
+  const [open, setOpen] = useState(false)
+
+  const handleOpen = () => setOpen((cur) => !cur)
 
   const handlePlusButton = () => {
-    if (quantityOrder < MAX) setQuantityOrder(quantityOrder + 1)
-    else setQuantityOrder(MAX)
+    if (quantityOrder < product.quantity) setQuantityOrder(quantityOrder + 1)
+    else setQuantityOrder(product.quantity)
   }
 
   const handleMinusButton = () => {
     if (quantityOrder > 2) setQuantityOrder(quantityOrder - 1)
     else setQuantityOrder(1)
   }
+  if (!product)
+    return (
+      <div>
+        <div role='status' className='mx-12 animate-pulse space-y-8 md:flex md:items-center md:space-x-8 md:space-y-0'>
+          <Card className='w-full flex-row'>
+            <CardHeader shadow={false} floated={false} className='m-0 h-[377px] w-[377px] shrink-0 rounded-r-none'>
+              <Card className='cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
+                <div className='flex h-[377px] w-[377px] items-center justify-center rounded bg-gray-500 dark:bg-gray-700'>
+                  <svg
+                    className='h-12 w-12 text-gray-200'
+                    xmlns='http://www.w3.org/2000/svg'
+                    aria-hidden='true'
+                    fill='currentColor'
+                    viewBox='0 0 640 512'
+                  >
+                    <path d='M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z' />
+                  </svg>
+                </div>
+              </Card>
+            </CardHeader>
+            <CardBody>
+              <Typography variant='h5' color='blue-gray' className='mb-2 font-medium'>
+                <div className='mb-4 h-[28px] w-[490px] bg-gray-500 dark:bg-gray-700'></div>
+              </Typography>
+              <div className='flex items-center justify-start'>
+                <div className='mb-4 h-[23px] w-[390px] bg-gray-500 dark:bg-gray-700'></div>
+              </div>
+              <div className='mb-4 h-[66px] w-[490px] bg-gray-500 dark:bg-gray-700'></div>
+              <Typography color='black' className='mb-2 border-t border-gray-300 pt-2 font-normal'>
+                <div className='mb-4 h-[20px] w-[70px] bg-gray-500 dark:bg-gray-700'></div>
+              </Typography>
+              <div className='mb-4 h-[38px] w-[340px] bg-gray-500 dark:bg-gray-700'></div>
+              <hr className='mb-6 mt-4 border-gray-300'></hr>
+              <div className='mx-8 flex justify-center gap-4'>
+                <div className='mb-4 h-[50px] w-[200px] bg-gray-500 dark:bg-gray-700'></div>
+                <div className='mb-4 h-[50px] w-[200px] bg-gray-500 dark:bg-gray-700'></div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+    )
 
   return (
     <>
       <div className='flex w-full gap-4'>
         <Card className='w-full flex-row'>
           <CardHeader shadow={false} floated={false} className='m-0 w-2/5 shrink-0 rounded-r-none'>
-            <img
-              src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80'
-              alt=''
-              className='h-full w-full object-fill'
-            />
+            <Card className='cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
+              <img src={product.images ? product.images[0].url : ''} alt='' className='h-full w-full object-fill' />
+            </Card>
+            <Dialog size='xl' open={open} handler={handleOpen}>
+              <DialogBody divider={true} className='p-0'>
+                <img
+                  alt='nature'
+                  className='h-[40rem] w-full object-none object-center'
+                  src={product.images ? product.images[0].url : ''}
+                />
+              </DialogBody>
+            </Dialog>
           </CardHeader>
           <CardBody>
             <Typography variant='h5' color='blue-gray' className='mb-2 font-medium'>
-              Lyft launching cross-platform service
+              {product.name}
             </Typography>
             <div className='flex items-center justify-start'>
               <div className='mr-3 border-r-2 border-gray-700 pr-2'>
-                <Rating value={4} readonly unratedColor='red' ratedColor='red' />
+                <Rating value={calAveragePoint ? calAveragePoint : 0} readonly unratedColor='red' ratedColor='red' />
               </div>
               <Typography variant='small' color='gray' className='font-normal opacity-75'>
-                Số lượng: 10
+                Số lượng: {product.quantity}
               </Typography>
             </div>
             <div className='my-4 flex w-[490px] items-end rounded bg-gray-200 px-2 py-3 md:px-3 md:py-5'>
-              <div className='mr-2 text-xl font-medium text-black md:text-xl'>8.500.000 VNĐ</div>
+              <div className='mr-2 text-xl font-medium text-black md:text-xl'>
+                {product.price.toLocaleString('vi-VN')} VNĐ
+              </div>
             </div>
             <Typography color='black' className='mb-2 border-t border-gray-300 pt-2 font-normal'>
               Số lượng
@@ -117,7 +176,7 @@ function ProductInfor() {
       <div className='m-auto max-w-7xl px-4 md:p-0'>
         <h1 className='mt-5 text-base font-medium md:text-2xl'>Thông tin sản phẩm</h1>
         <div>
-          <p className='whitespace-pre-wrap'>Đang cập nhật</p>
+          <p className='mt-2 whitespace-pre-wrap'>{product.description}</p>
         </div>
       </div>
     </>

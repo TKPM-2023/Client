@@ -3,6 +3,7 @@ import Pagination from 'src/components/Pagination'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import routes from 'src/constants/routes'
 import { createSearchParams, Link } from 'react-router-dom'
+import useCalAveragePoint from 'src/hooks/useCalAveragePoint'
 
 interface ListProductProps {
   products: Product[]
@@ -11,6 +12,9 @@ interface ListProductProps {
 }
 
 function ListProduct({ products, productQueryConfig, pageSize }: ListProductProps) {
+  const CalAveragePoint = (product: Product) => {
+    return useCalAveragePoint(product)
+  }
   return (
     <div className='ml-16 flex flex-wrap items-center gap-x-8 gap-y-6'>
       {products?.map((product) => (
@@ -26,7 +30,12 @@ function ListProduct({ products, productQueryConfig, pageSize }: ListProductProp
             </div>
             <div className='flex items-center justify-between'>
               <div className='border-r-2 border-gray-700 pr-2'>
-                <Rating value={product.total_rating} readonly unratedColor='red' ratedColor='red' />
+                <Rating
+                  value={CalAveragePoint(product) ? CalAveragePoint(product) : 0}
+                  readonly
+                  unratedColor='red'
+                  ratedColor='red'
+                />
               </div>
               <Typography variant='small' color='gray' className='font-normal opacity-75'>
                 Số lượng: {product.quantity}
@@ -37,7 +46,7 @@ function ListProduct({ products, productQueryConfig, pageSize }: ListProductProp
             </Typography>
           </CardBody>
           <CardFooter className='pt-0'>
-            <Link to={`/product/${product.id}`}>
+            <Link to={`/product/${product.category_id}-${product.id}`}>
               <Button
                 ripple={false}
                 fullWidth={true}

@@ -6,7 +6,7 @@ export interface User {
   created_at: string
   updated_at: string
   email: string
-  password: string
+  password?: string
   avatar: {
     url: string
     id: number
