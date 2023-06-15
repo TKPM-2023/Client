@@ -208,7 +208,11 @@ function Header() {
                 }
               >
                 <div className='w-6'>
-                  <img src={images.avatar} alt='avatar' className='w-full rounded-full object-cover' />
+                  <img
+                    src={profile?.avatar.url ? profile.avatar.url : images.avatar}
+                    alt='avatar'
+                    className='w-full rounded-full object-cover'
+                  />
                 </div>
                 <span>{profile?.first_name + ' ' + profile?.last_name}</span>
               </Popover>
