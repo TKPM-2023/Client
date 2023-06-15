@@ -2,7 +2,7 @@ import { Card, CardHeader, CardBody, Typography, Button, CardFooter, Rating } fr
 import Pagination from 'src/components/Pagination'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import routes from 'src/constants/routes'
-import { createSearchParams } from 'react-router-dom'
+import { createSearchParams, Link } from 'react-router-dom'
 
 interface ListProductProps {
   products: Product[]
@@ -37,13 +37,15 @@ function ListProduct({ products, productQueryConfig, pageSize }: ListProductProp
             </Typography>
           </CardBody>
           <CardFooter className='pt-0'>
-            <Button
-              ripple={false}
-              fullWidth={true}
-              className='bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100'
-            >
-              Thêm vào giỏ
-            </Button>
+            <Link to={`/product/${product.id}`}>
+              <Button
+                ripple={false}
+                fullWidth={true}
+                className='bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100'
+              >
+                Thêm vào giỏ
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       ))}
