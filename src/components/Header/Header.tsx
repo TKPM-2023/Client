@@ -209,7 +209,7 @@ function Header() {
               >
                 <div className='w-6'>
                   <img
-                    src={profile?.avatar.url ? profile.avatar.url : images.avatar}
+                    src={profile?.avatar?.url ? profile.avatar.url : images.avatar}
                     alt='avatar'
                     className='w-full rounded-full object-cover'
                   />
