@@ -8,7 +8,7 @@ import { AppContext } from 'src/contexts/app.context'
 import { clearLS } from 'src/utils/auth'
 
 function Header() {
-  const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
+  const { setIsAuthenticated, profile, setProfile } = useContext(AppContext)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -50,7 +50,11 @@ function Header() {
             ref={refs.setReference}
             {...getReferenceProps()}
           >
-            <img className='h-full w-full object-cover' src={images.avatar} alt='Your avatar' />
+            <img
+              className='h-full w-full object-cover'
+              src={profile?.avatar?.url ? profile.avatar.url : images.avatar}
+              alt={profile?.email || 'Your avatar'}
+            />
           </button>
           <AnimatePresence>
             {isOpen && (
