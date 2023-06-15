@@ -2,6 +2,7 @@ import { offset, useClick, useDismiss, useFloating, useInteractions } from '@flo
 import { AnimatePresence, motion } from 'framer-motion'
 import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
+import images from 'src/assets/images'
 import routes from 'src/constants/routes'
 import { AppContext } from 'src/contexts/app.context'
 import { clearLS } from 'src/utils/auth'
@@ -49,11 +50,7 @@ function Header() {
             ref={refs.setReference}
             {...getReferenceProps()}
           >
-            <img
-              className='h-full w-full object-cover'
-              src='https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=296&q=80'
-              alt='Your avatar'
-            />
+            <img className='h-full w-full object-cover' src={images.avatar} alt='Your avatar' />
           </button>
           <AnimatePresence>
             {isOpen && (
