@@ -59,7 +59,7 @@ function Home() {
               Tất cả sản phẩm
             </Typography>
           </div>
-          <div>
+          <div className='ml-16'>
             <ListProduct products={products as Product[]} productQueryConfig={productQueryConfig} pageSize={pageSize} />
           </div>
         </div>
