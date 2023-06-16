@@ -40,6 +40,7 @@ function SimilarProduct({ category, handleRefetchData }: Props) {
         <div className='ml-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-6'>
           {category?.products
             ?.filter((item) => item.id !== id?.split('-')[1])
+            .slice(0, 4)
             .map((product) => (
               <Card className='h-fit w-64' key={product.id}>
                 <CardHeader shadow={false} floated={false} className='h-48'>

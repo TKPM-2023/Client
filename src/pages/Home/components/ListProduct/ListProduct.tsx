@@ -7,18 +7,24 @@ import useCalAveragePoint from 'src/hooks/useCalAveragePoint'
 
 interface ListProductProps {
   products: Product[]
-  productQueryConfig: ProductListConfig
-  pageSize: number
+  productQueryConfig?: ProductListConfig
+  pageSize?: number
+  customSizeCard?: {
+    width: string
+    gapX: string
+  }
 }
 
-function ListProduct({ products, productQueryConfig, pageSize }: ListProductProps) {
+function ListProduct({ products, productQueryConfig, pageSize, customSizeCard }: ListProductProps) {
   const CalAveragePoint = (product: Product) => {
     return useCalAveragePoint(product)
   }
   return (
-    <div className='ml-16 flex flex-wrap items-center gap-x-8 gap-y-6'>
+    <div
+      className={`flex flex-wrap items-center ${customSizeCard ? `gap-x-${customSizeCard.gapX}` : 'gap-x-8'} gap-y-6`}
+    >
       {products?.map((product) => (
-        <Card className='h-fit w-64' key={product.id}>
+        <Card className={`h-fit ${customSizeCard ? `w-${customSizeCard.width}` : 'w-64'}`} key={product.id}>
           <CardHeader shadow={false} floated={false} className='h-48'>
             <img src={product.images ? product.images[0].url : ''} className='h-full w-full object-fill' alt='' />
           </CardHeader>
@@ -58,16 +64,18 @@ function ListProduct({ products, productQueryConfig, pageSize }: ListProductProp
           </CardFooter>
         </Card>
       ))}
-      <div className='flex w-full justify-center'>
-        <Pagination
-          pageSize={pageSize}
-          queryConfig={productQueryConfig}
-          to={(page: number) => ({
-            pathname: routes.home,
-            search: createSearchParams({ page: page.toString() }).toString()
-          })}
-        />
-      </div>
+      {pageSize && productQueryConfig && (
+        <div className='flex w-full justify-center'>
+          <Pagination
+            pageSize={pageSize}
+            queryConfig={productQueryConfig}
+            to={(page: number) => ({
+              pathname: routes.home,
+              search: createSearchParams({ page: page.toString() }).toString()
+            })}
+          />
+        </div>
+      )}
     </div>
   )
 }

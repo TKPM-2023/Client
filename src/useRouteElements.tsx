@@ -23,6 +23,7 @@ import UserManagement from './pages/Admin/pages/UserManagement'
 import ProductManagement from './pages/Admin/pages/ProductManagement'
 import CategoryManagement from './pages/Admin/pages/CategoryManagement'
 import DetailProduct from './pages/DetailProduct'
+import DetailCategory from './pages/DetailCategory'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute() {
@@ -44,7 +45,8 @@ function useRouteElements() {
       element: <MainLayout />,
       children: [
         { path: routes.home, element: <Home /> },
-        { path: routes.detailProduct, element: <DetailProduct /> }
+        { path: routes.detailProduct, element: <DetailProduct /> },
+        { path: routes.detailCategory, element: <DetailCategory /> }
       ]
     },
     {

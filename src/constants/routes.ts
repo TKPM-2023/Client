@@ -13,7 +13,7 @@ const routes = {
   manageCategories: '/admin/manage-categories',
   manageProducts: '/admin/manage-products',
   detailProduct: '/product/:id',
-  categoryApi: '/category/:id'
+  detailCategory: '/category/:categoryId'
 } as const
 
 export default routes
