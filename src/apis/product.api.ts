@@ -4,6 +4,7 @@ import http from 'src/utils/http'
 import { ProductSchema } from 'src/utils/rules'
 
 const URL = 'admin/products'
+const URL_USER = '/products'
 
 const productApi = {
   getProducts: (params: ProductListConfig, signal?: AbortSignal) => {
@@ -20,6 +21,12 @@ const productApi = {
   },
   deleteProduct: (id: string) => {
     return http.delete<SuccessResponse<boolean>>(`${URL}/${id}`)
+  },
+  getProductsFromUser: (params: ProductListConfig, signal?: AbortSignal) => {
+    return http.get<ProductList>(URL_USER, { params, signal })
+  },
+  getProductDetailFromUser: (id: string) => {
+    return http.get<SuccessResponse<Product>>(`${URL_USER}/${id}`)
   }
 }
 

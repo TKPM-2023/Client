@@ -6,6 +6,7 @@ import EditInfor from './components/EditInfor'
 import authApi from 'src/apis/auth.api'
 import SomethingWrong from 'src/components/SomethingWrong'
 import { toast } from 'react-toastify'
+import images from 'src/assets/images'
 
 function formatDate(dateString: string | undefined) {
   if (dateString) {
@@ -20,9 +21,6 @@ function formatDate(dateString: string | undefined) {
     return `${day}/${month}/${year}`
   }
 }
-
-const defaultAvatar =
-  'https://secure.gravatar.com/avatar/16e53ab164d51b98d92eef41468cf71b/?s=48&d=https://images.binaryfortress.com/General/UnknownUser1024.png'
 
 function GeneralInfor() {
   const abortController = new AbortController()
@@ -43,7 +41,8 @@ function GeneralInfor() {
   })
 
   const userProfileData = UserData?.data.data
-  const userAvatar: string = userProfileData?.avatar ? userProfileData.avatar.url : defaultAvatar
+  const userAvatar =
+    userProfileData?.avatar.url !== '' && userProfileData?.avatar ? userProfileData.avatar.url : images.avatar
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

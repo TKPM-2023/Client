@@ -1,6 +1,6 @@
-import { Typography, Button, IconButton, Badge } from '@material-tailwind/react'
+import { Button, IconButton, Badge } from '@material-tailwind/react'
 import { ShoppingCartIcon, HomeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import classNames from 'classnames'
 import routes from 'src/constants/routes'
 
@@ -46,28 +46,35 @@ function HeaderNavList() {
         to={routes.home}
         className={({ isActive }) =>
           classNames('', {
-            'rounded-full bg-cyan-100': isActive
+            'text-deep-purple-500': isActive
           })
         }
       >
-        <Button variant='text' color='blue-gray' className='flex items-center gap-0'>
-          <HomeIcon className='h-6 w-6' />
-          <Typography variant='small' color='blue-gray' className='p-1 font-normal'>
-            Trang chủ
-          </Typography>
+        <Button variant='text' color='blue-gray' className='flex items-center gap-3 text-inherit'>
+          <div className='text-inherit'>
+            <HomeIcon className='h-6 w-6' />
+          </div>
+          <div className='text-inherit'>Trang chủ</div>
         </Button>
       </NavLink>
 
-      <Link to='/' className=''>
-        <Button variant='text' color='blue-gray' className='flex items-center gap-3'>
-          <Badge content='5'>
-            <ShoppingCartIcon className='h-6 w-6' />
+      <NavLink
+        to={routes.cart}
+        className={({ isActive }) =>
+          classNames('', {
+            'text-deep-purple-500': isActive
+          })
+        }
+      >
+        <Button variant='text' color='blue-gray' className='flex items-center gap-3 text-inherit'>
+          <Badge overlap={'square'} content={5}>
+            <div>
+              <ShoppingCartIcon className='h-6 w-6 text-inherit' />
+            </div>
           </Badge>
-          <Typography variant='small' color='blue-gray' className='p-1 font-normal'>
-            giỏ hàng
-          </Typography>
+          <div className='text-inherit'>Giỏ hàng</div>
         </Button>
-      </Link>
+      </NavLink>
     </ul>
   )
 }

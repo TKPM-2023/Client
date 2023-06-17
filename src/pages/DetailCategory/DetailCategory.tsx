@@ -15,6 +15,11 @@ const customSizeCard = {
 }
 
 function DetailCategory() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
   const { categoryId } = useParams()
   const [open, setOpen] = useState(false)
   const [isDefaultSort, setIsDefaultSort] = useState<boolean>(true)
@@ -26,7 +31,7 @@ function DetailCategory() {
 
   const { data: categoryData } = useQuery({
     queryKey: ['categoryDetail', categoryId],
-    queryFn: () => categoryApi.getCategoryDetail(categoryId as string)
+    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
   })
 
   const categoryDetail = categoryData?.data.data

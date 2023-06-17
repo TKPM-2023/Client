@@ -23,7 +23,7 @@ function DetailProduct() {
 
   const { data: productData, refetch } = useQuery({
     queryKey: ['productDetail', id],
-    queryFn: () => productApi.getProductDetail(productId as string),
+    queryFn: () => productApi.getProductDetailFromUser(productId as string),
     keepPreviousData: true
   })
 
@@ -31,7 +31,7 @@ function DetailProduct() {
 
   const { data: categoryData } = useQuery({
     queryKey: ['categoryDetail'],
-    queryFn: () => categoryApi.getCategoryDetail(categoryId as string)
+    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
   })
 
   const categoryDetail = categoryData?.data.data
