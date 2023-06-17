@@ -104,7 +104,7 @@ function UserSidebar() {
           </AccordionBody>
         </Accordion>
         <NavLink
-          to={routes.oders}
+          to={routes.userOrders}
           className={({ isActive }) =>
             classNames('', {
               'rounded-lg bg-gray-600 text-white': isActive

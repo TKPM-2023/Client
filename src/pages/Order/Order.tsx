@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet-async'
+import SumaryOrder from './components/SumaryOrder'
+import OrderInfor from './components/OrderInfo'
 
-import ListProductInCart from './components/ListProductInCart'
-import SumaryChosen from './components/SumaryChosen'
-
-function Cart() {
+function Order() {
   return (
     <>
       <div className='h-full bg-gray-100 py-10'>
@@ -13,9 +12,8 @@ function Cart() {
         </Helmet>
         <div className='container h-full '>
           <div className='flex w-full gap-4'>
-            <ListProductInCart />
-
-            <SumaryChosen />
+            <OrderInfor />
+            <SumaryOrder />
           </div>
         </div>
       </div>
@@ -23,4 +21,4 @@ function Cart() {
   )
 }
 
-export default Cart
+export default Order

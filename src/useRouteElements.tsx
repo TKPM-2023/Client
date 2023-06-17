@@ -11,7 +11,7 @@ import UserProfile from './pages/UserProfile'
 import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
 import ChangePassword from './pages/UserProfile/pages/ChangePassword'
 import UserAddress from './pages/UserProfile/pages/UserAddress'
-import Orders from './pages/UserProfile/pages/Orders'
+import UserOrders from './pages/UserProfile/pages/Orders'
 import Reviews from './pages/UserProfile/pages/Reviews'
 //
 import Home from './pages/Home'
@@ -25,6 +25,7 @@ import CategoryManagement from './pages/Admin/pages/CategoryManagement'
 import DetailProduct from './pages/DetailProduct'
 import DetailCategory from './pages/DetailCategory'
 import Cart from './pages/Cart'
+import Order from './pages/Order'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute() {
@@ -75,8 +76,8 @@ function useRouteElements() {
                   element: <UserAddress />
                 },
                 {
-                  path: routes.oders,
-                  element: <Orders />
+                  path: routes.userOrders,
+                  element: <UserOrders />
                 },
                 {
                   path: routes.reviews,
@@ -84,7 +85,8 @@ function useRouteElements() {
                 }
               ]
             },
-            { path: routes.cart, element: <Cart /> }
+            { path: routes.cart, element: <Cart /> },
+            { path: routes.order, element: <Order /> }
           ]
         },
         {

@@ -1,6 +1,6 @@
 import { Card, CardBody, Input } from '@material-tailwind/react'
 
-function SumaryOrder() {
+function SumaryChosen() {
   return (
     <>
       <div className='flex w-96 flex-col gap-4'>
@@ -84,4 +84,4 @@ function SumaryOrder() {
   )
 }
 
-export default SumaryOrder
+export default SumaryChosen

@@ -42,55 +42,37 @@ function HeaderNavList() {
           <MagnifyingGlassIcon className='h-6 w-6'></MagnifyingGlassIcon>
         </IconButton>
       </form>
-      <NavLink to={routes.home}>
-        <Button variant='text' color='blue-gray' className='flex items-center gap-3'>
-          <NavLink
-            to={routes.home}
-            className={({ isActive }) =>
-              classNames('', {
-                'text-purple-500': isActive
-              })
-            }
-          >
+      <NavLink
+        to={routes.home}
+        className={({ isActive }) =>
+          classNames('', {
+            'text-deep-purple-500': isActive
+          })
+        }
+      >
+        <Button variant='text' color='blue-gray' className='flex items-center gap-3 text-inherit'>
+          <div className='text-inherit'>
             <HomeIcon className='h-6 w-6' />
-          </NavLink>
-          <NavLink
-            to={routes.home}
-            className={({ isActive }) =>
-              classNames('', {
-                'text-purple-500': isActive
-              })
-            }
-          >
-            Trang chủ
-          </NavLink>
+          </div>
+          <div className='text-inherit'>Trang chủ</div>
         </Button>
       </NavLink>
 
-      <NavLink to={routes.cart}>
-        <Button variant='text' color='blue-gray' className='flex items-center gap-3'>
-          <Badge content='5'>
-            <NavLink
-              to={routes.cart}
-              className={({ isActive }) =>
-                classNames('', {
-                  'text-purple-500': isActive
-                })
-              }
-            >
-              <ShoppingCartIcon className='h-6 w-6' />
-            </NavLink>
+      <NavLink
+        to={routes.cart}
+        className={({ isActive }) =>
+          classNames('', {
+            'text-deep-purple-500': isActive
+          })
+        }
+      >
+        <Button variant='text' color='blue-gray' className='flex items-center gap-3 text-inherit'>
+          <Badge overlap={'square'} content={5}>
+            <div>
+              <ShoppingCartIcon className='h-6 w-6 text-inherit' />
+            </div>
           </Badge>
-          <NavLink
-            to={routes.cart}
-            className={({ isActive }) =>
-              classNames('', {
-                'text-purple-500': isActive
-              })
-            }
-          >
-            Giỏ hàng
-          </NavLink>
+          <div className='text-inherit'>Giỏ hàng</div>
         </Button>
       </NavLink>
     </ul>
