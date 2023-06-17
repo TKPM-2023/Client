@@ -26,13 +26,13 @@ function Home() {
 
   const { data: categoryData } = useQuery({
     queryKey: ['categories', categoryQueryConfig],
-    queryFn: () => categoryApi.getCategories(categoryQueryConfig),
+    queryFn: () => categoryApi.getCategoriesFromUser(categoryQueryConfig),
     keepPreviousData: true
   })
 
   const { data: productData } = useQuery({
     queryKey: ['products', productQueryConfig],
-    queryFn: () => productApi.getProducts(productQueryConfig),
+    queryFn: () => productApi.getProductsFromUser(productQueryConfig),
     keepPreviousData: true
   })
 

@@ -4,6 +4,7 @@ import http from 'src/utils/http'
 import { CategorySchema } from 'src/utils/rules'
 
 const URL = 'admin/categories'
+const URL_USER = 'categories'
 
 const categoryApi = {
   getCategories: (params: CategoryListConfig) => {
@@ -20,6 +21,12 @@ const categoryApi = {
   },
   deleteCategory: (id: string) => {
     return http.delete<SuccessResponse<boolean>>(`${URL}/${id}`)
+  },
+  getCategoriesFromUser: (params: CategoryListConfig) => {
+    return http.get<CategoryList>(URL_USER, { params })
+  },
+  getCategoryDetailFromUser: (id: string) => {
+    return http.get<SuccessResponse<Category>>(`${URL_USER}/${id}`)
   }
 }
 

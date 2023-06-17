@@ -31,7 +31,7 @@ function DetailCategory() {
 
   const { data: categoryData } = useQuery({
     queryKey: ['categoryDetail', categoryId],
-    queryFn: () => categoryApi.getCategoryDetail(categoryId as string)
+    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
   })
 
   const categoryDetail = categoryData?.data.data

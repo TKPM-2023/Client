@@ -12,7 +12,7 @@ const authApi = {
     return http.post<LoginResponse>('authenticate', body)
   },
   getProfile: ({ signal }: { signal?: AbortSignal }) => {
-    return http.get<SuccessResponse<Profile>>('profile', { signal })
+    return http.get<SuccessResponse<Profile>>('client/users/profile', { signal })
   }
 }
 

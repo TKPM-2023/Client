@@ -21,12 +21,18 @@ function ListProduct({ products, productQueryConfig, pageSize, customSizeCard }:
   }
   return (
     <div
-      className={`flex flex-wrap items-center ${customSizeCard ? `gap-x-${customSizeCard.gapX}` : 'gap-x-8'} gap-y-6`}
+      className={`flex flex-wrap items-center ${
+        customSizeCard?.gapX ? `gap-x-${customSizeCard.gapX}` : 'gap-x-8'
+      } gap-y-6`}
     >
       {products?.map((product) => (
         <Card className={`h-fit ${customSizeCard ? `w-${customSizeCard.width}` : 'w-64'}`} key={product.id}>
           <CardHeader shadow={false} floated={false} className='h-48'>
-            <img src={product.images ? product.images[0].url : ''} className='h-full w-full object-fill' alt='' />
+            <img
+              src={product.images ? product.images[0].url : ''}
+              className={`${customSizeCard ? 'h-[192px] w-[207px]' : 'h-full w-full'} object-fill`}
+              alt=''
+            />
           </CardHeader>
           <CardBody>
             <div className='mb-2 flex items-center justify-between'>
