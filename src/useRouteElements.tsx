@@ -24,6 +24,7 @@ import ProductManagement from './pages/Admin/pages/ProductManagement'
 import CategoryManagement from './pages/Admin/pages/CategoryManagement'
 import DetailProduct from './pages/DetailProduct'
 import DetailCategory from './pages/DetailCategory'
+import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
 
 function ProtectedRoute() {
@@ -82,7 +83,8 @@ function useRouteElements() {
                   element: <Reviews />
                 }
               ]
-            }
+            },
+            { path: routes.cart, element: <Cart /> }
           ]
         },
         {

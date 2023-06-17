@@ -14,7 +14,7 @@ import {
   AccordionHeader,
   AccordionBody
 } from '@material-tailwind/react'
-import { ShoppingBagIcon, PowerIcon } from '@heroicons/react/24/solid'
+import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 function UserSidebar() {
@@ -115,7 +115,7 @@ function UserSidebar() {
             <ListItemPrefix>
               <ShoppingBagIcon className='h-5 w-5' />
             </ListItemPrefix>
-            <Typography className='mr-auto font-normal'>Đơn mua</Typography>
+            <Typography className='mr-auto font-normal'>Quản lý đơn hàng</Typography>
           </ListItem>
         </NavLink>
         <ListItem>
@@ -150,12 +150,6 @@ function UserSidebar() {
             Đánh giá
           </ListItem>
         </NavLink>
-        <ListItem>
-          <ListItemPrefix>
-            <PowerIcon className='h-5 w-5' />
-          </ListItemPrefix>
-          Log Out
-        </ListItem>
       </List>
     </Card>
   )

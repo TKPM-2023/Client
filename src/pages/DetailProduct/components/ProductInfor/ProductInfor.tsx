@@ -71,7 +71,7 @@ function ProductInfor({ product }: Props) {
     <>
       <div className='flex w-full gap-4'>
         <Card className='w-full flex-row'>
-          <CardHeader shadow={false} floated={false} className='m-0 w-2/5 shrink-0 rounded-r-none'>
+          <CardHeader shadow={false} floated={false} className='m-0 w-2/5 shrink-0 rounded-r-none '>
             <Card className='cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
               <img src={product.images ? product.images[0].url : ''} alt='' className='h-full w-full object-fill' />
             </Card>

@@ -1,6 +1,6 @@
-import { Typography, Button, IconButton, Badge } from '@material-tailwind/react'
+import { Button, IconButton, Badge } from '@material-tailwind/react'
 import { ShoppingCartIcon, HomeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import classNames from 'classnames'
 import routes from 'src/constants/routes'
 
@@ -42,32 +42,57 @@ function HeaderNavList() {
           <MagnifyingGlassIcon className='h-6 w-6'></MagnifyingGlassIcon>
         </IconButton>
       </form>
-      <NavLink
-        to={routes.home}
-        className={({ isActive }) =>
-          classNames('', {
-            'rounded-full bg-cyan-100': isActive
-          })
-        }
-      >
-        <Button variant='text' color='blue-gray' className='flex items-center gap-0'>
-          <HomeIcon className='h-6 w-6' />
-          <Typography variant='small' color='blue-gray' className='p-1 font-normal'>
+      <NavLink to={routes.home}>
+        <Button variant='text' color='blue-gray' className='flex items-center gap-3'>
+          <NavLink
+            to={routes.home}
+            className={({ isActive }) =>
+              classNames('', {
+                'text-purple-500': isActive
+              })
+            }
+          >
+            <HomeIcon className='h-6 w-6' />
+          </NavLink>
+          <NavLink
+            to={routes.home}
+            className={({ isActive }) =>
+              classNames('', {
+                'text-purple-500': isActive
+              })
+            }
+          >
             Trang chủ
-          </Typography>
+          </NavLink>
         </Button>
       </NavLink>
 
-      <Link to='/' className=''>
+      <NavLink to={routes.cart}>
         <Button variant='text' color='blue-gray' className='flex items-center gap-3'>
           <Badge content='5'>
-            <ShoppingCartIcon className='h-6 w-6' />
+            <NavLink
+              to={routes.cart}
+              className={({ isActive }) =>
+                classNames('', {
+                  'text-purple-500': isActive
+                })
+              }
+            >
+              <ShoppingCartIcon className='h-6 w-6' />
+            </NavLink>
           </Badge>
-          <Typography variant='small' color='blue-gray' className='p-1 font-normal'>
-            giỏ hàng
-          </Typography>
+          <NavLink
+            to={routes.cart}
+            className={({ isActive }) =>
+              classNames('', {
+                'text-purple-500': isActive
+              })
+            }
+          >
+            Giỏ hàng
+          </NavLink>
         </Button>
-      </Link>
+      </NavLink>
     </ul>
   )
 }

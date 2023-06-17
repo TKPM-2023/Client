@@ -15,6 +15,11 @@ const customSizeCard = {
 }
 
 function DetailCategory() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
   const { categoryId } = useParams()
   const [open, setOpen] = useState(false)
   const [isDefaultSort, setIsDefaultSort] = useState<boolean>(true)

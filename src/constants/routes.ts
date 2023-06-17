@@ -13,7 +13,9 @@ const routes = {
   manageCategories: '/admin/manage-categories',
   manageProducts: '/admin/manage-products',
   detailProduct: '/product/:id',
-  detailCategory: '/category/:categoryId'
+  detailCategory: '/category/:categoryId',
+  order: '/order-and-payment',
+  cart: '/my-cart'
 } as const
 
 export default routes
