@@ -1,7 +1,7 @@
 import { Typography, IconButton } from '@material-tailwind/react'
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
 import { TrashIcon } from '@heroicons/react/24/outline'
-import { AddressType } from 'src/types/user.type'
+import { AddressType } from 'src/types/contact.type'
 const TABLE_HEAD = ['Họ và tên', 'Số điện thoại', 'Địa chỉ', '']
 
 interface TableAddressProps {
@@ -11,6 +11,14 @@ interface TableAddressProps {
 }
 
 function TableAddress({ addresses, handleClickEditButton, handleClickDeleteButton }: TableAddressProps) {
+  if (addresses?.length === 0)
+    return (
+      <div className='mt-8'>
+        <Typography variant='head' color='blue-gray' className='font-normal leading-none opacity-70'>
+          Bạn chưa có địa chỉ nào
+        </Typography>
+      </div>
+    )
   return (
     <>
       <div className='mt-8'>
@@ -19,7 +27,7 @@ function TableAddress({ addresses, handleClickEditButton, handleClickDeleteButto
             <tr>
               {TABLE_HEAD.map((head) => (
                 <th key={head} className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'>
-                  <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
+                  <Typography variant='paragraph' color='black' className='font-bold leading-none'>
                     {head}
                   </Typography>
                 </th>
@@ -27,24 +35,24 @@ function TableAddress({ addresses, handleClickEditButton, handleClickDeleteButto
             </tr>
           </thead>
           <tbody>
-            {addresses.map((data) => (
-              <tr key={data.name} className='even:bg-blue-gray-50/50'>
-                <td className='p-4'>
+            {addresses?.map((data) => (
+              <tr key={data.id} className='even:bg-blue-gray-50/50'>
+                <td className='w-60 p-4'>
                   <Typography variant='small' color='blue-gray' className='font-normal'>
-                    {data.name}
+                    {data.name ? data.name : ''}
+                  </Typography>
+                </td>
+                <td className='w-40 p-4'>
+                  <Typography variant='small' color='blue-gray' className='font-normal'>
+                    {data.phone ? data.phone : ''}
                   </Typography>
                 </td>
                 <td className='p-4'>
                   <Typography variant='small' color='blue-gray' className='font-normal'>
-                    {data.phone}
+                    {data.addr ? data.addr : ''}
                   </Typography>
                 </td>
-                <td className='p-4'>
-                  <Typography variant='small' color='blue-gray' className='font-normal'>
-                    {data.address}
-                  </Typography>
-                </td>
-                <td className='p-4'>
+                <td className='w-32 p-4'>
                   <IconButton variant='text' onClick={() => handleClickEditButton(data)}>
                     <PencilSquareIcon strokeWidth={2} className='h-5 w-5' />
                   </IconButton>

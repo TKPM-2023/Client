@@ -1,14 +1,20 @@
 import { Card, CardHeader, CardBody, Typography, Button, Rating, Dialog, DialogBody } from '@material-tailwind/react'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { Product } from 'src/types/product.type'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import cartApi from 'src/apis/cart.api'
 import useCalAveragePoint from 'src/hooks/useCalAveragePoint'
+import { AddProductToCartType } from 'src/types/cart.type'
+import { AppContext } from 'src/contexts/app.context'
+import { toast } from 'react-toastify'
 
 interface Props {
   product: Product
 }
 
 function ProductInfor({ product }: Props) {
+  const { profile } = useContext(AppContext)
   const calAveragePoint = useCalAveragePoint(product)
   const [quantityOrder, setQuantityOrder] = useState<number>(1)
   const [open, setOpen] = useState(false)
@@ -23,6 +29,50 @@ function ProductInfor({ product }: Props) {
   const handleMinusButton = () => {
     if (quantityOrder > 2) setQuantityOrder(quantityOrder - 1)
     else setQuantityOrder(1)
+  }
+
+  const addProductToCartMutation = useMutation({
+    mutationFn: (body: AddProductToCartType[]) => cartApi.addProductToCard(profile?.cart_id as string, body),
+    onSuccess: () => {
+      toast.success('Đã thêm vào giỏ hàng')
+      refetch()
+    }
+  })
+
+  const updateProductQuantityMutation = useMutation({
+    mutationFn: (body: AddProductToCartType) => cartApi.updateProductQuantity(profile?.cart_id as string, body),
+    onSuccess: () => {
+      toast.success('Đã thêm vào giỏ hàng')
+      refetch()
+    }
+  })
+
+  const { data: data, refetch } = useQuery({
+    queryKey: ['cart', profile?.cart_id],
+    queryFn: () => cartApi.getCart(profile?.cart_id as string),
+    keepPreviousData: false
+  })
+
+  let isInCart = false
+  let quantityProductInCart = 0
+  if (data?.data?.data?.cart_products && data?.data?.data?.cart_products.length !== 0) {
+    for (const cartProduct of data.data.data.cart_products) {
+      if (cartProduct.Product.id === product?.id) {
+        isInCart = true
+        quantityProductInCart = cartProduct.quantity
+      }
+    }
+  }
+
+  const handleAddToCartButton = async () => {
+    if (quantityOrder + quantityProductInCart > product.quantity) {
+      toast.error('Vượt quá só lượng cho phép')
+    } else if (isInCart) {
+      await updateProductQuantityMutation.mutateAsync({
+        product_id: product.id,
+        quantity: quantityOrder + quantityProductInCart
+      })
+    } else await addProductToCartMutation.mutateAsync([{ product_id: product.id, quantity: quantityOrder }])
   }
   if (!product)
     return (
@@ -45,16 +95,16 @@ function ProductInfor({ product }: Props) {
               </Card>
             </CardHeader>
             <CardBody>
-              <Typography variant='h5' color='blue-gray' className='mb-2 font-medium'>
+              <div color='blue-gray' className='mb-2 font-medium'>
                 <div className='mb-4 h-[28px] w-[490px] bg-gray-500 dark:bg-gray-700'></div>
-              </Typography>
+              </div>
               <div className='flex items-center justify-start'>
                 <div className='mb-4 h-[23px] w-[390px] bg-gray-500 dark:bg-gray-700'></div>
               </div>
               <div className='mb-4 h-[66px] w-[490px] bg-gray-500 dark:bg-gray-700'></div>
-              <Typography color='black' className='mb-2 border-t border-gray-300 pt-2 font-normal'>
+              <div color='black' className='mb-2 border-t border-gray-300 pt-2 font-normal'>
                 <div className='mb-4 h-[20px] w-[70px] bg-gray-500 dark:bg-gray-700'></div>
-              </Typography>
+              </div>
               <div className='mb-4 h-[38px] w-[340px] bg-gray-500 dark:bg-gray-700'></div>
               <hr className='mb-6 mt-4 border-gray-300'></hr>
               <div className='mx-8 flex justify-center gap-4'>
@@ -71,8 +121,8 @@ function ProductInfor({ product }: Props) {
     <>
       <div className='flex w-full gap-4'>
         <Card className='w-full flex-row'>
-          <CardHeader shadow={false} floated={false} className='m-0 w-2/5 shrink-0 rounded-r-none '>
-            <Card className='cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
+          <CardHeader shadow={false} floated={false} className='m-0 h-[377px] w-[377px] shrink-0 rounded-r-none '>
+            <Card className='h-full w-full cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
               <img src={product.images ? product.images[0].url : ''} alt='' className='h-full w-full object-fill' />
             </Card>
             <Dialog size='xl' open={open} handler={handleOpen}>
@@ -119,7 +169,7 @@ function ProductInfor({ product }: Props) {
               <Button color='purple' size='lg' className='flex-1'>
                 Mua ngay
               </Button>
-              <Button color='purple' variant='outlined' className='' size='lg'>
+              <Button onClick={handleAddToCartButton} color='purple' variant='outlined' className='' size='lg'>
                 Thêm vào giỏ hàng
               </Button>
             </div>

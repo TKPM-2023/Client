@@ -20,11 +20,7 @@ function ListProduct({ products, productQueryConfig, pageSize, customSizeCard }:
     return useCalAveragePoint(product)
   }
   return (
-    <div
-      className={`flex flex-wrap items-center ${
-        customSizeCard?.gapX ? `gap-x-${customSizeCard.gapX}` : 'gap-x-8'
-      } gap-y-6`}
-    >
+    <div className={`flex flex-wrap items-center ${customSizeCard?.gapX ? 'gap-x-4' : 'gap-x-8'} gap-y-6`}>
       {products?.map((product) => (
         <Card className={`h-fit ${customSizeCard ? `w-${customSizeCard.width}` : 'w-64'}`} key={product.id}>
           <CardHeader shadow={false} floated={false} className='h-48'>

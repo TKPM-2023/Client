@@ -31,6 +31,7 @@ function Register() {
   })
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data)
     registerMutation.mutate(data, {
       onSuccess: () => {
         navigate(routes.login)

@@ -30,7 +30,7 @@ function GeneralInfor() {
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
   const {
-    data: UserData,
+    data: userData,
     isLoading,
     isSuccess,
     refetch
@@ -40,7 +40,7 @@ function GeneralInfor() {
     keepPreviousData: true
   })
 
-  const userProfileData = UserData?.data.data
+  const userProfileData = userData?.data.data
   const userAvatar =
     userProfileData?.avatar.url !== '' && userProfileData?.avatar ? userProfileData.avatar.url : images.avatar
 
