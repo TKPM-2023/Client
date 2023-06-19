@@ -1,6 +1,10 @@
 import { Card, CardBody, Input } from '@material-tailwind/react'
+interface Props {
+  listCheckedProduct: string[]
+  totalCost: number
+}
 
-function SumaryChosen() {
+function SumaryChosen({ listCheckedProduct, totalCost }: Props) {
   return (
     <>
       <div className='flex w-96 flex-col gap-4'>
@@ -42,7 +46,7 @@ function SumaryChosen() {
             <CardBody>
               <div className='flex items-center justify-between'>
                 <span className='text-black'>Tạm tính</span>
-                <span className='text-sm font-bold text-gray-900'>8.500.000 VNĐ</span>
+                <span className='text-sm font-bold text-gray-900'>{totalCost.toLocaleString('vi-VN')} VNĐ</span>
               </div>
             </CardBody>
           </Card>
@@ -67,16 +71,22 @@ function SumaryChosen() {
                     </span>
                   </div>
                 </div>
-                <span className='flex flex-col'>
-                  <span className='text-xl font-medium text-red-500 md:text-base'>8.500.000 VNĐ</span>
-                  <span className='block text-[10px]'>(Đã bao gồm VAT nếu có)</span>
-                </span>
+                {totalCost === 0 ? (
+                  <span className='text-xl font-medium text-red-500 md:text-base'>Vui lòng chọn sản phẩm</span>
+                ) : (
+                  <span className='flex flex-col'>
+                    <span className='text-xl font-medium text-red-500 md:text-base'>
+                      {totalCost.toLocaleString('vi-VN')} VNĐ
+                    </span>
+                    <span className='block text-[10px]'>(Đã bao gồm VAT nếu có)</span>
+                  </span>
+                )}
               </div>
             </CardBody>
           </Card>
 
           <button className='w-full rounded-lg rounded-t-none border border-gray-400 bg-deep-purple-400 p-3 text-lg text-white hover:border-indigo-700'>
-            Mua hàng (0)
+            Mua hàng ({listCheckedProduct.length - 1})
           </button>
         </div>
       </div>

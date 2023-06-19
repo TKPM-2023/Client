@@ -15,6 +15,7 @@ export interface User {
   first_name: string
   phone: string
   role: 'user' | 'admin'
+  cart_id?: string
 }
 
 export interface UserList {
@@ -41,5 +42,15 @@ export interface UserListConfig {
 
 export type Profile = Pick<
   User,
-  'id' | 'created_at' | 'email' | 'first_name' | 'last_name' | 'phone' | 'role' | 'status' | 'updated_at' | 'avatar'
+  | 'id'
+  | 'created_at'
+  | 'email'
+  | 'first_name'
+  | 'last_name'
+  | 'phone'
+  | 'role'
+  | 'status'
+  | 'updated_at'
+  | 'avatar'
+  | 'cart_id'
 >

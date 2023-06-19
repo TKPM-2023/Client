@@ -25,7 +25,7 @@ function UserAddress() {
     status: 1
   }
   const { data: contactData, refetch } = useQuery({
-    queryKey: ['userProfile', contactQueryConfig],
+    queryKey: ['address', contactQueryConfig],
     queryFn: () => contactApi.getListContact(contactQueryConfig),
     keepPreviousData: true
   })
