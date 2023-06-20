@@ -1,10 +1,25 @@
-import { Button, IconButton, Badge } from '@material-tailwind/react'
+import { Button, IconButton, Menu, MenuHandler, MenuList, MenuItem, Typography } from '@material-tailwind/react'
 import { ShoppingCartIcon, HomeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
+import { useState } from 'react'
 import classNames from 'classnames'
 import routes from 'src/constants/routes'
+import { CartProductType } from 'src/types/cart.type'
+import images from 'src/assets/images'
 
-function HeaderNavList() {
+interface Props {
+  listCartProduct: CartProductType[]
+  isAuthenticated: boolean
+}
+
+function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
+  const currentURL = window.location.href
+  const [openMenu, setOpenMenu] = useState(false)
+
+  const triggers = {
+    onMouseEnter: () => setOpenMenu(true),
+    onMouseLeave: () => setOpenMenu(false)
+  }
   return (
     <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-2'>
       <form className='flex w-96 items-center'>
@@ -57,23 +72,68 @@ function HeaderNavList() {
         </Button>
       </NavLink>
 
-      <NavLink
-        to={routes.cart}
-        className={({ isActive }) =>
-          classNames('', {
-            'text-deep-purple-500': isActive
-          })
-        }
-      >
-        <Button variant='text' color='blue-gray' className='flex items-center gap-3 text-inherit'>
-          <Badge overlap={'square'} content={5}>
-            <div>
-              <ShoppingCartIcon className='h-6 w-6 text-inherit' />
+      <Menu open={openMenu} handler={setOpenMenu}>
+        <MenuHandler>
+          <NavLink
+            to={routes.cart}
+            className={({ isActive }) =>
+              classNames('', {
+                'text-deep-purple-500': isActive
+              })
+            }
+          >
+            <button
+              {...triggers}
+              type='button'
+              className='relative inline-flex items-center rounded-lg bg-blue-700 p-3 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            >
+              <ShoppingCartIcon className='h-5 w-5 text-inherit' />
+              <span className='sr-only'>Notifications</span>
+              <div className='absolute -right-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900'>
+                {listCartProduct?.length}
+              </div>
+            </button>
+          </NavLink>
+        </MenuHandler>
+        <MenuList
+          {...triggers}
+          className={`hidden w-[28rem] grid-cols-4 gap-3 overflow-visible ${
+            currentURL === `http://localhost:3000${routes.cart}` ? '' : 'lg:grid'
+          }`}
+        >
+          {listCartProduct?.length === 0 || !isAuthenticated ? (
+            <div className='col-span-4 mb-16 text-center'>
+              <img src={images.emptyCart} alt='empty-cart' className='inline-block mix-blend-darken md:w-1/3' />
+              <p className='mb-4 text-base font-medium md:mb-3'>Bạn chưa có sản phẩm nào trong giỏ hàng!</p>
             </div>
-          </Badge>
-          <div className='text-inherit'>Giỏ hàng</div>
-        </Button>
-      </NavLink>
+          ) : (
+            <div className='col-span-4'>
+              <div className='col-span-4 border-b pb-2'>Sản phẩm mới nhất</div>
+              {listCartProduct?.slice(0, 5).map((product) => (
+                <MenuItem key={product.product_id} className='col-span-4 flex items-center gap-4'>
+                  <div className='mb-1 flex w-[280px] items-center gap-4'>
+                    <img
+                      src={product.Product.images ? product.Product.images[0].url : ''}
+                      alt=''
+                      className='h-12 w-12'
+                    />
+                    <Typography variant='small' color='blue-gray'>
+                      {product.Product.name}
+                    </Typography>
+                  </div>
+
+                  <Typography variant='small' color='red' className='font-bold'>
+                    {product.Product.price.toLocaleString('vi-VN')} VNĐ
+                  </Typography>
+                </MenuItem>
+              ))}
+              <Link to={routes.cart} className='col-span-4 mt-3 flex justify-end'>
+                <Button className='w-fit'>Xem giỏ hàng</Button>
+              </Link>
+            </div>
+          )}
+        </MenuList>
+      </Menu>
     </ul>
   )
 }

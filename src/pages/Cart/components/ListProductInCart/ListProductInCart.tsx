@@ -1,20 +1,20 @@
 import { Typography, Checkbox } from '@material-tailwind/react'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
-import { CartProductType, AddProductToCartType } from 'src/types/cart.type'
+import { CartProductType, AddProductToCartType, ProductIsOrderingType } from 'src/types/cart.type'
 import { useMutation } from '@tanstack/react-query'
 import cartApi from 'src/apis/cart.api'
 import { toast } from 'react-toastify'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { PriceQuantityType } from 'src/types/cart.type'
+import { Upload } from 'src/types/upload.type'
 
 interface Props {
   productInCart: CartProductType
   handleRefetchData: () => void
   listCheckedProduct: string[]
   setListCheckedProduct: React.Dispatch<React.SetStateAction<string[]>>
-  listPrice: PriceQuantityType[]
-  setListPrice: React.Dispatch<React.SetStateAction<PriceQuantityType[]>>
+  listPrice: ProductIsOrderingType[]
+  setListPrice: React.Dispatch<React.SetStateAction<ProductIsOrderingType[]>>
 }
 
 const isInList = (id: string, list: string[]) => {
@@ -26,7 +26,7 @@ const isInList = (id: string, list: string[]) => {
   else return false
 }
 
-const isInList1 = (id: string, list: PriceQuantityType[]) => {
+const isInListPriceQuantity = (id: string, list: ProductIsOrderingType[]) => {
   let yes = 0
   list.forEach((item) => {
     if (id === item.product_id) {
@@ -48,11 +48,13 @@ function ListProductInCart({
   const [quantityOrder, setQuantityOrder] = useState<number>(productInCart.quantity)
   const [isChecked, setIsChecked] = useState<boolean>(false)
 
-  const deleteUserContactMutation = useMutation({
+  const deleteProductFromCartMutation = useMutation({
     mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(productInCart.cart_id as string, body),
     onSuccess: () => {
       handleRefetchData()
       toast.success('Đã xóa khỏi giỏ hàng')
+      const newList = listCheckedProduct.filter((item) => item !== productInCart.product_id)
+      setListCheckedProduct(newList)
     }
   })
 
@@ -67,7 +69,7 @@ function ListProductInCart({
   }
 
   const handleDeleteProductFromCart = () => {
-    deleteUserContactMutation.mutate([{ product_id: productInCart.Product.id }])
+    deleteProductFromCartMutation.mutate([{ product_id: productInCart.Product.id }])
   }
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean) } }) => {
@@ -92,19 +94,23 @@ function ListProductInCart({
 
   useEffect(() => {
     if (isChecked) {
-      if (isInList1(productInCart.product_id, listPrice)) {
+      if (isInListPriceQuantity(productInCart.product_id, listPrice)) {
         const newListPrice = listPrice.filter((item) => item.product_id !== productInCart.product_id)
         newListPrice.push({
           product_id: productInCart.product_id,
           price: productInCart.Product.price,
-          quantity: quantityOrder
+          quantity: quantityOrder,
+          name: productInCart.Product.name,
+          images: productInCart?.Product?.images as Upload[]
         })
         setListPrice(newListPrice)
       } else {
         listPrice.push({
           product_id: productInCart.product_id,
           price: productInCart.Product.price,
-          quantity: quantityOrder
+          quantity: quantityOrder,
+          name: productInCart.Product.name,
+          images: productInCart?.Product?.images as Upload[]
         })
         const newListPrice = listPrice
         setListPrice(newListPrice)

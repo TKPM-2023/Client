@@ -1,12 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 import { Typography, Checkbox, Tooltip } from '@material-tailwind/react'
 import cartApi from 'src/apis/cart.api'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { AppContext } from 'src/contexts/app.context'
 import { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import images from 'src/assets/images'
-import { PriceQuantityType } from 'src/types/cart.type'
+import { AddProductToCartType, ProductIsOrderingType } from 'src/types/cart.type'
+import { toast } from 'react-toastify'
 import _ from 'lodash'
 
 import ListProductInCart from './components/ListProductInCart'
@@ -19,9 +20,9 @@ const isSimilarArray = (arr1: string[], arr2: string[]) => {
 }
 
 function Cart() {
-  const { profile } = useContext(AppContext)
+  const { profile, setListProductIsOrdering } = useContext(AppContext)
   const [listCheckedProduct, setListCheckedProduct] = useState([''])
-  const [listPrice, setListPrice] = useState<PriceQuantityType[]>([])
+  const [listPrice, setListPrice] = useState<ProductIsOrderingType[]>([])
   const [isChecked, setIsChecked] = useState<boolean>(false)
   const [totalCost, setTotalCost] = useState<number>(0)
 
@@ -39,6 +40,10 @@ function Cart() {
 
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean) } }) => {
     setIsChecked(event.target.checked)
+  }
+
+  const handleOrderButton = () => {
+    setListProductIsOrdering(listPrice)
   }
 
   const listIdProductInCart = ['']
@@ -67,10 +72,29 @@ function Cart() {
   useEffect(() => {
     if (listPrice.length === 0) setTotalCost(0)
     else {
-      const totalCost1 = listPrice.reduce((accumulator, item) => accumulator + item.price * item.quantity, 0)
-      setTotalCost(totalCost1)
+      const tempTotalCost = listPrice.reduce((accumulator, item) => accumulator + item.price * item.quantity, 0)
+      setTotalCost(tempTotalCost)
     }
   }, [listPrice, listCheckedProduct])
+
+  const deleteProductFromCartMutation = useMutation({
+    mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(cartData?.id as string, body),
+    onSuccess: () => {
+      handleRefetchData()
+      toast.success('Đã xóa khỏi giỏ hàng')
+      setListCheckedProduct([''])
+    }
+  })
+
+  const handleDelteAll = () => {
+    const listProductDeltete: AddProductToCartType[] = []
+    for (const item of listCheckedProduct) {
+      if (item !== '') {
+        listProductDeltete.push({ product_id: item })
+      }
+    }
+    deleteProductFromCartMutation.mutate(listProductDeltete)
+  }
 
   if (cartData?.cart_products.length === 0) {
     return (
@@ -121,7 +145,7 @@ function Cart() {
                   }}
                   placement='bottom'
                 >
-                  <div className='flex cursor-pointer content-end items-center'>
+                  <button onClick={handleDelteAll} className='flex cursor-pointer content-end items-center'>
                     <svg
                       viewBox='64 64 896 896'
                       focusable='false'
@@ -133,7 +157,7 @@ function Cart() {
                     >
                       <path d='M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z'></path>
                     </svg>
-                  </div>
+                  </button>
                 </Tooltip>
               </div>
               {cartData?.cart_products.map((cart_product) => (
@@ -148,7 +172,11 @@ function Cart() {
                 />
               ))}
             </div>
-            <SumaryChosen listCheckedProduct={listCheckedProduct} totalCost={totalCost} />
+            <SumaryChosen
+              listCheckedProduct={listCheckedProduct}
+              totalCost={totalCost}
+              handleOrderButton={handleOrderButton}
+            />
           </div>
         </div>
       </div>

@@ -1,33 +1,19 @@
-import { Card, CardBody, Dialog, DialogHeader, DialogBody } from '@material-tailwind/react'
+import { Card, CardBody, Dialog, DialogHeader, DialogBody, Button } from '@material-tailwind/react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { AddressType } from 'src/types/contact.type'
 
-type contact = {
-  id: string
-  name: string
-  phone: string
-  address: string
+interface Props {
+  addresses: AddressType[]
+  totalCost: number
+  deliveryCost: number
 }
 
-const table = [
-  {
-    id: '1',
-    name: 'tran anh thi',
-    phone: '099988998',
-    address: '134 cao bá đạt, võ xu, đức linh, Bình thuận'
-  },
-  {
-    id: '2',
-    name: 'tran huỳnh cư',
-    phone: '01231234',
-    address: '120 tô vĩnh diện, võ xu, đức linh, Bình thuận'
-  }
-]
-
-function SumaryOrder() {
+function SumaryOrder({ addresses, totalCost, deliveryCost }: Props) {
   const [open, setOpen] = useState<boolean>(false)
-  const [isChosenAddress, setIsChosenAddress] = useState<contact>({ id: '', name: '', phone: '', address: '' })
+  const [isChosenAddress, setIsChosenAddress] = useState<AddressType>({ id: '', name: '', phone: '', addr: '' })
 
-  const hanldeChooseAddress = (contact: contact) => {
+  const hanldeChooseAddress = (contact: AddressType) => {
     setIsChosenAddress(contact)
     handleOpen()
   }
@@ -65,7 +51,7 @@ function SumaryOrder() {
                       <span className='font-normal'>{isChosenAddress.phone}</span>
                     </div>
                     <div>
-                      <span className='text-zinc-500 font-normal'>{isChosenAddress.address}</span>
+                      <span className='text-zinc-500 font-normal'>{isChosenAddress.addr}</span>
                     </div>
                   </div>
                 ) : (
@@ -78,7 +64,7 @@ function SumaryOrder() {
             <CardBody className='flex flex-col gap-2'>
               <div className='flex items-center justify-between'>
                 <span className='text-black'>Tạm tính</span>
-                <span className='text-sm font-bold text-gray-900'>8.500.000 VNĐ</span>
+                <span className='text-sm font-bold text-gray-900'>{totalCost.toLocaleString('vi-VN')} VNĐ</span>
               </div>
               <div className='flex items-center justify-between'>
                 <span className='text-black'>Giảm giá</span>
@@ -86,7 +72,7 @@ function SumaryOrder() {
               </div>
               <div className='flex items-center justify-between'>
                 <span className='text-black'>Phí vận chuyển</span>
-                <span className='text-sm font-bold text-gray-900'>50.000 VNĐ</span>
+                <span className='text-sm font-bold text-gray-900'>{deliveryCost.toLocaleString('vi-VN')} VNĐ</span>
               </div>
             </CardBody>
           </Card>
@@ -112,7 +98,9 @@ function SumaryOrder() {
                   </div>
                 </div>
                 <span className='flex flex-col'>
-                  <span className='text-xl font-medium text-red-500 md:text-base'>8.500.000 VNĐ</span>
+                  <span className='text-xl font-medium text-red-500 md:text-base'>
+                    {(totalCost + deliveryCost).toLocaleString('vi-VN')} VNĐ
+                  </span>
                   <span className='block text-[10px]'>(Đã bao gồm VAT nếu có)</span>
                 </span>
               </div>
@@ -132,29 +120,40 @@ function SumaryOrder() {
 
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Thay đổi địa chỉ nhận hàng</DialogHeader>
-        <DialogBody divider className={`${table.length > 6 ? 'h-96 overflow-scroll' : 'h-full'}`}>
-          {table.map((contact) => (
-            <button
-              key={contact.id}
-              value={`{'name': ${contact.name},'phone': ${contact.phone},'address': ${contact.address} }`}
-              onClick={() => {
-                hanldeChooseAddress(contact)
-              }}
-              className={`${
-                contact.id === isChosenAddress.id ? 'border-2 border-deep-purple-500' : ''
-              } mb-2 flex w-full flex-col items-start rounded-md bg-gray-200 p-3 text-black hover:bg-deep-purple-500 hover:text-white`}
-            >
-              <div className='flex items-center'>
-                <span className='font-normal'>{contact.name}</span>
-                <span className='bg-slate-400 mx-2 font-bold'>|</span>
-                <span className='font-normal'>{contact.phone}</span>
-              </div>
-              <div>
-                <span className=' font-normal'>{contact.address} </span>
-              </div>
-            </button>
-          ))}
-        </DialogBody>
+        {!addresses ? (
+          <DialogBody>
+            <div></div>
+          </DialogBody>
+        ) : (
+          <DialogBody divider className={`${addresses.length > 6 ? 'h-96 overflow-scroll' : 'h-full'}`}>
+            <div className={`${addresses.length < 1 ? '' : 'hidden'} text-center text-black`}>
+              <div className='text-lg'>Bạn chưa có địa chỉ nhận hàng nào</div>
+              <Link to={'/profile/user-address'}>
+                <Button className='mt-2 '>Thêm địa chỉ mới</Button>
+              </Link>
+            </div>
+            {addresses.map((contact) => (
+              <button
+                key={contact.id}
+                onClick={() => {
+                  hanldeChooseAddress(contact)
+                }}
+                className={`${
+                  contact.id === isChosenAddress.id ? 'border-2 border-deep-purple-500' : ''
+                } mb-2 flex w-full flex-col items-start rounded-md bg-gray-200 p-3 text-black hover:bg-deep-purple-500 hover:text-white`}
+              >
+                <div className='flex items-center'>
+                  <span className='font-normal'>{contact.name}</span>
+                  <span className='bg-slate-400 mx-2 font-bold'>|</span>
+                  <span className='font-normal'>{contact.phone}</span>
+                </div>
+                <div>
+                  <span className=' font-normal'>{contact.addr} </span>
+                </div>
+              </button>
+            ))}
+          </DialogBody>
+        )}
       </Dialog>
     </>
   )

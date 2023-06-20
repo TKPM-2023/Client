@@ -1,38 +1,27 @@
 import { Typography, Radio } from '@material-tailwind/react'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
-
+import { ProductIsOrderingType } from 'src/types/cart.type'
 import { useState } from 'react'
+
+interface Props {
+  listProductIsOrdering: ProductIsOrderingType[]
+  setDeliveryCost: React.Dispatch<React.SetStateAction<number>>
+}
 
 const TABLE_HEAD = ['Tên sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền']
 
-const TABLE_ROWS = [
-  {
-    name: 'John Michael',
-    job: 'Manager',
-    date: '23/04/18'
-  },
-  {
-    name: 'Alexa Liras',
-    job: 'Developer',
-    date: '23/04/18'
-  },
-  {
-    name: 'Laurent Perrier',
-    job: 'Executive',
-    date: '19/09/17'
-  }
-]
-
-function OrderInfor() {
+function OrderInfor({ listProductIsOrdering, setDeliveryCost }: Props) {
   const [isFastDeliveryMethod, setIsFastDeliveryMethod] = useState<boolean>(true)
   const [paymentMethod, setPaymentMethod] = useState('cash')
 
   const handleFastDeliveryButton = () => {
     setIsFastDeliveryMethod(true)
+    setDeliveryCost(50000)
   }
 
   const handleNowDeliveryButton = () => {
     setIsFastDeliveryMethod(false)
+    setDeliveryCost(20000)
   }
 
   const handleSetPaymentMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +38,7 @@ function OrderInfor() {
               <tr>
                 {TABLE_HEAD.map((head) => (
                   <th key={head} className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'>
-                    <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
+                    <Typography variant='small' color='black' className='font-normal leading-none'>
                       {head}
                     </Typography>
                   </th>
@@ -57,34 +46,30 @@ function OrderInfor() {
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map(({ name }) => (
-                <tr key={name} className='even:bg-blue-gray-50/50'>
+              {listProductIsOrdering.map((product) => (
+                <tr key={product.product_id} className='even:bg-blue-gray-50/50'>
                   <td className='w-[400px] p-4'>
                     <div className=' flex w-fit items-center'>
-                      <img
-                        src='https://storage.googleapis.com/my-image-products/ghe-corsair-tc200-leatherette-black-black--s220806204.png'
-                        alt=''
-                        width={77}
-                      ></img>
-                      <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
-                        Ghế Corsair TC200 Leatherette Black-Black
+                      <img src={product.images[0].url} alt='' width={77}></img>
+                      <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-bold'>
+                        {product.name}
                       </Typography>
                     </div>
                   </td>
                   <td className='w-[150px] p-4'>
                     <Typography variant='small' color='red' className='flex items-center '>
-                      8.500.000 VNĐ
+                      {product.price.toLocaleString('vi-VN')} VNĐ
                     </Typography>
                   </td>
                   <td className='w-[100px] p-4'>
                     <Typography variant='small' color='blue-gray' className='font-normal'>
-                      1
+                      {product.quantity}
                     </Typography>
                   </td>
                   <td className='w-[165px] p-4'>
                     <Typography as='a' href='#' variant='small' color='blue' className='font-medium'>
                       <Typography variant='small' color='red' className='flex items-center '>
-                        8.500.000 VNĐ
+                        {(product.price * product.quantity).toLocaleString('vi-VN')} VNĐ
                       </Typography>
                     </Typography>
                   </td>
@@ -93,7 +78,7 @@ function OrderInfor() {
             </tbody>
           </table>
         </div>
-        {/* Phần phương thức thanh toán */}
+        {/* Phần phương thức vận chuyển */}
 
         <div className=''>
           <div className='my-2 text-xl font-bold'>Phương thức giao hàng</div>

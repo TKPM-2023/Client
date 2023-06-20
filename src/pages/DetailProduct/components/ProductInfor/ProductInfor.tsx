@@ -8,13 +8,15 @@ import useCalAveragePoint from 'src/hooks/useCalAveragePoint'
 import { AddProductToCartType } from 'src/types/cart.type'
 import { AppContext } from 'src/contexts/app.context'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
+import { Upload } from 'src/types/upload.type'
 
 interface Props {
   product: Product
 }
 
 function ProductInfor({ product }: Props) {
-  const { profile } = useContext(AppContext)
+  const { profile, setListProductIsOrdering } = useContext(AppContext)
   const calAveragePoint = useCalAveragePoint(product)
   const [quantityOrder, setQuantityOrder] = useState<number>(1)
   const [open, setOpen] = useState(false)
@@ -31,6 +33,17 @@ function ProductInfor({ product }: Props) {
     else setQuantityOrder(1)
   }
 
+  const handleOrderButton = () => {
+    setListProductIsOrdering([
+      {
+        product_id: product.id,
+        price: product.price,
+        quantity: quantityOrder,
+        name: product.name,
+        images: product.images as Upload[]
+      }
+    ])
+  }
   const addProductToCartMutation = useMutation({
     mutationFn: (body: AddProductToCartType[]) => cartApi.addProductToCard(profile?.cart_id as string, body),
     onSuccess: () => {
@@ -166,9 +179,12 @@ function ProductInfor({ product }: Props) {
             </div>
             <hr className='mb-6 mt-4 border-gray-300'></hr>
             <div className='mx-8 flex justify-center gap-4'>
-              <Button color='purple' size='lg' className='flex-1'>
-                Mua ngay
-              </Button>
+              <Link to={'/order-and-payment'}>
+                <Button onClick={handleOrderButton} color='purple' size='lg' className='flex-1'>
+                  Mua ngay
+                </Button>
+              </Link>
+
               <Button onClick={handleAddToCartButton} color='purple' variant='outlined' className='' size='lg'>
                 Thêm vào giỏ hàng
               </Button>

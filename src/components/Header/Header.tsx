@@ -7,10 +7,21 @@ import routes from 'src/constants/routes'
 import images from 'src/assets/images'
 import { AppContext } from 'src/contexts/app.context'
 import { clearLS } from 'src/utils/auth'
+import cartApi from 'src/apis/cart.api'
+import { useQuery } from '@tanstack/react-query'
+import { CartProductType } from 'src/types/cart.type'
 
 function Header() {
   const [openNav, setOpenNav] = useState(false)
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
+
+  const { data: data } = useQuery({
+    queryKey: ['cart', profile?.cart_id],
+    queryFn: () => cartApi.getCart(profile?.cart_id as string),
+    keepPreviousData: false
+  })
+
+  const CartProduct = data?.data.data.cart_products
 
   const handleLogout = () => {
     setIsAuthenticated(false)
@@ -41,7 +52,7 @@ function Header() {
           </Link>
           <div className='flex items-center gap-4'>
             <div className='mr-4 hidden lg:block'>
-              <HeaderNavList />
+              <HeaderNavList listCartProduct={CartProduct as CartProductType[]} isAuthenticated={isAuthenticated} />
             </div>
             {!isAuthenticated && (
               <div className='hidden gap-2 lg:flex'>
@@ -95,7 +106,7 @@ function Header() {
           </div>
         </div>
         <Collapse open={openNav}>
-          <HeaderNavList />
+          <HeaderNavList listCartProduct={CartProduct as CartProductType[]} isAuthenticated={isAuthenticated} />
           {!isAuthenticated && (
             <div className='hidden gap-2 lg:flex'>
               <Link to={routes.login}>

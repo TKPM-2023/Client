@@ -1,10 +1,13 @@
 import { Card, CardBody, Input } from '@material-tailwind/react'
+import { Link } from 'react-router-dom'
+
 interface Props {
   listCheckedProduct: string[]
   totalCost: number
+  handleOrderButton: () => void
 }
 
-function SumaryChosen({ listCheckedProduct, totalCost }: Props) {
+function SumaryChosen({ listCheckedProduct, totalCost, handleOrderButton }: Props) {
   return (
     <>
       <div className='flex w-96 flex-col gap-4'>
@@ -84,10 +87,17 @@ function SumaryChosen({ listCheckedProduct, totalCost }: Props) {
               </div>
             </CardBody>
           </Card>
-
-          <button className='w-full rounded-lg rounded-t-none border border-gray-400 bg-deep-purple-400 p-3 text-lg text-white hover:border-indigo-700'>
-            Mua hàng ({listCheckedProduct.length - 1})
-          </button>
+          <Link to='/order-and-payment'>
+            <button
+              onClick={handleOrderButton}
+              disabled={listCheckedProduct.length > 1 ? false : true}
+              className={` ${
+                listCheckedProduct.length > 1 ? '' : 'bg-gray-600'
+              } w-full rounded-lg rounded-t-none border border-gray-400 bg-deep-purple-400 p-3 text-lg text-white hover:border-indigo-700`}
+            >
+              Mua hàng ({listCheckedProduct.length - 1})
+            </button>
+          </Link>
         </div>
       </div>
     </>
