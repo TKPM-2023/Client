@@ -1,4 +1,5 @@
 import { Product } from 'src/types/product.type'
+import { Upload } from './upload.type'
 
 export type AddProductToCartType = {
   product_id: string
@@ -23,8 +24,10 @@ export type CartType = {
   }
 }
 
-export type PriceQuantityType = {
+export type ProductIsOrderingType = {
   product_id: string
   price: number
   quantity: number
+  name: string
+  images: Upload[]
 }

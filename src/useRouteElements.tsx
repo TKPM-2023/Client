@@ -12,6 +12,7 @@ import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
 import ChangePassword from './pages/UserProfile/pages/ChangePassword'
 import UserAddress from './pages/UserProfile/pages/UserAddress'
 import UserOrders from './pages/UserProfile/pages/Orders'
+import DetailOrdered from './pages/UserProfile/pages/DetailOrdered'
 import Reviews from './pages/UserProfile/pages/Reviews'
 //
 import Home from './pages/Home'
@@ -82,6 +83,10 @@ function useRouteElements() {
                 {
                   path: routes.reviews,
                   element: <Reviews />
+                },
+                {
+                  path: routes.detailUserOrder,
+                  element: <DetailOrdered />
                 }
               ]
             },

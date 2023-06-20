@@ -6,6 +6,7 @@ const routes = {
   changePassword: '/profile/change-password',
   userAddress: '/profile/user-address',
   userOrders: '/profile/my-oders',
+  detailUserOrder: '/profile/my-oders/:orderId',
   reviews: '/profile/reviews',
   admin: '/admin',
   manageUsers: '/admin/manage-users',
