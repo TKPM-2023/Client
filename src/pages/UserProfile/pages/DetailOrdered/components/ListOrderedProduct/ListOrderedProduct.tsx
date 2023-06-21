@@ -1,46 +1,40 @@
 import { Typography, Tooltip, Dialog, DialogHeader, DialogBody, DialogFooter, Button } from '@material-tailwind/react'
+import { OrderedProductType } from 'src/types/order.type'
 import { useState } from 'react'
+
 interface Props {
+  orderedProduct: OrderedProductType
   status: number
 }
 
-function ListOrderedProduct({ status }: Props) {
+function ListOrderedProduct({ orderedProduct, status }: Props) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(!open)
   return (
     <div className='mb-3 flex justify-center'>
-      <div className=' grid w-[940px] grid-cols-[400px_150px_170px_175px_25px] rounded-md bg-gray-200 p-3'>
+      <div className='grid w-[940px] grid-cols-[400px_150px_170px_175px_25px] rounded-md bg-gray-200 p-3 hover:bg-gray-100'>
         <div color='blue-gray' className='flex items-center font-bold'>
           <div className=' flex w-fit items-center'>
-            <Tooltip
-              content='Xem sản phẩm'
-              animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 }
-              }}
-              placement='bottom'
-            >
-              <img
-                src='https://storage.googleapis.com/my-image-products/iphone-14-pro-max--p459617sku=220909017.webp'
-                alt=''
-                width={50}
-              />
-            </Tooltip>
+            <img
+              src={orderedProduct.product_origin.images ? orderedProduct.product_origin.images[0].url : ''}
+              alt=''
+              width={50}
+            />
 
             <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-medium'>
-              Iphone 14 Pro Max 1TB Deep purple
+              {orderedProduct.product_origin.name}
             </Typography>
           </div>
         </div>
         <Typography variant='small' color='red' className='flex items-center font-medium'>
-          500.000 VNĐ
+          {(orderedProduct?.price / orderedProduct.quantiy).toLocaleString('vi-VN')} VNĐ
         </Typography>
         <Typography variant='small' color='blue-gray' className='ml-6 flex items-center'>
-          1
+          {orderedProduct?.quantiy}
         </Typography>
         <Typography variant='small' color='red' className='flex items-center font-medium'>
-          500.000 VNĐ
+          {orderedProduct?.price.toLocaleString('vi-VN')} VNĐ
         </Typography>
         {status === 2 ? (
           <Tooltip

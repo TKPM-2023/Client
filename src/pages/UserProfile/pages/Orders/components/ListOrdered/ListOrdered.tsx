@@ -1,57 +1,118 @@
 import { Collapse, Tooltip, Typography, Chip } from '@material-tailwind/react'
-import { useState } from 'react'
+import { color } from '@material-tailwind/react/types/components/chip'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { OrderType } from 'src/types/order.type'
 
-function ListOrdered() {
+interface Props {
+  order: OrderType
+}
+
+export function formatDate(time: string) {
+  const dateTime = new Date(time)
+
+  const year = dateTime.getFullYear()
+  const month = dateTime.getMonth() + 1
+  const day = dateTime.getDate()
+
+  return `${day}/${month}/${year}`
+}
+
+function ListOrdered({ order }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen((cur) => !cur)
+  const [status, setStatus] = useState<number>(0)
+  const [chipProp, setChipProp] = useState<{ color: string; value: string; iconColor: string }>({
+    color: 'green',
+    value: 'pending',
+    iconColor: 'bg-green-900'
+  })
+
+  useEffect(() => {
+    let updatedStatus = status
+
+    if (order?.status !== 0) {
+      updatedStatus = order.order_status
+    } else {
+      updatedStatus = -1
+    }
+
+    setStatus(updatedStatus)
+
+    switch (updatedStatus) {
+      case 0:
+        setChipProp({ color: 'yellow', value: 'pending', iconColor: 'bg-yellow-900' })
+        break
+      case 1:
+        setChipProp({ color: 'blue', value: 'delivery', iconColor: 'bg-blue-900' })
+        break
+      case 2:
+        setChipProp({ color: 'green', value: 'success', iconColor: 'bg-green-900' })
+        break
+      default:
+        setChipProp({ color: 'red', value: 'cancel', iconColor: 'bg-red-900' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order.order_status, order.status])
+
   return (
     <div className=''>
       <div
         className={`${
-          isOpen ? 'rounded-b-none bg-blue-50' : 'mt-3'
-        } grid w-full grid-cols-[80px_100px_100px_175px_400px_150px_100px_20px] rounded-md bg-gray-200 px-3 py-6 hover:bg-gray-100`}
+          isOpen ? ' rounded-b-none bg-blue-50 ' : ' mt-3 bg-gray-200'
+        } grid w-full grid-cols-[80px_100px_100px_175px_380px_150px_120px_20px] rounded-md px-3 py-6 hover:bg-gray-100`}
       >
         <Tooltip
-          content='Xem chi tiết đơn hàng'
+          content={status === -1 ? 'Đơn hàng đã hủy' : 'Xem chi tiết đơn hàng'}
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0, y: 25 }
           }}
           placement='bottom'
         >
-          <Link to={`/profile/my-oders/1231`}>
-            <Typography variant='small' color='blue-gray' className='flex items-center font-medium hover:font-bold'>
-              #e5352
+          {status !== -1 ? (
+            <Link to={`/profile/my-oders/${order.id}`}>
+              <Typography variant='small' color='blue-gray' className='flex items-center font-medium hover:font-bold'>
+                #{order.id.slice(-5)}
+              </Typography>
+            </Link>
+          ) : (
+            <Typography
+              variant='small'
+              color='blue-gray'
+              className='flex cursor-default items-center font-medium hover:font-bold'
+            >
+              #{order.id.slice(-5)}
             </Typography>
-          </Link>
+          )}
         </Tooltip>
 
         <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
-          27/5/2023
+          {formatDate(order.created_at)}
         </Typography>
         <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
-          <span className='ml-6'>3</span>
+          <span className='ml-6'>{order.products.length}</span>
         </Typography>
         <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
-          <span>Trần Anh Thi</span>
+          <span>{order.contact.name}</span>
         </Typography>
         <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
-          134 Cao Bá Đạt, Võ Xu, Đức Linh, Bình Thuận
+          {order.contact.addr}
         </Typography>
         <Typography variant='small' color='red' className='flex items-center font-medium'>
-          2.000.000 VNĐ
+          {order.total_price.toLocaleString('vi-VN')} VNĐ
         </Typography>
-        <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
+        {/* trạng thái đơn hàng */}
+        <div color='blue-gray' className='flex items-center font-medium'>
           <Chip
             variant='ghost'
-            color='green'
+            color={chipProp.color as color}
             size='sm'
-            value='Success'
+            value={chipProp.value}
             className='rounded-full'
-            icon={<span className="mx-auto mt-1 block h-2 w-2 rounded-full bg-green-900 content-['']" />}
+            icon={<span className={`mx-auto mt-1 block h-2 w-2 rounded-full ${chipProp.iconColor} content-['']`} />}
           />
-        </Typography>
+        </div>
 
         <Tooltip
           content='Xem thêm'
@@ -72,73 +133,45 @@ function ListOrdered() {
           </button>
         </Tooltip>
       </div>
+      {/* Danh sách sản phẩm  */}
       <Collapse open={isOpen}>
         <div className='mb-3 w-full rounded-md rounded-t-none border-t border-gray-400 bg-gray-200 px-12'>
           <div className='flex h-full w-full justify-center'>
             <table className='h-full w-full min-w-max  text-left'>
               <tbody>
-                <tr className='even:bg-blue-gray-50/50'>
-                  <td className='w-[300px] p-4'>
-                    <div className=' flex w-fit items-center'>
-                      <img
-                        src='https://storage.googleapis.com/my-image-products/iphone-14-pro-max--p459617sku=220909017.webp'
-                        alt=''
-                        width={50}
-                      ></img>
-                      <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-bold'>
-                        Iphone 14 Pro Max 1TB Deep purple
-                      </Typography>
-                    </div>
-                  </td>
-                  <td className='w-[150px] p-4'>
-                    <Typography variant='small' color='red' className='flex items-center '>
-                      500.000 VNĐ
-                    </Typography>
-                  </td>
-                  <td className='w-[100px] p-4'>
-                    <Typography variant='small' color='blue-gray' className='font-normal'>
-                      x2
-                    </Typography>
-                  </td>
-                  <td className='w-[165px] p-4'>
-                    <Typography as='a' href='#' variant='small' color='blue' className='font-medium'>
+                {order.products.map((product) => (
+                  <tr key={product.id} className='even:bg-blue-gray-50/50'>
+                    <td className='w-[300px] p-4'>
+                      <div className=' flex w-fit items-center'>
+                        <img
+                          src={product.product_origin.images ? product.product_origin.images[0].url : ''}
+                          alt=''
+                          width={50}
+                        ></img>
+                        <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-bold'>
+                          {product.product_origin.name}
+                        </Typography>
+                      </div>
+                    </td>
+                    <td className='w-[150px] p-4'>
                       <Typography variant='small' color='red' className='flex items-center '>
-                        1.000.000 VNĐ
+                        {(product.price / product.quantiy).toLocaleString('vi-VN')} VNĐ
                       </Typography>
-                    </Typography>
-                  </td>
-                </tr>
-                <tr className='even:bg-blue-gray-50/50'>
-                  <td className='w-[300px] p-4'>
-                    <div className=' flex w-fit items-center'>
-                      <img
-                        src='https://storage.googleapis.com/my-image-products/iphone-14-pro-max--p459617sku=220909017.webp'
-                        alt=''
-                        width={50}
-                      ></img>
-                      <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-bold'>
-                        Iphone 14 Pro Max 1TB Deep purple
+                    </td>
+                    <td className='w-[100px] p-4'>
+                      <Typography variant='small' color='blue-gray' className='font-normal'>
+                        x{product.quantiy}
                       </Typography>
-                    </div>
-                  </td>
-                  <td className='w-[150px] p-4'>
-                    <Typography variant='small' color='red' className='flex items-center '>
-                      500.000 VNĐ
-                    </Typography>
-                  </td>
-                  <td className='w-[100px] p-4'>
-                    <Typography variant='small' color='blue-gray' className='font-normal'>
-                      x2
-                    </Typography>
-                  </td>
-                  <td className='w-[165px] p-4'>
-                    <Typography as='a' href='#' variant='small' color='blue' className='font-medium'>
-                      <Typography variant='small' color='red' className='flex items-center '>
-                        1.000.000 VNĐ
+                    </td>
+                    <td className='w-[165px] p-4'>
+                      <Typography as='a' href='#' variant='small' color='blue' className='font-medium'>
+                        <Typography variant='small' color='red' className='flex items-center '>
+                          {product.price.toLocaleString('vi-VN')} VNĐ
+                        </Typography>
                       </Typography>
-                    </Typography>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

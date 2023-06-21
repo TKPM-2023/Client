@@ -55,6 +55,7 @@ function Cart() {
     const checkedArray = listIdProductInCart
     if (isSimilarArray(listCheckedProduct, checkedArray)) setIsChecked(true)
     else setIsChecked(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckedProduct])
 
   useEffect(() => {
@@ -67,6 +68,7 @@ function Cart() {
       else setListCheckedProduct([''])
       setListPrice([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked])
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import images from 'src/assets/images'
 import { useQuery } from '@tanstack/react-query'
 import contactApi from 'src/apis/contact.api'
 import { AddressType, ContactListConfig } from 'src/types/contact.type'
+import { OrderProductType } from 'src/types/order.type'
 
 function Order() {
   const { listProductIsOrdering, profile } = useContext(AppContext)
@@ -30,6 +31,15 @@ function Order() {
     queryKey: ['address', contactQueryConfig],
     queryFn: () => contactApi.getListContact(contactQueryConfig),
     keepPreviousData: true
+  })
+
+  const ListOrderProduct: OrderProductType[] = []
+  listProductIsOrdering.forEach((product) => {
+    ListOrderProduct.push({
+      product_origin: { id: product.product_id },
+      quantity: product.quantity,
+      discount: 0
+    })
   })
 
   const contactList = contactData?.data.data
@@ -55,7 +65,12 @@ function Order() {
           <div className='container h-full '>
             <div className='flex w-full gap-4'>
               <OrderInfor listProductIsOrdering={listProductIsOrdering} setDeliveryCost={setDeliveryCost} />
-              <SumaryOrder addresses={contactList as AddressType[]} totalCost={totalCost} deliveryCost={deliveryCost} />
+              <SumaryOrder
+                addresses={contactList as AddressType[]}
+                totalCost={totalCost}
+                deliveryCost={deliveryCost}
+                ListOrderProduct={ListOrderProduct}
+              />
             </div>
           </div>
         )}
