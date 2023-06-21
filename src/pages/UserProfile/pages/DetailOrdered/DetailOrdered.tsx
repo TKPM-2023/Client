@@ -5,26 +5,35 @@ import StatusOrdered from './components/StatusOrdered'
 import ListOrderedProduct from './components/ListOrderedProduct'
 import routes from 'src/constants/routes'
 import orderApi from 'src/apis/order.api'
-import { useQuery } from '@tanstack/react-query'
-import { useParams, Link } from 'react-router-dom'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { OrderType } from 'src/types/order.type'
+import { toast } from 'react-toastify'
 
 function DetailOrdered() {
+  const navigate = useNavigate()
   const [status, setStatus] = useState<number>(0)
   const { orderId } = useParams()
-  const { data: orderData, refetch } = useQuery({
+  const { data: orderData } = useQuery({
     queryKey: ['detailOrder', orderId],
     queryFn: () => orderApi.getDetailOrder(orderId as string),
     keepPreviousData: true
+  })
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: () => orderApi.deleteOrder(orderId as string),
+    onSuccess: () => {
+      toast.success('Hủy đơn hàng thành công')
+      navigate('/profile/my-oders')
+    }
   })
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(!open)
 
   const hanldeButtonCancel = () => {
-    console.log('abc')
-    refetch()
+    deleteOrderMutation.mutate()
     setOpen(false)
   }
 

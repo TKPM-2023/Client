@@ -63,18 +63,28 @@ function ListOrdered({ order }: Props) {
         } grid w-full grid-cols-[80px_100px_100px_175px_380px_150px_120px_20px] rounded-md px-3 py-6 hover:bg-gray-100`}
       >
         <Tooltip
-          content='Xem chi tiết đơn hàng'
+          content={status === -1 ? 'Đơn hàng đã hủy' : 'Xem chi tiết đơn hàng'}
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0, y: 25 }
           }}
           placement='bottom'
         >
-          <Link to={`/profile/my-oders/${order.id}`}>
-            <Typography variant='small' color='blue-gray' className='flex items-center font-medium hover:font-bold'>
+          {status !== -1 ? (
+            <Link to={`/profile/my-oders/${order.id}`}>
+              <Typography variant='small' color='blue-gray' className='flex items-center font-medium hover:font-bold'>
+                #{order.id.slice(-5)}
+              </Typography>
+            </Link>
+          ) : (
+            <Typography
+              variant='small'
+              color='blue-gray'
+              className='flex cursor-default items-center font-medium hover:font-bold'
+            >
               #{order.id.slice(-5)}
             </Typography>
-          </Link>
+          )}
         </Tooltip>
 
         <Typography variant='small' color='blue-gray' className='flex items-center font-medium'>
