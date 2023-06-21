@@ -1,21 +1,46 @@
 import { Card, CardBody, Dialog, DialogHeader, DialogBody, Button } from '@material-tailwind/react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
+import { Link, useNavigate } from 'react-router-dom'
 import { AddressType } from 'src/types/contact.type'
+import { OrderProductType, CreateOrderType } from 'src/types/order.type'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import orderApi from 'src/apis/order.api'
 
 interface Props {
   addresses: AddressType[]
   totalCost: number
   deliveryCost: number
+  ListOrderProduct: OrderProductType[]
 }
 
-function SumaryOrder({ addresses, totalCost, deliveryCost }: Props) {
+function SumaryOrder({ addresses, totalCost, deliveryCost, ListOrderProduct }: Props) {
+  const { setListProductIsOrdering } = useContext(AppContext)
+  const navigate = useNavigate()
   const [open, setOpen] = useState<boolean>(false)
   const [isChosenAddress, setIsChosenAddress] = useState<AddressType>({ id: '', name: '', phone: '', addr: '' })
 
   const hanldeChooseAddress = (contact: AddressType) => {
     setIsChosenAddress(contact)
     handleOpen()
+  }
+
+  const createOrderMutation = useMutation({
+    mutationFn: (body: CreateOrderType) => orderApi.createOrder(body),
+    onSuccess: (data) => {
+      toast.success('Đặt hàng thành công')
+      setListProductIsOrdering([])
+      navigate(`/profile/my-oders/${data.data.data}`)
+    }
+  })
+
+  const hanldePurchaseButton = () => {
+    createOrderMutation.mutate({
+      contact_id: isChosenAddress.id as string,
+      products: ListOrderProduct,
+      total_price: totalCost + deliveryCost
+    })
   }
 
   const handleOpen = () => setOpen(!open)
@@ -108,6 +133,7 @@ function SumaryOrder({ addresses, totalCost, deliveryCost }: Props) {
           </Card>
 
           <button
+            onClick={hanldePurchaseButton}
             disabled={isChosenAddress.id === ''}
             className={` ${
               isChosenAddress.id === '' ? 'pointer-events-none bg-gray-500' : ''

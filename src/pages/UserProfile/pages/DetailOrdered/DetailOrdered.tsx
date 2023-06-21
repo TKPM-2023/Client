@@ -1,13 +1,48 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
-import { Typography, Button } from '@material-tailwind/react'
+import { Typography, Button, Dialog, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react'
 import DetailInforOrdered from './components/DetailInforOrdered'
 import StatusOrdered from './components/StatusOrdered'
 import ListOrderedProduct from './components/ListOrderedProduct'
-import { Link } from 'react-router-dom'
 import routes from 'src/constants/routes'
+import orderApi from 'src/apis/order.api'
+import { useQuery } from '@tanstack/react-query'
+import { useParams, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { OrderType } from 'src/types/order.type'
 
 function DetailOrdered() {
-  const status = 2
+  const [status, setStatus] = useState<number>(0)
+  const { orderId } = useParams()
+  const { data: orderData, refetch } = useQuery({
+    queryKey: ['detailOrder', orderId],
+    queryFn: () => orderApi.getDetailOrder(orderId as string),
+    keepPreviousData: true
+  })
+  const [open, setOpen] = useState(false)
+
+  const handleOpen = () => setOpen(!open)
+
+  const hanldeButtonCancel = () => {
+    console.log('abc')
+    refetch()
+    setOpen(false)
+  }
+
+  const detailOrder = orderData?.data.data
+
+  useEffect(() => {
+    let updatedStatus = status
+
+    if (detailOrder?.status !== 0) {
+      updatedStatus = detailOrder?.order_status as number
+    } else {
+      updatedStatus = -1
+    }
+
+    setStatus(updatedStatus)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailOrder?.order_status, detailOrder?.status])
+
   return (
     <>
       <div className='bg-gray-300 px-2 py-6'>
@@ -19,9 +54,9 @@ function DetailOrdered() {
                 <Link to={routes.userOrders}>
                   <ChevronLeftIcon className='h-6 w-6 hover:text-blue-700'></ChevronLeftIcon>
                 </Link>
-                <h1 className='text-2xl font-bold text-gray-700'>Đơn hàng #1231312</h1>{' '}
+                <h1 className='text-2xl font-bold text-gray-700'>Đơn hàng #{detailOrder?.id.slice(-5)}</h1>{' '}
               </div>
-              <Button disabled={status === 2 ? true : false} color='red'>
+              <Button onClick={handleOpen} disabled={status === 2 ? true : false} color='red'>
                 Hủy đơn hàng
               </Button>
             </div>
@@ -49,11 +84,27 @@ function DetailOrdered() {
               <div></div>
             </div>
           </div>
-          <ListOrderedProduct status={status} />
-          <ListOrderedProduct status={status} />
-          <DetailInforOrdered />
+          {detailOrder?.products.map((product) => (
+            <ListOrderedProduct key={product.id} status={status} orderedProduct={product} />
+          ))}
+          <DetailInforOrdered detailOrder={detailOrder as OrderType} />
         </div>
       </div>
+
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>Hủy đơn hàng #{detailOrder?.id.slice(-5)}</DialogHeader>
+        <DialogBody divider>
+          <Typography color='red'>Bạn có chắc chắn muốn hủy đơn hàng này</Typography>
+        </DialogBody>
+        <DialogFooter>
+          <Button variant='text' color='green' onClick={handleOpen} className='mr-1'>
+            <span>Không</span>
+          </Button>
+          <Button variant='gradient' color='red' onClick={hanldeButtonCancel}>
+            <span>Hủy đơn hàng</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </>
   )
 }

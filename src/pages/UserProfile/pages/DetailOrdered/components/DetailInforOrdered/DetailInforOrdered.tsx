@@ -1,6 +1,12 @@
 import { Card, CardBody, CardFooter, Typography } from '@material-tailwind/react'
+import { OrderType } from 'src/types/order.type'
+import { formatTime } from 'src/pages/DetailProduct/components/ProductReview/ProductReview'
 
-function DetailInforOrdered() {
+interface Props {
+  detailOrder: OrderType
+}
+
+function DetailInforOrdered({ detailOrder }: Props) {
   return (
     <div className='mt-8 flex justify-center'>
       <Card className='w-[640px] bg-gray-200'>
@@ -10,32 +16,37 @@ function DetailInforOrdered() {
               Thông tin hóa đơn
             </Typography>
             <Typography variant='h5' color='red' className=''>
-              5.000.000 VNĐ
+              {detailOrder?.total_price.toLocaleString('vi-VN')} VNĐ
             </Typography>
           </div>
           <div className='flex '>
-            <Typography variant='head' color='blue-gray' className='flex-1'>
-              <span className='font-bold'>Mã hóa đơn: </span>456yrrtrt
+            <Typography variant='lead' color='blue-gray' className='flex-1'>
+              <span className='font-bold'>Mã hóa đơn: </span>
+              {detailOrder?.id.slice(-5)}
             </Typography>
-            <Typography variant='head' color='blue-gray' className='flex-1'>
-              <span className='font-bold'>Ngày mua </span>27/05/2023
+            <Typography variant='lead' color='blue-gray' className='flex-1'>
+              <span className='font-bold'>Ngày mua </span>
+              {formatTime(detailOrder?.created_at)}
             </Typography>
           </div>
           <div className='flex '>
-            <Typography variant='head' color='blue-gray' className='flex-1'>
-              <span className='font-bold'>Tên khách hàng: </span>Tràn Anh Thi
+            <Typography variant='lead' color='blue-gray' className='flex-1'>
+              <span className='font-bold'>Tên khách hàng: </span>
+              {detailOrder?.contact.name}
             </Typography>
-            <Typography variant='head' color='blue-gray' className='flex-1'>
-              <span className='font-bold'>Số điện thoại: </span>035958588
+            <Typography variant='lead' color='blue-gray' className='flex-1'>
+              <span className='font-bold'>Số điện thoại: </span>
+              {detailOrder?.contact.phone}
             </Typography>
           </div>
-          <Typography variant='head' color='blue-gray' className='flex-1'>
-            <span className='font-bold'>Địa chỉ: </span>134 Cao Bá Đạt, Võ Xu, Đức Linh, Bình Thuận
+          <Typography variant='lead' color='blue-gray' className='flex-1'>
+            <span className='font-bold'>Địa chỉ: </span>
+            {detailOrder?.contact.addr}
           </Typography>
-          <Typography variant='head' color='blue-gray' className='flex-1'>
+          <Typography variant='lead' color='blue-gray' className='flex-1'>
             <span className='font-bold'>Phí ship: </span>50.000 VNĐ
           </Typography>
-          <Typography variant='head' color='blue-gray' className='flex-1'>
+          <Typography variant='lead' color='blue-gray' className='flex-1'>
             <span className='font-bold'>Hình thức thanh toán </span>Tiền mặt
           </Typography>
         </CardBody>

@@ -79,6 +79,7 @@ function ListProductInCart({
   useEffect(() => {
     if (isInList(productInCart.product_id, listCheckedProduct)) setIsChecked(true)
     else setIsChecked(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckedProduct])
 
   useEffect(() => {
@@ -90,6 +91,7 @@ function ListProductInCart({
       const newList = listCheckedProduct.filter((item) => item !== productInCart.product_id)
       setListCheckedProduct(newList)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked])
 
   useEffect(() => {
@@ -121,6 +123,7 @@ function ListProductInCart({
         return newListPrice
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked, quantityOrder, listCheckedProduct])
 
   return (
