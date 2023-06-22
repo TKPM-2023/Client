@@ -12,14 +12,14 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
 
   const handleOpen = () => setOpen(!open)
   return (
-    <div className='mb-3 flex justify-center'>
-      <div className='grid w-[940px] grid-cols-[400px_150px_170px_175px_25px] rounded-md bg-gray-200 p-3 hover:bg-gray-100'>
+    <div className='mb-1 flex justify-center'>
+      <div className='grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2 hover:bg-gray-100'>
         <div color='blue-gray' className='flex items-center font-bold'>
           <div className=' flex w-fit items-center'>
             <img
               src={orderedProduct.product_origin.images ? orderedProduct.product_origin.images[0].url : ''}
               alt=''
-              width={50}
+              width={30}
             />
 
             <Typography variant='small' color='blue-gray' className='ml-3 flex items-center font-medium'>
@@ -52,7 +52,7 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
                 viewBox='0 0 24 24'
                 strokeWidth='1.5'
                 stroke='currentColor'
-                className='h-5 w-5'
+                className='h-4 w-4'
               >
                 <path
                   strokeLinecap='round'

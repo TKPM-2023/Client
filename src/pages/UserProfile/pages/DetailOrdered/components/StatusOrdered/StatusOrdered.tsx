@@ -8,7 +8,7 @@ interface Props {
 function StatusOrdered({ status }: Props) {
   return (
     <div className=' mb-20 flex justify-center'>
-      <div className=' mt-8 w-[700px]'>
+      <div className=' mt-8 w-[500px]'>
         <Stepper activeStep={status} className='z-0'>
           <Step>
             <ClockIcon className='h-5 w-5' />

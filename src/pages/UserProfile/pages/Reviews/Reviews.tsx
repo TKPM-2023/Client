@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, Typography, Button, Avatar } from '@material-tailwind/react'
+import { Card, CardHeader, CardBody, Typography, Avatar } from '@material-tailwind/react'
 import { StarIcon } from '@heroicons/react/24/solid'
 function Reviews() {
   return (
@@ -14,16 +14,6 @@ function Reviews() {
             <div className='mt-4 flex justify-center text-start text-gray-500'></div>{' '}
           </div>
           <div className='mt-8 rounded border-2 p-6'>
-            <div className='flex items-center justify-center gap-4 border-b pb-4'>
-              <Avatar
-                src='https://nontrum.vn/wp-content/uploads/2018/11/royal-m139-den-bong-e1681460645978.jpg'
-                alt='avatar'
-                variant='square'
-              />
-              <Typography variant='h6' color='blue-gray'>
-                nón siêu cấp
-              </Typography>
-            </div>
             <Card color='transparent' shadow={false} className='w-full '>
               <CardHeader
                 color='transparent'
@@ -42,6 +32,16 @@ function Reviews() {
                     <Typography variant='h5' color='blue-gray'>
                       Thi đẹp trai
                     </Typography>
+                    <div className='flex items-center justify-center gap-4'>
+                      <Avatar
+                        src='https://nontrum.vn/wp-content/uploads/2018/11/royal-m139-den-bong-e1681460645978.jpg'
+                        alt='avatar'
+                        variant='square'
+                      />
+                      <Typography variant='h6' color='blue-gray'>
+                        nón siêu cấp
+                      </Typography>
+                    </div>
                     <div className='5 flex items-center gap-0'>
                       <StarIcon className='h-5 w-5 text-yellow-700' />
                       <StarIcon className='h-5 w-5 text-yellow-700' />
