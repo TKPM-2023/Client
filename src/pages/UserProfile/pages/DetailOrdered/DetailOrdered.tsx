@@ -1,8 +1,9 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { Typography, Button, Dialog, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react'
-import DetailInforOrdered from './components/DetailInforOrdered'
+import BillOrderDetail from './components/BillOrderDetail'
 import StatusOrdered from './components/StatusOrdered'
 import ListOrderedProduct from './components/ListOrderedProduct'
+import CustomerDetail from './components/CustomerDetail'
 import routes from 'src/constants/routes'
 import orderApi from 'src/apis/order.api'
 import { useQuery, useMutation } from '@tanstack/react-query'
@@ -63,7 +64,9 @@ function DetailOrdered() {
                 <Link to={routes.userOrders}>
                   <ChevronLeftIcon className='h-6 w-6 hover:text-blue-700'></ChevronLeftIcon>
                 </Link>
-                <h1 className='text-2xl font-bold text-gray-700'>Đơn hàng #{detailOrder?.id.slice(-5)}</h1>{' '}
+                <h1 className='text-2xl font-bold text-gray-700'>
+                  Đơn hàng <span className='text-blue-700'>#{detailOrder?.id.slice(-5).toUpperCase()}</span>
+                </h1>{' '}
               </div>
               <Button onClick={handleOpen} disabled={status === 2 ? true : false} color='red'>
                 Hủy đơn hàng
@@ -71,35 +74,45 @@ function DetailOrdered() {
             </div>
             <div className='mt-4 flex justify-center text-start text-gray-500'></div>{' '}
           </div>
-          {/* Trạng thái */}
-          <StatusOrdered status={status} />
-          {/* Danh sách sản phẩm trong đơn hàng */}
-          <div className='mb-6 flex justify-center'>
-            <div className=' grid w-[940px] grid-cols-[400px_150px_170px_175px_25px] rounded-md bg-gray-200 p-3'>
-              <div color='blue-gray' className='flex items-center font-bold'>
-                <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
-                  Sản phẩm
-                </Typography>
+          {/* Body */}
+          <div className='flex h-full gap-12'>
+            <div className='flex h-full flex-col'>
+              {/* Trạng thái */}
+              <StatusOrdered status={status} />
+              <div className='mb-3 flex justify-center'>
+                <div className=' grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2.5'>
+                  <div color='blue-gray' className='flex items-center font-bold'>
+                    <Typography color='blue-gray' className='flex items-center text-[15px] font-bold'>
+                      Thông tin sản phẩm
+                    </Typography>
+                  </div>
+                  <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
+                    Đơn giá
+                  </Typography>
+                  <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
+                    Số lượng
+                  </Typography>
+                  <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
+                    Thành tiền
+                  </Typography>
+                  <div></div>
+                </div>
               </div>
-              <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
-                Đơn giá
-              </Typography>
-              <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
-                Số lượng
-              </Typography>
-              <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
-                Thành tiền
-              </Typography>
-              <div></div>
+              {/* Danh sách sản phẩm trong đơn hàng */}
+              {detailOrder?.products.map((product) => (
+                <ListOrderedProduct key={product.id} status={status} orderedProduct={product} />
+              ))}
+              {/* Thông tin chi tiết về khách hàng*/}
+              <CustomerDetail detailOrder={detailOrder as OrderType} />
+            </div>
+            <div className=''>
+              <BillOrderDetail detailOrder={detailOrder as OrderType} />
             </div>
           </div>
-          {detailOrder?.products.map((product) => (
-            <ListOrderedProduct key={product.id} status={status} orderedProduct={product} />
-          ))}
-          <DetailInforOrdered detailOrder={detailOrder as OrderType} />
         </div>
       </div>
 
+      {/* dialog xác nhận hủy đơn hàng */}
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Hủy đơn hàng #{detailOrder?.id.slice(-5)}</DialogHeader>
         <DialogBody divider>

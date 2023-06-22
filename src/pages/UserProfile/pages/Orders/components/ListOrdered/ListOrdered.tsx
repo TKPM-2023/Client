@@ -72,17 +72,17 @@ function ListOrdered({ order }: Props) {
         >
           {status !== -1 ? (
             <Link to={`/profile/my-oders/${order.id}`}>
-              <Typography variant='small' color='blue-gray' className='flex items-center font-medium hover:font-bold'>
-                #{order.id.slice(-5)}
+              <Typography variant='small' color='blue' className='flex items-center font-medium hover:font-bold'>
+                #{order.id.slice(-5).toUpperCase()}
               </Typography>
             </Link>
           ) : (
             <Typography
               variant='small'
-              color='blue-gray'
+              color='blue'
               className='flex cursor-default items-center font-medium hover:font-bold'
             >
-              #{order.id.slice(-5)}
+              #{order.id.slice(-5).toUpperCase()}
             </Typography>
           )}
         </Tooltip>

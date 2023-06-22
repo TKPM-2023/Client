@@ -1,14 +1,30 @@
 import { Typography } from '@material-tailwind/react'
 import ListOrdered from './components/ListOrdered'
+import FilterAndSearch from './components/FilterAndSearch'
 import orderApi from 'src/apis/order.api'
-import { useContext } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AppContext } from 'src/contexts/app.context'
 import { Link } from 'react-router-dom'
 import images from 'src/assets/images'
+import { OrderType } from 'src/types/order.type'
+
+export interface DateRangeItem {
+  startDate: Date | undefined
+  endDate: Date | undefined
+  key: string
+}
 
 function Orders() {
   const { profile } = useContext(AppContext)
+  const [filteredOrderList, setFilteredOrderList] = useState<OrderType[]>([])
+  const [dateRange, setDateRange] = useState<DateRangeItem>({
+    startDate: undefined,
+    endDate: undefined,
+    key: 'selection'
+  })
+
+  const [selectedStatus, setSelectedStatus] = useState<string>('all')
 
   const orderQueryConfig = {
     user_id: `"${profile?.id}"`
@@ -20,6 +36,44 @@ function Orders() {
   })
 
   const orderList = orderData?.data.data
+
+  useEffect(() => {
+    let tempList: OrderType[] | undefined
+
+    if (dateRange.startDate && dateRange.endDate) {
+      if (selectedStatus === 'all') {
+        tempList = orderList?.filter((order) => {
+          const orderDate = new Date(order.created_at)
+          return orderDate >= (dateRange.startDate as Date) && orderDate <= (dateRange.endDate as Date)
+        })
+      } else {
+        tempList = orderList?.filter((order) => {
+          const orderDate = new Date(order.created_at)
+          return (
+            orderDate >= (dateRange.startDate as Date) &&
+            orderDate <= (dateRange.endDate as Date) &&
+            ((selectedStatus === 'pending' && order.order_status === 0 && order.status === 1) ||
+              (selectedStatus === 'delivery' && order.order_status === 1 && order.status === 1) ||
+              (selectedStatus === 'success' && order.order_status === 2 && order.status === 1) ||
+              (selectedStatus === 'cancel' && order.status === 0))
+          )
+        })
+      }
+    } else if (selectedStatus !== 'all') {
+      tempList = orderList?.filter((order) => {
+        return (
+          (selectedStatus === 'pending' && order.order_status === 0 && order.status === 1) ||
+          (selectedStatus === 'delivery' && order.order_status === 1 && order.status === 1) ||
+          (selectedStatus === 'success' && order.order_status === 2 && order.status === 1) ||
+          (selectedStatus === 'cancel' && order.status === 0)
+        )
+      })
+    } else {
+      tempList = orderList
+    }
+
+    setFilteredOrderList(tempList as OrderType[])
+  }, [dateRange, orderList, selectedStatus])
 
   return (
     <>
@@ -49,7 +103,13 @@ function Orders() {
               </button>
             </div>
           ) : (
-            <div className='mt-8'>
+            <div className='mt-4'>
+              <FilterAndSearch
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+              />
               <div className='mb-5 grid w-full grid-cols-[80px_100px_100px_175px_380px_150px_120px_20px] rounded-md bg-gray-200 p-3'>
                 <Typography variant='small' color='blue-gray' className='flex items-center font-bold'>
                   ID
@@ -78,7 +138,7 @@ function Orders() {
                 </Typography>
               </div>
 
-              {orderList?.map((order) => (
+              {filteredOrderList?.map((order) => (
                 <ListOrdered key={order.id} order={order} />
               ))}
             </div>
