@@ -1,9 +1,9 @@
 function Dashboard() {
   return (
     <div className='px-5'>
-      <h1 className='mb-4 text-3xl font-semibold capitalize text-gray-800'>Bảng điều khiển</h1>
-      <div className='flex flex-wrap'>
-        <div className='w-full px-6 sm:w-1/2 xl:w-1/3'>
+      <h1 className='mb-6 text-3xl font-semibold capitalize text-gray-800'>Bảng điều khiển</h1>
+      <div className='grid grid-cols-12 gap-6'>
+        <div className='col-span-12 w-full lg:col-span-4'>
           <div className='flex items-center rounded-md bg-white px-5 py-6 shadow-sm'>
             <div className='rounded-full bg-indigo-600 bg-opacity-75 p-3'>
               <svg className='h-8 w-8 text-white' viewBox='0 0 28 30' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -35,11 +35,11 @@ function Dashboard() {
             </div>
             <div className='mx-5'>
               <h4 className='text-2xl font-semibold text-gray-700'> 8,282 </h4>
-              <div className='text-gray-500'> New Users </div>
+              <div className='text-gray-500'> Người dùng mới </div>
             </div>
           </div>
         </div>
-        <div className='mt-6 w-full px-6 sm:mt-0 sm:w-1/2 xl:w-1/3'>
+        <div className='col-span-12 w-full lg:col-span-4'>
           <div className='flex items-center rounded-md bg-white px-5 py-6 shadow-sm'>
             <div className='rounded-full bg-blue-600 bg-opacity-75 p-3'>
               <svg className='h-8 w-8 text-white' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -59,11 +59,11 @@ function Dashboard() {
             </div>
             <div className='mx-5'>
               <h4 className='text-2xl font-semibold text-gray-700'> 200,521 </h4>
-              <div className='text-gray-500'> Total Orders </div>
+              <div className='text-gray-500'> Tổng đơn hàng </div>
             </div>
           </div>
         </div>
-        <div className='mt-6 w-full px-6 sm:w-1/2 xl:mt-0 xl:w-1/3'>
+        <div className='col-span-12 w-full lg:col-span-4'>
           <div className='flex items-center rounded-md bg-white px-5 py-6 shadow-sm'>
             <div className='rounded-full bg-pink-600 bg-opacity-75 p-3'>
               <svg className='h-8 w-8 text-white' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -83,7 +83,32 @@ function Dashboard() {
             </div>
             <div className='mx-5'>
               <h4 className='text-2xl font-semibold text-gray-700'> 215,542 </h4>
-              <div className='text-gray-500'> Available Products </div>
+              <div className='text-gray-500'> Sản phẩm hiện có </div>
+            </div>
+          </div>
+        </div>
+
+        <div className='col-span-12 w-full lg:col-span-4'>
+          <div className='flex items-center rounded-md bg-white px-5 py-6 shadow-sm'>
+            <div className='rounded-full bg-pink-600 bg-opacity-75 p-3'>
+              <svg className='h-8 w-8 text-white' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  d='M6.99998 11.2H21L22.4 23.8H5.59998L6.99998 11.2Z'
+                  fill='currentColor'
+                  stroke='currentColor'
+                  strokeWidth={2}
+                  strokeLinejoin='round'
+                />
+                <path
+                  d='M9.79999 8.4C9.79999 6.08041 11.6804 4.2 14 4.2C16.3196 4.2 18.2 6.08041 18.2 8.4V12.6C18.2 14.9197 16.3196 16.8 14 16.8C11.6804 16.8 9.79999 14.9197 9.79999 12.6V8.4Z'
+                  stroke='currentColor'
+                  strokeWidth={2}
+                />
+              </svg>
+            </div>
+            <div className='mx-5'>
+              <h4 className='text-2xl font-semibold text-gray-700'> 3,000 </h4>
+              <div className='text-gray-500'>Thể loại</div>
             </div>
           </div>
         </div>
