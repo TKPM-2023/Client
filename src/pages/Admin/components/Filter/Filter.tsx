@@ -5,7 +5,7 @@ import { renderStatus } from 'src/utils/utils'
 
 interface Props<QueryConfig> {
   queryConfig: QueryConfig
-  hasRoleFilter: boolean
+  hasRoleFilter?: boolean
 }
 
 const statusOptions = [

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { formatDate, renderOrderStatus, renderRole, renderStatus } from 'src/utils/utils'
+import { formatDate, formatNumber, renderOrderStatus, renderRole, renderStatus } from 'src/utils/utils'
 import Pagination from 'src/components/Pagination'
 import routes from 'src/constants/routes'
 import { createSearchParams } from 'react-router-dom'
@@ -11,9 +11,10 @@ interface Props {
   orders: OrderType[]
   pageSize: number
   queryConfig: QueryConfig
+  handleClickViewButton: (order: OrderType) => void
 }
 
-function Table({ orders, pageSize, queryConfig }: Props) {
+function Table({ orders, pageSize, queryConfig, handleClickViewButton }: Props) {
   const page = Number(queryConfig.page)
   const limit = Number(queryConfig.limit)
 
@@ -24,10 +25,16 @@ function Table({ orders, pageSize, queryConfig }: Props) {
           <thead className='bg-gray-50 uppercase text-gray-700 dark:bg-gray-700 dark:text-white'>
             <tr>
               <th scope='col' className='px-4 py-3'>
+                ID
+              </th>
+              <th scope='col' className='px-4 py-3'>
                 Số đơn
               </th>
               <th scope='col' className='px-4 py-3'>
                 Ngày đặt
+              </th>
+              <th scope='col' className='px-4 py-3'>
+                Tổng tiền
               </th>
               <th scope='col' className='px-4 py-3'>
                 Trạng thái
@@ -36,14 +43,14 @@ function Table({ orders, pageSize, queryConfig }: Props) {
                 Khách
               </th>
               <th scope='col' className='px-4 py-3'>
-                Hành động
+                Thao tác
               </th>
             </tr>
           </thead>
           <tbody>
             {orders?.length === 0 && (
               <tr className='border-b bg-white hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-600'>
-                <td colSpan={5} className='px-4 py-2 text-center text-base font-medium text-gray-800'>
+                <td colSpan={7} className='px-4 py-2 text-center text-base font-medium text-gray-800'>
                   Không có đơn
                 </td>
               </tr>
@@ -59,26 +66,35 @@ function Table({ orders, pageSize, queryConfig }: Props) {
                     })}
                   >
                     <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-white'>
-                      {order.products.length}
+                      {order.id}
                     </th>
+                    <td className='px-4 py-2'>{order.products.length}</td>
                     <td className='px-4 py-2'>{formatDate(order.created_at)}</td>
+                    <td className='px-4 py-2'>{formatNumber(order.total_price)}</td>
                     <td className='px-4 py-2'>
                       <span
-                        className={classNames('rounded  px-2.5 py-0.5 text-sm font-medium ', {
-                          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300':
-                            order.order_status === orderStatus.waitForConfirmation,
-                          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300':
-                            order.order_status === orderStatus.inProgress,
-                          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300':
-                            order.order_status === orderStatus.completed
-                        })}
+                        className={classNames(
+                          'relative select-none items-center rounded-full px-2 py-1 font-sans text-xs font-bold uppercase',
+                          {
+                            'bg-red-500/20 text-red-900': order.order_status === orderStatus.waitForConfirmation,
+                            'bg-blue-500/20 text-blue-900': order.order_status === orderStatus.inProgress,
+                            'bg-green-100 text-green-800': order.order_status === orderStatus.completed
+                          }
+                        )}
                       >
                         {renderOrderStatus(order.order_status)}
                       </span>
                     </td>
                     <td className='px-4 py-2'>{order.contact.name}</td>
                     <td className='px-4 py-2'>
-                      <div className='flex items-center gap-2'></div>
+                      <div className='flex items-center gap-2'>
+                        <button
+                          onClick={() => handleClickViewButton(order)}
+                          className='text-blue-600 hover:underline dark:text-blue-500'
+                        >
+                          Xem chi tiết
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 )

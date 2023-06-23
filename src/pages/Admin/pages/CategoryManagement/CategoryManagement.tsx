@@ -70,11 +70,11 @@ function CategoryManagement() {
     refetch()
   }
 
-  if (!categories || categories.length === 0) return null
+  if (!categories) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Thể Loại</title>
+        <title>Quản Lí Thể Loại | Trang Quản Trị</title>
         <meta name='description' content='Quản lí thể loại dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>

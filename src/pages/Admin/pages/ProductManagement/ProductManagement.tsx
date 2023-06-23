@@ -90,11 +90,11 @@ function ProductManagement() {
     refetch()
   }
 
-  if (!extendProducts || extendProducts.length === 0 || !categories || categories.length === 0) return null
+  if (!extendProducts || !categories) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Sản Phẩm</title>
+        <title>Quản Lí Sản Phẩm | Trang Quản Trị</title>
         <meta name='description' content='Quản lí sản phẩm dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>

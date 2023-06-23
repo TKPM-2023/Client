@@ -71,11 +71,11 @@ function UserManagement() {
     refetch()
   }
 
-  if (!users || users.length === 0) return null
+  if (!users) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Người Dùng</title>
+        <title>Quản Lí Người Dùng | Trang Quản Trị</title>
         <meta name='description' content='Quản lí người dùng dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>

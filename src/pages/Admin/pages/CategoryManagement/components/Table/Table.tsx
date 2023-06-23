@@ -54,7 +54,7 @@ function Table({
                 Ngày tạo
               </th>
               <th scope='col' className='px-4 py-3'>
-                Hành động
+                Thao tác
               </th>
             </tr>
           </thead>

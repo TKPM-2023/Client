@@ -43,7 +43,7 @@ function DetailProduct() {
   return (
     <div className='h-full bg-gray-100 py-10'>
       <Helmet>
-        <title>Nón Trùm | Thông tin sản phẩm</title>
+        <title>Thông tin sản phẩm | Nón Trùm</title>
         <meta name='description' content='Trang chủ' />
       </Helmet>
       <div className='container h-full'>

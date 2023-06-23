@@ -6,6 +6,8 @@ import { OrderListConfig, OrderType } from 'src/types/order.type'
 import { useQuery } from '@tanstack/react-query'
 import orderApi from 'src/apis/order.api'
 import Table from '../Table'
+import ViewModal from '../ViewModal'
+import { useState } from 'react'
 
 export type QueryConfig = {
   [key in keyof OrderListConfig]: string
@@ -16,7 +18,7 @@ function Dashboard() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || '1'
+      limit: queryParams.limit || '5'
       // status: queryParams.status || String(status.inStore),
     },
     isUndefined
@@ -31,7 +33,13 @@ function Dashboard() {
   const pageSize = orderData ? Math.ceil(orderData.data.paging.total / orderData.data.paging.limit) : 1
   const orders = orderData?.data.data
 
-  console.log(orders)
+  const [isOpenViewModal, setIsOpenViewModal] = useState<boolean>(false)
+  const [viewOrderData, setViewOrderData] = useState<OrderType | null>(null)
+
+  const handleClickViewButton = (order: OrderType) => {
+    setIsOpenViewModal(true)
+    setViewOrderData(order)
+  }
 
   return (
     <div>
@@ -154,7 +162,14 @@ function Dashboard() {
         <h1 className='text-xl font-semibold capitalize text-white'>Quản lý đơn hàng</h1>
       </div>
 
-      <Table pageSize={pageSize} orders={orders as OrderType[]} queryConfig={queryConfig} />
+      <Table
+        pageSize={pageSize}
+        orders={orders as OrderType[]}
+        queryConfig={queryConfig}
+        handleClickViewButton={handleClickViewButton}
+      />
+
+      <ViewModal isOpen={isOpenViewModal} setIsOpen={setIsOpenViewModal} order={viewOrderData as OrderType} />
     </div>
   )
 }
