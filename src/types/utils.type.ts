@@ -15,3 +15,8 @@ export type ToUndefined<T> = {
 
 export type StatusParams = 0 | 1
 export type OrderStatusParams = 0 | 1 | 2
+
+export type FilterType = {
+  param: string
+  options: { name: string; value: string | number }[]
+}
