@@ -15,6 +15,26 @@ import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import { Helmet } from 'react-helmet-async'
 import Filter from '../../components/Filter'
+import { FilterType } from 'src/types/utils.type'
+import { renderStatus } from 'src/utils/utils'
+
+const filters: FilterType[] = [
+  {
+    param: 'limit',
+    options: [
+      { value: '2', name: '2' },
+      { value: '5', name: '5' },
+      { value: '10', name: '10' }
+    ]
+  },
+  {
+    param: 'status',
+    options: [
+      { value: status.inStore, name: renderStatus(status.inStore) },
+      { value: status.deleted, name: renderStatus(status.deleted) }
+    ]
+  }
+]
 
 export interface ProductType extends Product {
   category_name: string
@@ -90,11 +110,11 @@ function ProductManagement() {
     refetch()
   }
 
-  if (!extendProducts || extendProducts.length === 0 || !categories || categories.length === 0) return null
+  if (!extendProducts || !categories) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Sản Phẩm</title>
+        <title>Quản Lí Sản Phẩm | Trang Quản Trị</title>
         <meta name='description' content='Quản lí sản phẩm dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
@@ -117,7 +137,7 @@ function ProductManagement() {
         </div>
       </div>
 
-      <Filter queryConfig={queryConfig} />
+      <Filter filters={filters} queryConfig={queryConfig} />
 
       <Table
         products={extendProducts}

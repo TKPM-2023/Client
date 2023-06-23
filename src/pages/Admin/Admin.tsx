@@ -8,7 +8,7 @@ function Admin() {
   return (
     <div className='flex h-screen'>
       <Helmet>
-        <title>Trang Quản Trị | Bảng Điều Khiển</title>
+        <title>Bảng Điều Khiển | Trang Quản Trị</title>
         <meta name='description' content='Bảng điều khiển dành cho người quản trị' />
       </Helmet>
       <Sidebar />

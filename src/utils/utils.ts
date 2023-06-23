@@ -1,7 +1,15 @@
 import { type AxiosError, isAxiosError, HttpStatusCode } from 'axios'
+import { ErrorResponse } from 'src/types/utils.type'
 
 export function isAxiosBadRequestError<FormError>(error: unknown): error is AxiosError<FormError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.BadRequest
+}
+
+export function isAxiosUnauthorizedError<FormError>(error: unknown): error is AxiosError<FormError> {
+  return (
+    isAxiosBadRequestError<ErrorResponse>(error) &&
+    ['ErrInvalidToken', 'ErrWrongAuthHeader'].includes(error.response?.data.error_key as string)
+  )
 }
 
 export const formatDate = (date: string) => {
@@ -19,3 +27,9 @@ export const formatNumber = (num: number) => {
 export const renderRole = (role: 'user' | 'admin') => (role === 'admin' ? 'Quản trị' : 'Người dùng')
 
 export const renderStatus = (status: 1 | 0) => (status === 1 ? 'Tồn tại' : 'Đã xóa')
+
+export const renderOrderStatus = (orderStatus: 2 | 1 | 0) => {
+  if (orderStatus === 0) return 'Chờ xác nhận'
+  if (orderStatus === 1) return 'Đang giao hàng'
+  return 'Đã giao hàng'
+}

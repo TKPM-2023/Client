@@ -42,7 +42,7 @@ function GeneralInfor() {
 
   const userProfileData = userData?.data.data
   const userAvatar =
-    userProfileData?.avatar.url !== '' && userProfileData?.avatar ? userProfileData.avatar.url : images.avatar
+    userProfileData?.avatar?.url !== '' && userProfileData?.avatar ? userProfileData.avatar.url : images.avatar
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

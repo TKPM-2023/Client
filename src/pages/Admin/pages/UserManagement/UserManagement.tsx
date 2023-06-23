@@ -14,6 +14,35 @@ import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import Filter from '../../components/Filter'
 import status from 'src/constants/status'
+import { FilterType } from 'src/types/utils.type'
+import { renderRole, renderStatus } from 'src/utils/utils'
+import { role } from 'src/constants/users'
+
+const filters: FilterType[] = [
+  {
+    param: 'limit',
+    options: [
+      { value: '2', name: '2' },
+      { value: '5', name: '5' },
+      { value: '10', name: '10' }
+    ]
+  },
+  {
+    param: 'status',
+    options: [
+      { value: status.inStore, name: renderStatus(status.inStore) },
+      { value: status.deleted, name: renderStatus(status.deleted) }
+    ]
+  },
+  {
+    param: 'role',
+    options: [
+      { value: '', name: 'Tất cả' },
+      { value: role.admin, name: renderRole(role.admin) },
+      { value: role.user, name: renderRole(role.user) }
+    ]
+  }
+]
 
 export type QueryConfig = {
   [key in keyof UserListConfig]: string
@@ -24,7 +53,7 @@ function UserManagement() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || '2',
+      limit: queryParams.limit || '5',
       status: queryParams.status || String(status.inStore),
       role: queryParams.role || ''
     },
@@ -71,11 +100,11 @@ function UserManagement() {
     refetch()
   }
 
-  if (!users || users.length === 0) return null
+  if (!users) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Người Dùng</title>
+        <title>Quản Lí Người Dùng | Trang Quản Trị</title>
         <meta name='description' content='Quản lí người dùng dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
@@ -98,7 +127,7 @@ function UserManagement() {
         </div>
       </div>
 
-      <Filter queryConfig={queryConfig} hasRoleFilter={true} />
+      <Filter queryConfig={queryConfig} filters={filters} />
 
       <Table
         users={users}

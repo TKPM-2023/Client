@@ -1,4 +1,4 @@
-import { CreateOrderType, OrderResponseType, OrderType } from 'src/types/order.type'
+import { CreateOrderType, OrderListConfig, OrderResponseType, OrderType } from 'src/types/order.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
@@ -8,7 +8,7 @@ const orderApi = {
   createOrder: (body: CreateOrderType) => {
     return http.post<SuccessResponse<string>>(URL, body)
   },
-  getListOrder: (params: { user_id: string }, signal?: AbortSignal) => {
+  getListOrder: (params: OrderListConfig, signal?: AbortSignal) => {
     return http.get<OrderResponseType>(URL, { params, signal })
   },
   getDetailOrder: (orderId: string) => {

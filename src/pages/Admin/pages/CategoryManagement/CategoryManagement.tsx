@@ -14,6 +14,26 @@ import CreateModal from './components/CreateModal'
 import ConfirmDeleteModal from './components/ConfirmDeleteModal'
 import { Helmet } from 'react-helmet-async'
 import Filter from '../../components/Filter'
+import { FilterType } from 'src/types/utils.type'
+import { renderStatus } from 'src/utils/utils'
+
+const filters: FilterType[] = [
+  {
+    param: 'limit',
+    options: [
+      { value: '2', name: '2' },
+      { value: '5', name: '5' },
+      { value: '10', name: '10' }
+    ]
+  },
+  {
+    param: 'status',
+    options: [
+      { value: status.inStore, name: renderStatus(status.inStore) },
+      { value: status.deleted, name: renderStatus(status.deleted) }
+    ]
+  }
+]
 
 export type QueryConfig = {
   [key in keyof CategoryListConfig]: string
@@ -70,11 +90,11 @@ function CategoryManagement() {
     refetch()
   }
 
-  if (!categories || categories.length === 0) return null
+  if (!categories) return null
   return (
     <div>
       <Helmet>
-        <title>Trang Quản Trị | Quản Lí Thể Loại</title>
+        <title>Quản Lí Thể Loại | Trang Quản Trị</title>
         <meta name='description' content='Quản lí thể loại dành cho người quản trị' />
       </Helmet>
       <div className='mb-3 flex h-16 items-center justify-between bg-cyan-600 px-5'>
@@ -97,7 +117,7 @@ function CategoryManagement() {
         </div>
       </div>
 
-      <Filter queryConfig={queryConfig} />
+      <Filter queryConfig={queryConfig} filters={filters} />
 
       <Table
         categories={categories}

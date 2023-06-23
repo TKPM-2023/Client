@@ -18,7 +18,8 @@ function Header() {
   const { data: data } = useQuery({
     queryKey: ['cart', profile?.cart_id],
     queryFn: () => cartApi.getCart(profile?.cart_id as string),
-    keepPreviousData: false
+    keepPreviousData: false,
+    enabled: isAuthenticated
   })
 
   const CartProduct = data?.data.data.cart_products
