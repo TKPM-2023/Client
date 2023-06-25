@@ -6,10 +6,11 @@ export function isAxiosBadRequestError<FormError>(error: unknown): error is Axio
 }
 
 export function isAxiosUnauthorizedError<FormError>(error: unknown): error is AxiosError<FormError> {
-  return (
-    isAxiosBadRequestError<ErrorResponse>(error) &&
-    ['ErrInvalidToken', 'ErrWrongAuthHeader'].includes(error.response?.data.error_key as string)
-  )
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
+}
+
+export function isAxiosExpiredTokenError<FormError>(error: unknown): error is AxiosError<FormError> {
+  return isAxiosUnauthorizedError<ErrorResponse>(error) && error.response?.data.error_key === 'ErrTokenExpired'
 }
 
 export const formatDate = (date: string) => {
@@ -28,8 +29,9 @@ export const renderRole = (role: 'user' | 'admin') => (role === 'admin' ? 'Quả
 
 export const renderStatus = (status: 1 | 0) => (status === 1 ? 'Tồn tại' : 'Đã xóa')
 
-export const renderOrderStatus = (orderStatus: 2 | 1 | 0) => {
+export const renderOrderStatus = (orderStatus: 2 | 1 | 0 | -1) => {
+  if (orderStatus === -1) return 'Tất cả'
   if (orderStatus === 0) return 'Chờ xác nhận'
   if (orderStatus === 1) return 'Đang giao hàng'
-  return 'Đã giao hàng'
+  return 'Đã hoàn thành'
 }

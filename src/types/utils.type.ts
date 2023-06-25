@@ -18,5 +18,5 @@ export type OrderStatusParams = 0 | 1 | 2
 
 export type FilterType = {
   param: string
-  options: { name: string; value: string | number }[]
+  options: { name: string; value: string | number; disabled?: boolean }[]
 }

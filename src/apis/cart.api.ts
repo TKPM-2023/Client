@@ -5,8 +5,8 @@ import http from 'src/utils/http'
 const URL = 'client/carts'
 
 const cartApi = {
-  getCart: (cartId: string) => {
-    return http.get<CartType>(`${URL}/${cartId}`)
+  getCart: () => {
+    return http.get<CartType>(URL)
   },
   updateProductQuantity: (cartId: string, body: AddProductToCartType) => {
     return http.patch<SuccessResponse<boolean>>(`${URL}/${cartId}/quantity`, body)

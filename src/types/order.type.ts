@@ -63,6 +63,7 @@ export type OrderResponseType = {
 export interface OrderListConfig {
   limit?: number | string
   status?: number | string
+  order_status?: number | string
   cursor?: string
   page?: number | string
   user_id?: string

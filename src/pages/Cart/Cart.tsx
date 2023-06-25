@@ -20,15 +20,15 @@ const isSimilarArray = (arr1: string[], arr2: string[]) => {
 }
 
 function Cart() {
-  const { profile, setListProductIsOrdering } = useContext(AppContext)
+  const { setListProductIsOrdering } = useContext(AppContext)
   const [listCheckedProduct, setListCheckedProduct] = useState([''])
   const [listPrice, setListPrice] = useState<ProductIsOrderingType[]>([])
   const [isChecked, setIsChecked] = useState<boolean>(false)
   const [totalCost, setTotalCost] = useState<number>(0)
 
   const { data: data, refetch } = useQuery({
-    queryKey: ['cart', profile?.cart_id],
-    queryFn: () => cartApi.getCart(profile?.cart_id as string),
+    queryKey: ['cart'],
+    queryFn: () => cartApi.getCart(),
     keepPreviousData: false
   })
 

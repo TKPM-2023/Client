@@ -8,6 +8,38 @@ import orderApi from 'src/apis/order.api'
 import Table from '../Table'
 import ViewModal from '../ViewModal'
 import { useState } from 'react'
+import { renderOrderStatus, renderStatus } from 'src/utils/utils'
+import { orderStatus } from 'src/constants/order'
+import { FilterType } from 'src/types/utils.type'
+import Filter from '../Filter'
+
+const filters: FilterType[] = [
+  {
+    param: 'limit',
+    options: [
+      { value: '2', name: '2' },
+      { value: '5', name: '5' },
+      { value: '10', name: '10' }
+    ]
+  },
+  // {
+  //   param: 'status',
+  //   options: [
+  //     { value: status.inStore, name: renderStatus(status.inStore) },
+  //     { value: status.deleted, name: renderStatus(status.deleted) }
+  //   ]
+  // },
+  {
+    param: 'order_status',
+    options: [
+      { value: '', name: 'Trạng thái đơn hàng', disabled: true },
+      { value: orderStatus.all, name: renderOrderStatus(orderStatus.all) },
+      { value: orderStatus.waitForConfirmation, name: renderOrderStatus(orderStatus.waitForConfirmation) },
+      { value: orderStatus.inProgress, name: renderOrderStatus(orderStatus.inProgress) },
+      { value: orderStatus.completed, name: renderOrderStatus(orderStatus.completed) }
+    ]
+  }
+]
 
 export type QueryConfig = {
   [key in keyof OrderListConfig]: string
@@ -18,8 +50,9 @@ function Dashboard() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || '5'
-      // status: queryParams.status || String(status.inStore),
+      limit: queryParams.limit || '5',
+      order_status: queryParams.order_status || orderStatus.all
+      // status: queryParams.status || String(status.inStore)
     },
     isUndefined
   )
@@ -161,6 +194,8 @@ function Dashboard() {
       <div className='mb-3 mt-10 flex h-16 items-center justify-between bg-cyan-600 px-5'>
         <h1 className='text-xl font-semibold capitalize text-white'>Quản lý đơn hàng</h1>
       </div>
+
+      <Filter filters={filters} queryConfig={queryConfig} />
 
       <Table
         pageSize={pageSize}

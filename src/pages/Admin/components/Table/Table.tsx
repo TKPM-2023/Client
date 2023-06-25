@@ -18,6 +18,8 @@ function Table({ orders, pageSize, queryConfig, handleClickViewButton }: Props) 
   const page = Number(queryConfig.page)
   const limit = Number(queryConfig.limit)
 
+  console.log(orders)
+
   return (
     <div className='px-5'>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>

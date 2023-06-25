@@ -58,7 +58,7 @@ function Header() {
           </button>
           <AnimatePresence>
             {isOpen && (
-              <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
+              <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()} className='z-10'>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
