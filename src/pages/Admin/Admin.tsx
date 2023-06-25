@@ -1,10 +1,21 @@
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
+import routes from 'src/constants/routes'
+import { toast } from 'react-toastify'
+import { role } from 'src/constants/users'
 
 function Admin() {
+  const { profile } = useContext(AppContext)
+
+  if (profile?.role === role.user) {
+    toast.warning('You have no permission to access this page!', { autoClose: 1000 })
+    return <Navigate to={routes.home} />
+  }
   return (
     <div className='flex h-screen'>
       <Helmet>

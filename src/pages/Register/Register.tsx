@@ -60,7 +60,7 @@ function Register() {
   })
 
   return (
-    <div className='grid grid-cols-1 gap-8 bg-primary px-8 py-28 lg:grid-cols-5'>
+    <div className='grid grid-cols-1 gap-8 bg-cyan-600 px-8 py-28 lg:grid-cols-5'>
       <Helmet>
         <title>Nón Trùm | Đăng Ký</title>
         <meta name='description' content='Đăng ký tài khoản để sử dụng Nón Trùm' />
@@ -70,7 +70,7 @@ function Register() {
           <h1 className='text-xl'>Đăng ký</h1>
 
           <div className='mt-6'>
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='email'
               name='email'
@@ -78,7 +78,7 @@ function Register() {
               register={register}
               errorMessage={errors.email?.message}
             />
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='text'
               name='first_name'
@@ -86,7 +86,7 @@ function Register() {
               register={register}
               errorMessage={errors.first_name?.message}
             />
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='text'
               name='last_name'
@@ -94,7 +94,7 @@ function Register() {
               register={register}
               errorMessage={errors.last_name?.message}
             />
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='password'
               name='password'
@@ -102,7 +102,7 @@ function Register() {
               register={register}
               errorMessage={errors.password?.message}
             />
-            <Input<FormData>
+            <Input
               className='mt-2'
               type='password'
               name='confirm_password'
@@ -114,7 +114,7 @@ function Register() {
 
           <Button
             type='submit'
-            className='mt-2 w-full rounded bg-primary px-4 py-2 text-sm uppercase text-white'
+            className='mt-2 w-full rounded bg-cyan-400 px-4 py-2 text-sm uppercase text-white'
             isLoading={registerMutation.isLoading}
             disabled={registerMutation.isLoading}
           >
@@ -122,7 +122,7 @@ function Register() {
           </Button>
           <div className='mt-8 text-center text-sm'>
             <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>
-            <Link to={routes.login} className='text-red-500'>
+            <Link to={routes.login} className='text-cyan-700'>
               Đăng nhập
             </Link>
           </div>

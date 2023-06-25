@@ -155,12 +155,12 @@ function ListOrdered({ order }: Props) {
                     </td>
                     <td className='w-[150px] p-4'>
                       <Typography variant='small' color='red' className='flex items-center '>
-                        {(product.price / product.quantiy).toLocaleString('vi-VN')} VNĐ
+                        {(product.price / product.quantity).toLocaleString('vi-VN')} VNĐ
                       </Typography>
                     </td>
                     <td className='w-[100px] p-4'>
                       <Typography variant='small' color='blue-gray' className='font-normal'>
-                        x{product.quantiy}
+                        x{product.quantity}
                       </Typography>
                     </td>
                     <td className='w-[165px] p-4'>

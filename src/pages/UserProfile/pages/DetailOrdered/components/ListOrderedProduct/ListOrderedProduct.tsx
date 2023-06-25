@@ -28,10 +28,10 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
           </div>
         </div>
         <Typography variant='small' color='red' className='flex items-center font-medium'>
-          {(orderedProduct?.price / orderedProduct.quantiy).toLocaleString('vi-VN')} VNĐ
+          {(orderedProduct?.price / orderedProduct.quantity).toLocaleString('vi-VN')} VNĐ
         </Typography>
         <Typography variant='small' color='blue-gray' className='ml-6 flex items-center'>
-          {orderedProduct?.quantiy}
+          {orderedProduct?.quantity}
         </Typography>
         <Typography variant='small' color='red' className='flex items-center font-medium'>
           {orderedProduct?.price.toLocaleString('vi-VN')} VNĐ

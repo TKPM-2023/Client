@@ -28,16 +28,15 @@ import DetailCategory from './pages/DetailCategory'
 import Cart from './pages/Cart'
 import Order from './pages/Order'
 import NotFound from './pages/NotFound'
+import OrderManagement from './pages/Admin/pages/OrderManagement'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-
   return isAuthenticated ? <Outlet /> : <Navigate to={routes.login} />
 }
 
 function RejectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-
   return isAuthenticated ? <Navigate to={routes.home} /> : <Outlet />
 }
 
@@ -101,7 +100,8 @@ function useRouteElements() {
             { element: <Dashboard />, index: true },
             { path: routes.manageUsers, element: <UserManagement /> },
             { path: routes.manageProducts, element: <ProductManagement /> },
-            { path: routes.manageCategories, element: <CategoryManagement /> }
+            { path: routes.manageCategories, element: <CategoryManagement /> },
+            { path: routes.manageOrders, element: <OrderManagement /> }
           ]
         }
       ]

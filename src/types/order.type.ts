@@ -29,7 +29,7 @@ export type OrderedProductType = {
   order_id: string
   product_origin: ProductOriginType
   price: number
-  quantiy: number
+  quantity: number
   discount: number
 }
 

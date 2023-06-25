@@ -9,6 +9,7 @@ const routes = {
   detailUserOrder: '/profile/my-oders/:orderId',
   reviews: '/profile/reviews',
   admin: '/admin',
+  manageOrders: '/admin/manage-orders',
   manageUsers: '/admin/manage-users',
   manageCategories: '/admin/manage-categories',
   manageProducts: '/admin/manage-products',
