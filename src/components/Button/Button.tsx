@@ -4,11 +4,11 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
 }
 
-function Button({ type, className, children, disabled, isLoading, ...rest }: Props) {
+function Button({ className, children, disabled, isLoading, ...rest }: Props) {
   let newClassName = disabled ? className + ' brightness-90 cursor-not-allowed' : className
   newClassName += ' inline-flex items-center justify-center'
   return (
-    <button type={type} className={newClassName} disabled={disabled} {...rest}>
+    <button {...rest} className={newClassName} disabled={disabled}>
       {isLoading && (
         <svg
           aria-hidden='true'
