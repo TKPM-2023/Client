@@ -5,18 +5,18 @@ import http from 'src/utils/http'
 const URL = 'client/carts'
 
 const cartApi = {
-  getCart: (cartId: string) => {
-    return http.get<CartType>(`${URL}/${cartId}`)
+  getCart: () => {
+    return http.get<CartType>(`${URL}`)
   },
-  updateProductQuantity: (cartId: string, body: AddProductToCartType) => {
-    return http.patch<SuccessResponse<boolean>>(`${URL}/${cartId}/quantity`, body)
+  updateProductQuantity: (body: AddProductToCartType) => {
+    return http.patch<SuccessResponse<boolean>>(`${URL}/quantity`, body)
   },
-  addProductToCard: (cartId: string, body: AddProductToCartType[]) => {
-    return http.patch<SuccessResponse<boolean>>(`${URL}/${cartId}`, body)
+  addProductToCard: (body: AddProductToCartType[]) => {
+    return http.patch<SuccessResponse<boolean>>(`${URL}`, body)
   },
-  deleteProductFromCart: (cartId: string, body: AddProductToCartType[]) => {
+  deleteProductFromCart: (body: AddProductToCartType[]) => {
     return http.request<SuccessResponse<boolean>>({
-      url: `${URL}/${cartId}`,
+      url: `${URL}`,
       method: 'DELETE',
       data: body
     })

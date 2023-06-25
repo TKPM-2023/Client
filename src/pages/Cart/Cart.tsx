@@ -28,7 +28,7 @@ function Cart() {
 
   const { data: data, refetch } = useQuery({
     queryKey: ['cart', profile?.cart_id],
-    queryFn: () => cartApi.getCart(profile?.cart_id as string),
+    queryFn: () => cartApi.getCart(),
     keepPreviousData: false
   })
 
@@ -80,7 +80,7 @@ function Cart() {
   }, [listPrice, listCheckedProduct])
 
   const deleteProductFromCartMutation = useMutation({
-    mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(cartData?.id as string, body),
+    mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(body),
     onSuccess: () => {
       handleRefetchData()
       toast.success('Đã xóa khỏi giỏ hàng')
@@ -162,10 +162,10 @@ function Cart() {
                   </button>
                 </Tooltip>
               </div>
-              {cartData?.cart_products.map((cart_product) => (
+              {cartData?.cart_products.map((cartProduct) => (
                 <ListProductInCart
-                  key={cart_product.Product.id}
-                  productInCart={cart_product}
+                  key={cartProduct.Product.id}
+                  productInCart={cartProduct}
                   handleRefetchData={handleRefetchData}
                   listCheckedProduct={listCheckedProduct}
                   setListCheckedProduct={setListCheckedProduct}

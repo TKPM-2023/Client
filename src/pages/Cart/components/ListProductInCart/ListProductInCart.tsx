@@ -49,7 +49,7 @@ function ListProductInCart({
   const [isChecked, setIsChecked] = useState<boolean>(false)
 
   const deleteProductFromCartMutation = useMutation({
-    mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(productInCart.cart_id as string, body),
+    mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(body),
     onSuccess: () => {
       handleRefetchData()
       toast.success('Đã xóa khỏi giỏ hàng')
