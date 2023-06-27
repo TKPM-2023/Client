@@ -19,6 +19,13 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
     }, 0)
   }, [order])
 
+  const shippingFee = useMemo(() => {
+    if (!order) return 0
+    return order.products.reduce((acc, product) => {
+      return acc - product.price
+    }, order.total_price)
+  }, [order])
+
   if (!order) return null
   return (
     <Modal headingTitle='Hóa đơn' isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -84,9 +91,9 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
                       <td className='px-6 py-4'>
                         <div className='text-sm'>{product.quantity}</div>
                       </td>
-                      <td className='px-6 py-4 text-sm'>{formatNumber(product.price)}</td>
+                      <td className='px-6 py-4 text-sm'>{formatNumber(product.price / product.quantity)}</td>
                       <td className='px-6 py-4 text-sm'>{product.discount}</td>
-                      <td className='px-6 py-4 font-semibold'>{formatNumber(product.quantity * product.price)}</td>
+                      <td className='px-6 py-4 font-semibold'>{formatNumber(product.price)}</td>
                     </tr>
                   ))}
 
@@ -95,6 +102,13 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
                     <td className='text-sm font-bold'>Tổng giảm</td>
                     <td className='text-sm font-bold tracking-wider'>
                       <b>{totalDiscount}</b>
+                    </td>
+                  </tr>
+                  <tr className=''>
+                    <td colSpan={4}></td>
+                    <td className='text-sm font-bold'>Phí ship</td>
+                    <td className='text-sm font-bold tracking-wider'>
+                      <b>{formatNumber(shippingFee)}</b>
                     </td>
                   </tr>
                   <tr className='bg-gray-800 text-white'>
@@ -116,7 +130,6 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
 
         <div className='p-4'>
           <div className='flex items-end justify-end space-x-3'>
-            {/* <button className='bg-green-100 px-4 py-2 text-sm text-green-600'>In</button> */}
             <button className='bg-blue-100 px-4 py-2 text-sm text-blue-600'>Lưu</button>
             <button onClick={() => setIsOpen(false)} className='bg-red-100 px-4 py-2 text-sm text-red-600'>
               Thoát

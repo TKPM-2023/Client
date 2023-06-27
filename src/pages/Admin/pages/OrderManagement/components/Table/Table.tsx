@@ -16,12 +16,6 @@ interface Props {
   handleUpdateOrderStatus: (orderId: string, orderStatus: OrderStatusParams) => void
 }
 
-const statusOptions = [
-  { value: orderStatus.waitForConfirmation, name: renderOrderStatus(orderStatus.waitForConfirmation) },
-  { value: orderStatus.inProgress, name: renderOrderStatus(orderStatus.inProgress) },
-  { value: orderStatus.completed, name: renderOrderStatus(orderStatus.completed) }
-]
-
 function Table({ orders, pageSize, queryConfig, handleClickViewButton, handleUpdateOrderStatus }: Props) {
   return (
     <div className='px-5'>
