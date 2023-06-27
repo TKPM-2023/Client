@@ -1,6 +1,7 @@
 export const orderStatus = {
   all: -1,
-  waitForConfirmation: 0,
-  inProgress: 1,
-  completed: 2
+  waitForConfirmation: 1,
+  inProgress: 2,
+  completed: 3,
+  canceled: 4
 } as const

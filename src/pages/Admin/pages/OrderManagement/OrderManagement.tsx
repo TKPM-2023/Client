@@ -2,16 +2,17 @@ import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
 import useQueryParams from 'src/hooks/useQueryParams'
 import { OrderListConfig, OrderType } from 'src/types/order.type'
-import { useQuery } from '@tanstack/react-query'
-import orderApi from 'src/apis/order.api'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import orderApi, { UploadOrderBody } from 'src/apis/order.api'
 import Table from './components/Table'
 import ViewModal from './components/ViewModal'
 import { useState } from 'react'
 import { renderOrderStatus } from 'src/utils/utils'
 import { orderStatus } from 'src/constants/order'
-import { FilterType } from 'src/types/utils.type'
+import { FilterType, OrderStatusParams } from 'src/types/utils.type'
 import Filter from '../../components/Filter'
 import { Helmet } from 'react-helmet-async'
+import { toast } from 'react-toastify'
 
 const filters: FilterType[] = [
   {
@@ -36,7 +37,8 @@ const filters: FilterType[] = [
       { value: orderStatus.all, name: renderOrderStatus(orderStatus.all) },
       { value: orderStatus.waitForConfirmation, name: renderOrderStatus(orderStatus.waitForConfirmation) },
       { value: orderStatus.inProgress, name: renderOrderStatus(orderStatus.inProgress) },
-      { value: orderStatus.completed, name: renderOrderStatus(orderStatus.completed) }
+      { value: orderStatus.completed, name: renderOrderStatus(orderStatus.completed) },
+      { value: orderStatus.canceled, name: renderOrderStatus(orderStatus.canceled) }
     ]
   }
 ]
@@ -51,16 +53,20 @@ function OrderManagement() {
     {
       page: queryParams.page || '1',
       limit: queryParams.limit || '5',
-      order_status: queryParams.order_status || orderStatus.all
+      order_status: queryParams.order_status || orderStatus.waitForConfirmation
       // status: queryParams.status || String(status.inStore)
     },
     isUndefined
   )
 
-  const { data: orderData } = useQuery({
+  const { data: orderData, refetch } = useQuery({
     queryKey: ['orders', queryConfig],
     queryFn: () => orderApi.getListOrder(queryConfig),
     keepPreviousData: true
+  })
+
+  const updateOrderMutation = useMutation({
+    mutationFn: ({ id, body }: { id: string; body: UploadOrderBody }) => orderApi.updateOrder(id, body)
   })
 
   const pageSize = orderData ? Math.ceil(orderData.data.paging.total / orderData.data.paging.limit) : 1
@@ -72,6 +78,21 @@ function OrderManagement() {
   const handleClickViewButton = (order: OrderType) => {
     setIsOpenViewModal(true)
     setViewOrderData(order)
+  }
+
+  const handleUpdateOrderStatus = (orderId: string, orderStatus: OrderStatusParams) => {
+    updateOrderMutation.mutate(
+      { id: orderId, body: { order_status: orderStatus } },
+      {
+        onSuccess: () => {
+          toast.success('Cập nhật trạng thái đơn hàng thành công!', { autoClose: 1000 })
+          refetch()
+        },
+        onError: (error) => {
+          console.log(error)
+        }
+      }
+    )
   }
 
   return (
@@ -91,6 +112,7 @@ function OrderManagement() {
         orders={orders as OrderType[]}
         queryConfig={queryConfig}
         handleClickViewButton={handleClickViewButton}
+        handleUpdateOrderStatus={handleUpdateOrderStatus}
       />
 
       <ViewModal isOpen={isOpenViewModal} setIsOpen={setIsOpenViewModal} order={viewOrderData as OrderType} />

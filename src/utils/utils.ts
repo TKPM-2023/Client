@@ -29,9 +29,11 @@ export const renderRole = (role: 'user' | 'admin') => (role === 'admin' ? 'Quả
 
 export const renderStatus = (status: 1 | 0) => (status === 1 ? 'Tồn tại' : 'Đã xóa')
 
-export const renderOrderStatus = (orderStatus: 2 | 1 | 0 | -1) => {
+export const renderOrderStatus = (orderStatus: 4 | 3 | 2 | 1 | -1) => {
   if (orderStatus === -1) return 'Tất cả'
-  if (orderStatus === 0) return 'Chờ xác nhận'
-  if (orderStatus === 1) return 'Đang giao hàng'
-  return 'Đã hoàn thành'
+  if (orderStatus === 1) return 'Chờ xác nhận'
+  if (orderStatus === 2) return 'Đang giao hàng'
+  if (orderStatus === 3) return 'Hoàn thành'
+  if (orderStatus === 4) return 'Đã hủy'
+  return ''
 }
