@@ -27,7 +27,8 @@ function Orders() {
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
 
   const orderQueryConfig = {
-    user_id: `"${profile?.id}"`
+    user_id: `"${profile?.id}"`,
+    order_status: -1
   }
   const { data: orderData } = useQuery({
     queryKey: ['order', orderQueryConfig],

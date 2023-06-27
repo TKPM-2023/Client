@@ -1,6 +1,23 @@
-import { Typography, Tooltip, Dialog, DialogHeader, DialogBody, DialogFooter, Button } from '@material-tailwind/react'
+import {
+  Typography,
+  Tooltip,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Button,
+  Rating,
+  Textarea
+} from '@material-tailwind/react'
 import { OrderedProductType } from 'src/types/order.type'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
+import * as yup from 'yup'
+import { useFormik } from 'formik'
+import { useMutation } from '@tanstack/react-query'
+import ratingApi from 'src/apis/rating.api'
+import { toast } from 'react-toastify'
+import { PostRatingType } from 'src/types/rating.type'
 
 interface Props {
   orderedProduct: OrderedProductType
@@ -8,9 +25,32 @@ interface Props {
 }
 
 function ListOrderedProduct({ orderedProduct, status }: Props) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
+  const [rated, setRated] = useState<number>(0)
+
+  const postRatingMutation = useMutation({
+    mutationFn: (body: PostRatingType) => ratingApi.postRating(orderedProduct.product_origin.id, body),
+    onSuccess: () => {
+      toast.success('Đã đánh giá')
+    }
+  })
 
   const handleOpen = () => setOpen(!open)
+
+  const formik = useFormik({
+    initialValues: {
+      comment: ''
+    },
+
+    validationSchema: yup.object({
+      comment: yup.string()
+    }),
+
+    onSubmit: async (userRating) => {
+      await postRatingMutation.mutateAsync({ ...userRating, point: rated, detail_id: orderedProduct.id })
+      handleOpen()
+    }
+  })
   return (
     <div className='mb-1 flex justify-center'>
       <div className='grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2 hover:bg-gray-100'>
@@ -67,18 +107,49 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
         )}
       </div>
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <div className='flex items-center justify-between'>
+          <DialogHeader>Đánh giá sản phẩm</DialogHeader>
+          <XMarkIcon className='mr-3 h-5 w-5' onClick={handleOpen} />
+        </div>
         <DialogBody divider>
-          The key to more success is to have a lot of pillows. Put it this way, it took me twenty five years to get
-          these plants, twenty five years of blood sweat and tears, and I&apos;m never giving up, I&apos;m just getting
-          started. I&apos;m up to something. Fan luv.
+          <div className='grid gap-6'>
+            <div className=' flex w-fit items-center'>
+              <img
+                src={orderedProduct.product_origin.images ? orderedProduct.product_origin.images[0].url : ''}
+                alt=''
+                width={80}
+              />
+
+              <Typography variant='lead' color='blue-gray' className='ml-3 flex items-center font-bold'>
+                {orderedProduct.product_origin.name}
+              </Typography>
+            </div>
+            <div className='flex justify-center'>
+              <div className='flex items-center gap-2'>
+                <Rating value={rated} onChange={(value) => setRated(value)} />
+                <Typography color='blue-gray' className='font-medium'>
+                  {rated}.0 Rated
+                </Typography>
+              </div>
+            </div>
+            <form onSubmit={formik.handleSubmit} id='rating'>
+              <Textarea
+                id='comment'
+                name='comment'
+                value={formik.values.comment}
+                onChange={formik.handleChange}
+                label='Bình luận'
+                required
+              />
+            </form>
+          </div>
         </DialogBody>
-        <DialogFooter>
-          <Button variant='text' color='red' onClick={handleOpen} className='mr-1'>
-            <span>Cancel</span>
+        <DialogFooter className='space-x-2'>
+          <Button variant='outlined' color='red' onClick={handleOpen}>
+            Đóng
           </Button>
-          <Button variant='gradient' color='green' onClick={handleOpen}>
-            <span>Confirm</span>
+          <Button variant='gradient' color='green' form='rating' type='submit'>
+            Gửi đánh giá
           </Button>
         </DialogFooter>
       </Dialog>

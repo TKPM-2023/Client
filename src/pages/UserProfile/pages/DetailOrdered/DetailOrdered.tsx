@@ -68,7 +68,7 @@ function DetailOrdered() {
                   Đơn hàng <span className='text-blue-700'>#{detailOrder?.id.slice(-5).toUpperCase()}</span>
                 </h1>{' '}
               </div>
-              <Button onClick={handleOpen} disabled={status === 2 ? true : false} color='red'>
+              <Button onClick={handleOpen} disabled={status === 2 || status === 1 ? true : false} color='red'>
                 Hủy đơn hàng
               </Button>
             </div>
