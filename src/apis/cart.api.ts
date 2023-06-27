@@ -6,7 +6,7 @@ const URL = 'client/carts'
 
 const cartApi = {
   getCart: () => {
-    return http.get<CartType>(`${URL}`)
+    return http.get<CartType>(URL)
   },
   updateProductQuantity: (body: AddProductToCartType) => {
     return http.patch<SuccessResponse<boolean>>(`${URL}/quantity`, body)

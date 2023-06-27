@@ -6,6 +6,7 @@ import { SuccessResponse } from 'src/types/utils.type'
 
 export const URL_REGISTER = 'register'
 export const URL_LOGIN = 'authenticate'
+export const URL_REFRESH_TOKEN = 'refresh'
 
 const authApi = {
   registerAccount: (body: Pick<UserSchema, 'email' | 'first_name' | 'last_name' | 'password'>) => {

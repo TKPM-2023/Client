@@ -15,11 +15,6 @@ interface Props {
 }
 
 function Table({ orders, pageSize, queryConfig, handleClickViewButton }: Props) {
-  const page = Number(queryConfig.page)
-  const limit = Number(queryConfig.limit)
-
-  console.log(orders)
-
   return (
     <div className='px-5'>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
@@ -109,7 +104,7 @@ function Table({ orders, pageSize, queryConfig, handleClickViewButton }: Props) 
         pageSize={pageSize}
         queryConfig={queryConfig}
         to={(page: number) => ({
-          pathname: routes.admin,
+          pathname: routes.manageOrders,
           search: createSearchParams({ ...queryConfig, page: page.toString() }).toString()
         })}
       />

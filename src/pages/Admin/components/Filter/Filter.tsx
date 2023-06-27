@@ -39,7 +39,7 @@ function Filter<QueryConfig>({ queryConfig, filters }: Props<QueryConfig>) {
               value={queryConfig[filter.param as keyof typeof queryConfig] as string}
             >
               {filter.options.map((option) => (
-                <option key={option.value} value={option.value}>
+                <option key={option.value} value={option.value} disabled={option.disabled}>
                   {option.name}
                 </option>
               ))}

@@ -2,26 +2,26 @@ import { Typography } from '@material-tailwind/react'
 
 function Footer() {
   return (
-    <footer className='relative w-full border-t-[3px] border-purple-600'>
+    <footer className='relative w-full py-6'>
       <div className='mx-auto w-full max-w-7xl px-8'>
         <div className='false bg-white'>
           <div className='m-auto flex max-w-7xl flex-col gap-5 bg-white p-4 md:flex-row'>
             <div className='md:w-[30%] md:max-w-[30%]'>
-              <h1 className='text-base'>ĐỒ ÁN CUỐI KÌ</h1>
+              <h1 className='mb-2 text-base font-semibold'>ĐỒ ÁN CUỐI KÌ</h1>
               <span>
                 Đồ án cuối kì Thiết kế phần mềm là project demo 1 số chức năng của một website bán hàng online (Điện
                 thoại, laptop &amp; Gaming Gear). Trong quá trình thực hiện project có những lỗi phát sinh, mong nhận
                 được ý kiến và đóng góp của mọi người để có thể hoàn thiện hơn. Thanks!
               </span>
-              <div>
-                <h2 className='mb-0 mr-1 inline-block'>Lưu ý:</h2>
+              <div className='mt-2'>
+                <h2 className='mb-0 mr-1 inline-block font-medium'>Lưu ý:</h2>
                 <span>
                   Vì đây là project chỉ mang tính chất demo nên không có chức năng thay thế hoàn toàn các website khác.
                 </span>
               </div>
             </div>
             <div className='md:max-w-35%] md:w-[35%]'>
-              <h1 className='text-base'>THÔNG TIN CÔNG TY</h1>
+              <h1 className='mb-2 text-base font-semibold'>THÔNG TIN CÔNG TY</h1>
               <h2 className='mb-0'>Trụ sở đặt tại: </h2>
               <div className='mb-2 flex flex-col md:mb-0 md:flex-row md:gap-2'>
                 <span>Ấp 3, xã Tân Thành, huyện Tân Thạnh, tỉnh Long An</span>
@@ -41,7 +41,7 @@ function Footer() {
             </div>
             <div className='md:max-w[-20%] md:w-[20%]'>
               <div>
-                <h1 className='text-base'>PHƯƠNG THỨC THANH TOÁN</h1>
+                <h1 className='mb-2 text-base font-semibold'>PHƯƠNG THỨC THANH TOÁN</h1>
                 <div>
                   <div className='flex items-center gap-2'>
                     <img

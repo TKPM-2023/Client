@@ -1,46 +1,4 @@
-import omitBy from 'lodash/omitBy'
-import isUndefined from 'lodash/isUndefined'
-import status from 'src/constants/status'
-import useQueryParams from 'src/hooks/useQueryParams'
-import { OrderListConfig, OrderType } from 'src/types/order.type'
-import { useQuery } from '@tanstack/react-query'
-import orderApi from 'src/apis/order.api'
-import Table from '../Table'
-import ViewModal from '../ViewModal'
-import { useState } from 'react'
-
-export type QueryConfig = {
-  [key in keyof OrderListConfig]: string
-}
-
 function Dashboard() {
-  const queryParams = useQueryParams()
-  const queryConfig: QueryConfig = omitBy(
-    {
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '5'
-      // status: queryParams.status || String(status.inStore),
-    },
-    isUndefined
-  )
-
-  const { data: orderData } = useQuery({
-    queryKey: ['orders', queryConfig],
-    queryFn: () => orderApi.getListOrder(queryConfig),
-    keepPreviousData: true
-  })
-
-  const pageSize = orderData ? Math.ceil(orderData.data.paging.total / orderData.data.paging.limit) : 1
-  const orders = orderData?.data.data
-
-  const [isOpenViewModal, setIsOpenViewModal] = useState<boolean>(false)
-  const [viewOrderData, setViewOrderData] = useState<OrderType | null>(null)
-
-  const handleClickViewButton = (order: OrderType) => {
-    setIsOpenViewModal(true)
-    setViewOrderData(order)
-  }
-
   return (
     <div>
       <div className='px-5'>
@@ -157,19 +115,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-
-      <div className='mb-3 mt-10 flex h-16 items-center justify-between bg-cyan-600 px-5'>
-        <h1 className='text-xl font-semibold capitalize text-white'>Quản lý đơn hàng</h1>
-      </div>
-
-      <Table
-        pageSize={pageSize}
-        orders={orders as OrderType[]}
-        queryConfig={queryConfig}
-        handleClickViewButton={handleClickViewButton}
-      />
-
-      <ViewModal isOpen={isOpenViewModal} setIsOpen={setIsOpenViewModal} order={viewOrderData as OrderType} />
     </div>
   )
 }
