@@ -35,7 +35,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 8,282 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'> 30 </h4>
                 <div className='text-gray-500'> Người dùng mới </div>
               </div>
             </div>
@@ -59,7 +59,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 200,521 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'> 121 </h4>
                 <div className='text-gray-500'> Tổng đơn hàng </div>
               </div>
             </div>
@@ -83,7 +83,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 215,542 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'> 50 </h4>
                 <div className='text-gray-500'> Sản phẩm hiện có </div>
               </div>
             </div>
@@ -108,7 +108,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 3,000 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'> 4 </h4>
                 <div className='text-gray-500'>Thể loại</div>
               </div>
             </div>

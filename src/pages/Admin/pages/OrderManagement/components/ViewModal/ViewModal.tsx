@@ -19,6 +19,13 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
     }, 0)
   }, [order])
 
+  const shippingFee = useMemo(() => {
+    if (!order) return 0
+    return order.products.reduce((acc, product) => {
+      return acc - product.price
+    }, order.total_price)
+  }, [order])
+
   if (!order) return null
   return (
     <Modal headingTitle='Hóa đơn' isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -77,16 +84,16 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
                 <tbody className='bg-white text-center'>
                   {order.products.map((product, index) => (
                     <tr key={product.product_origin.id} className='whitespace-nowrap'>
-                      <td className='px-6 py-4 text-sm'>{index}</td>
+                      <td className='px-6 py-4 text-sm'>{index + 1}</td>
                       <td className='px-6 py-4'>
                         <div className='text-sm'>{product.product_origin.name}</div>
                       </td>
                       <td className='px-6 py-4'>
                         <div className='text-sm'>{product.quantity}</div>
                       </td>
-                      <td className='px-6 py-4 text-sm'>{formatNumber(product.price)}</td>
+                      <td className='px-6 py-4 text-sm'>{formatNumber(product.price / product.quantity)}</td>
                       <td className='px-6 py-4 text-sm'>{product.discount}</td>
-                      <td className='px-6 py-4 font-semibold'>{formatNumber(product.quantity * product.price)}</td>
+                      <td className='px-6 py-4 font-semibold'>{formatNumber(product.price)}</td>
                     </tr>
                   ))}
 
@@ -95,6 +102,13 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
                     <td className='text-sm font-bold'>Tổng giảm</td>
                     <td className='text-sm font-bold tracking-wider'>
                       <b>{totalDiscount}</b>
+                    </td>
+                  </tr>
+                  <tr className=''>
+                    <td colSpan={4}></td>
+                    <td className='text-sm font-bold'>Phí ship</td>
+                    <td className='text-sm font-bold tracking-wider'>
+                      <b>{formatNumber(shippingFee)}</b>
                     </td>
                   </tr>
                   <tr className='bg-gray-800 text-white'>
@@ -116,25 +130,12 @@ function ViewModal({ order, isOpen, setIsOpen }: Props) {
 
         <div className='p-4'>
           <div className='flex items-end justify-end space-x-3'>
-            <button className='bg-green-100 px-4 py-2 text-sm text-green-600'>In</button>
             <button className='bg-blue-100 px-4 py-2 text-sm text-blue-600'>Lưu</button>
             <button onClick={() => setIsOpen(false)} className='bg-red-100 px-4 py-2 text-sm text-red-600'>
               Thoát
             </button>
           </div>
         </div>
-
-        {/* <div className='flex items-center justify-end gap-1 px-4 py-3'>
-          <Button
-            type='button'
-            className='group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 p-0.5 text-sm font-medium hover:text-white focus:outline-none focus:ring-4 focus:ring-pink-200 group-hover:from-pink-500 group-hover:to-orange-400 dark:text-white dark:focus:ring-pink-800'
-            onClick={() => setIsOpen(false)}
-          >
-            <span className='relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900'>
-              Thoát
-            </span>
-          </Button>
-        </div> */}
       </div>
     </Modal>
   )

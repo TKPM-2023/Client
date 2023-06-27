@@ -14,7 +14,7 @@ export type ToUndefined<T> = {
 }
 
 export type StatusParams = 0 | 1
-export type OrderStatusParams = 0 | 1 | 2
+export type OrderStatusParams = 1 | 2 | 3 | 4
 
 export type FilterType = {
   param: string
