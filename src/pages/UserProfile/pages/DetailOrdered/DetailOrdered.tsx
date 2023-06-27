@@ -5,7 +5,7 @@ import StatusOrdered from './components/StatusOrdered'
 import ListOrderedProduct from './components/ListOrderedProduct'
 import CustomerDetail from './components/CustomerDetail'
 import routes from 'src/constants/routes'
-import orderApi from 'src/apis/order.api'
+import orderApi, { UploadOrderBody } from 'src/apis/order.api'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -23,7 +23,7 @@ function DetailOrdered() {
   })
 
   const deleteOrderMutation = useMutation({
-    mutationFn: () => orderApi.deleteOrder(orderId as string),
+    mutationFn: (body: UploadOrderBody) => orderApi.updateOrder(orderId as string, body),
     onSuccess: () => {
       toast.success('Hủy đơn hàng thành công')
       navigate('/profile/my-oders')
@@ -34,7 +34,7 @@ function DetailOrdered() {
   const handleOpen = () => setOpen(!open)
 
   const hanldeButtonCancel = () => {
-    deleteOrderMutation.mutate()
+    deleteOrderMutation.mutate({ order_status: 4 })
     setOpen(false)
   }
 
@@ -68,7 +68,7 @@ function DetailOrdered() {
                   Đơn hàng <span className='text-blue-700'>#{detailOrder?.id.slice(-5).toUpperCase()}</span>
                 </h1>{' '}
               </div>
-              <Button onClick={handleOpen} disabled={status === 2 || status === 1 ? true : false} color='red'>
+              <Button onClick={handleOpen} disabled={status === 3 || status === 2 ? true : false} color='red'>
                 Hủy đơn hàng
               </Button>
             </div>
@@ -78,7 +78,7 @@ function DetailOrdered() {
           <div className='flex h-full gap-12'>
             <div className='flex h-full flex-col'>
               {/* Trạng thái */}
-              <StatusOrdered status={status} />
+              <StatusOrdered status={status - 1} />
               <div className='mb-3 flex justify-center'>
                 <div className=' grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2.5'>
                   <div color='blue-gray' className='flex items-center font-bold'>

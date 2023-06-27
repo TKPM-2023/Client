@@ -1,5 +1,5 @@
 import { CreateOrderType, OrderListConfig, OrderResponseType, OrderType } from 'src/types/order.type'
-import { OrderStatusParams, SuccessResponse } from 'src/types/utils.type'
+import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
 const URL = 'client/orders'
