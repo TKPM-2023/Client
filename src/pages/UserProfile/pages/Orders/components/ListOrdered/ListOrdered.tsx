@@ -40,13 +40,13 @@ function ListOrdered({ order }: Props) {
     setStatus(updatedStatus)
 
     switch (updatedStatus) {
-      case 0:
+      case 1:
         setChipProp({ color: 'yellow', value: 'pending', iconColor: 'bg-yellow-900' })
         break
-      case 1:
+      case 2:
         setChipProp({ color: 'blue', value: 'delivery', iconColor: 'bg-blue-900' })
         break
-      case 2:
+      case 3:
         setChipProp({ color: 'green', value: 'success', iconColor: 'bg-green-900' })
         break
       default:

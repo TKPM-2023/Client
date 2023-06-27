@@ -1,6 +1,7 @@
 import { AddressType } from './contact.type'
 import { Upload } from './upload.type'
 import { OrderStatusParams } from './utils.type'
+import { User } from './user.type'
 
 export type OrderProductType = {
   product_origin: { id: string }
@@ -39,6 +40,7 @@ export type OrderType = {
   created_at: string
   updated_at: string
   user_id: string
+  user: User
   total_price: number
   order_status: OrderStatusParams
   products: OrderedProductType[]
@@ -57,6 +59,7 @@ export type OrderResponseType = {
   }
   filter: {
     user_id: string
+    order_status: number
   }
 }
 

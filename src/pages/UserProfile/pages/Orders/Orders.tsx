@@ -27,7 +27,8 @@ function Orders() {
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
 
   const orderQueryConfig = {
-    user_id: `"${profile?.id}"`
+    user_id: `"${profile?.id}"`,
+    order_status: -1
   }
   const { data: orderData } = useQuery({
     queryKey: ['order', orderQueryConfig],
@@ -52,20 +53,20 @@ function Orders() {
           return (
             orderDate >= (dateRange.startDate as Date) &&
             orderDate <= (dateRange.endDate as Date) &&
-            ((selectedStatus === 'pending' && order.order_status === 0 && order.status === 1) ||
-              (selectedStatus === 'delivery' && order.order_status === 1 && order.status === 1) ||
-              (selectedStatus === 'success' && order.order_status === 2 && order.status === 1) ||
-              (selectedStatus === 'cancel' && order.status === 0))
+            ((selectedStatus === 'pending' && order.order_status === 1 && order.status === 1) ||
+              (selectedStatus === 'delivery' && order.order_status === 2 && order.status === 1) ||
+              (selectedStatus === 'success' && order.order_status === 3 && order.status === 1) ||
+              (selectedStatus === 'cancel' && order.order_status === 4 && order.status === 1))
           )
         })
       }
     } else if (selectedStatus !== 'all') {
       tempList = orderList?.filter((order) => {
         return (
-          (selectedStatus === 'pending' && order.order_status === 0 && order.status === 1) ||
-          (selectedStatus === 'delivery' && order.order_status === 1 && order.status === 1) ||
-          (selectedStatus === 'success' && order.order_status === 2 && order.status === 1) ||
-          (selectedStatus === 'cancel' && order.status === 0)
+          (selectedStatus === 'pending' && order.order_status === 1 && order.status === 1) ||
+          (selectedStatus === 'delivery' && order.order_status === 2 && order.status === 1) ||
+          (selectedStatus === 'success' && order.order_status === 3 && order.status === 1) ||
+          (selectedStatus === 'cancel' && order.order_status === 4 && order.status === 1)
         )
       })
     } else {

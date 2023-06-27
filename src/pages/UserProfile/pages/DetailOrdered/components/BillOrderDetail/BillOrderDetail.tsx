@@ -9,7 +9,7 @@ interface Props {
 function DetailInforOrdered({ detailOrder }: Props) {
   return (
     <div className='-row mt-6 flex flex-col justify-center gap-6'>
-      <Card className=' w-full bg-gray-300'>
+      <Card className=' w-full bg-gray-200'>
         <CardBody className='flex items-center gap-2'>
           <div className='flex items-center gap-3'>
             <img src='https://www.october16th.store/assets/logo-3c597220.png' alt='logo' width='32' height='32' />
@@ -18,7 +18,7 @@ function DetailInforOrdered({ detailOrder }: Props) {
         </CardBody>
       </Card>
 
-      <Card className=' w-full bg-gray-300'>
+      <Card className=' w-full bg-gray-200'>
         <CardBody className='flex flex-col gap-2'>
           <Typography color='blue-gray' className='mb-2 border-b border-blue-gray-100 pb-3 text-lg font-bold'>
             Hóa đơn chi tiết
@@ -67,7 +67,7 @@ function DetailInforOrdered({ detailOrder }: Props) {
         </CardBody>
       </Card>
 
-      <Card className=' w-full bg-gray-300'>
+      <Card className=' w-full bg-gray-200'>
         <CardBody className=''>
           <div className='flex items-center justify-between'>
             <Typography color='blue-gray' className=' text-sm font-bold'>
