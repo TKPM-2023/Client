@@ -83,6 +83,13 @@ function Login() {
         <title>Nón Trùm | Đăng Nhập</title>
         <meta name='description' content='Đăng nhập để truy cập vào Nón Trùm' />
       </Helmet>
+      <span className='col-start-2 hidden md:block'>
+        <img
+          src='https://www.october16th.store/assets/logo-3c597220.png'
+          alt='logo'
+          className='h-300 w-300 object-contain '
+        />
+      </span>
       <div className='mx-8 lg:col-span-2 lg:col-start-4'>
         <form className='rounded bg-white px-8 py-6 shadow-md' noValidate onSubmit={onSubmit}>
           <h1 className='text-xl'>Đăng nhập</h1>
