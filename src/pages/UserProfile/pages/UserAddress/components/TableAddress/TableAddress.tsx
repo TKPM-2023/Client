@@ -15,7 +15,7 @@ function TableAddress({ addresses, handleClickEditButton, handleClickDeleteButto
     return (
       <div className='mt-8'>
         <Typography variant='head' color='blue-gray' className='font-normal leading-none opacity-70'>
-          Bạn chưa có địa chỉ nào
+          Bạn chưa có địa chỉ nào. Thêm địa chỉ để dễ dàng mua sắm
         </Typography>
       </div>
     )

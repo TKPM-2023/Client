@@ -16,7 +16,7 @@ import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 function UserSidebar() {
-  const [open, setOpen] = React.useState(0)
+  const [open, setOpen] = React.useState(1)
 
   const handleOpen = (value: React.SetStateAction<number>) => {
     setOpen(open === value ? 0 : value)
