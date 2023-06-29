@@ -1,10 +1,10 @@
 import { Card, CardBody, Breadcrumbs, Collapse, Button } from '@material-tailwind/react'
 import { ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline'
 import { Helmet } from 'react-helmet-async'
-import { useParams, Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import ListProduct from '../Home/components/ListProduct'
 import { useQuery } from '@tanstack/react-query'
-import categoryApi from 'src/apis/category.api'
+import productApi from 'src/apis/product.api'
 import { Product } from 'src/types/product.type'
 import { useState } from 'react'
 import _ from 'lodash'
@@ -14,25 +14,29 @@ const customSizeCard = {
   gapX: '4'
 }
 
-function DetailCategory() {
+function SearchProduct() {
   window.scrollTo({
     top: 0,
     left: 0,
     behavior: 'smooth'
   })
-  const { categoryId } = useParams()
+  const location = useLocation()
   const [open, setOpen] = useState(false)
+
   const [typeSort, setTypeSort] = useState<string>('by-default')
+
+  const search = location.search
+  const searchParams = new URLSearchParams(search)
+  const searchName = searchParams.get('name')
 
   const toggleOpen = () => setOpen((cur) => !cur)
 
-  const { data: categoryData } = useQuery({
-    queryKey: ['categoryDetail', categoryId],
-    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
+  const { data: searchData } = useQuery({
+    queryKey: ['search', searchName],
+    queryFn: () => productApi.searchProduct({ name: searchName as string })
   })
 
-  const categoryDetail = categoryData?.data.data
-  let listProduct = categoryDetail?.products
+  let listProduct = searchData?.data.data
 
   if (typeSort === 'by-default') {
     listProduct = _.sortBy(listProduct, 'id')
@@ -75,7 +79,7 @@ function DetailCategory() {
               </svg>
             </Link>
             <div className=''>
-              <span>{categoryDetail?.name}</span>
+              <span>Kết quả tìm kiếm cho: {searchName}</span>
             </div>
           </Breadcrumbs>
         </div>
@@ -99,7 +103,7 @@ function DetailCategory() {
               <span>Khoảng giá</span>
             </Button>
             <Collapse open={open}>
-              <Card className='w-48'>
+              <Card className='w-48 rounded-t-none'>
                 <CardBody>
                   <div className='flex flex-col gap-2'>
                     <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
@@ -166,11 +170,13 @@ function DetailCategory() {
                 </div>
               </div>
             </div>
-            {categoryDetail?.products?.length === 0 ? (
+            {listProduct?.length === 0 ? (
               <div className='mt-12'>
                 <div className='ml-52 mt-16 flex flex-col flex-wrap items-center justify-center gap-x-8'>
                   <ArchiveBoxXMarkIcon className='h-16 w-16 opacity-20'></ArchiveBoxXMarkIcon>
-                  <p className='mb-2 mt-2 pl-4 text-base font-medium md:pl-0 md:text-2xl'>Không có sản phẩm nào</p>
+                  <p className='mb-2 mt-2 pl-4 text-base font-medium md:pl-0 md:text-2xl'>
+                    Không có sản phẩm nào phù hợp
+                  </p>
                 </div>
               </div>
             ) : (
@@ -183,4 +189,4 @@ function DetailCategory() {
   )
 }
 
-export default DetailCategory
+export default SearchProduct

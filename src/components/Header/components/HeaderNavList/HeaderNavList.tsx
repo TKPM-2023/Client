@@ -1,7 +1,7 @@
 import { Button, IconButton, Menu, MenuHandler, MenuList, MenuItem, Typography } from '@material-tailwind/react'
 import { ShoppingCartIcon, HomeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { Link, NavLink } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, NavLink, useNavigate, createSearchParams } from 'react-router-dom'
+import { SetStateAction, useState } from 'react'
 import classNames from 'classnames'
 import routes from 'src/constants/routes'
 import { CartProductType } from 'src/types/cart.type'
@@ -14,15 +14,30 @@ interface Props {
 
 function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
   const currentURL = window.location.href
+  const navigate = useNavigate()
   const [openMenu, setOpenMenu] = useState(false)
+  const [searchParam, setSearchParam] = useState<string>('')
 
   const triggers = {
     onMouseEnter: () => setOpenMenu(true),
     onMouseLeave: () => setOpenMenu(false)
   }
+
+  const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
+    setSearchParam(event.target.value)
+  }
+
+  const handleSearch = (event: { preventDefault: () => void }) => {
+    event.preventDefault()
+    navigate({
+      pathname: routes.search,
+      search: createSearchParams({ name: searchParam }).toString()
+    })
+  }
+
   return (
     <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-2'>
-      <form className='flex w-96 items-center'>
+      <form onSubmit={handleSearch} className='flex w-96 items-center'>
         <label htmlFor='simple-search' className='sr-only'>
           Search
         </label>
@@ -45,8 +60,10 @@ function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
           <input
             type='text'
             className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-            placeholder='Search'
+            placeholder='Nhập tên sản phẩm'
             required
+            value={searchParam}
+            onChange={handleChange}
           />
         </div>
         <IconButton

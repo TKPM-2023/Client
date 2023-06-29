@@ -29,6 +29,7 @@ import Cart from './pages/Cart'
 import Order from './pages/Order'
 import NotFound from './pages/NotFound'
 import OrderManagement from './pages/Admin/pages/OrderManagement'
+import SearchProduct from './pages/SearchProduct'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -48,7 +49,8 @@ function useRouteElements() {
       children: [
         { path: routes.home, element: <Home /> },
         { path: routes.detailProduct, element: <DetailProduct /> },
-        { path: routes.detailCategory, element: <DetailCategory /> }
+        { path: routes.detailCategory, element: <DetailCategory /> },
+        { path: routes.search, element: <SearchProduct /> }
       ]
     },
     {
