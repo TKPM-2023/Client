@@ -6,7 +6,7 @@ import ListProduct from '../Home/components/ListProduct'
 import { useQuery } from '@tanstack/react-query'
 import categoryApi from 'src/apis/category.api'
 import { Product } from 'src/types/product.type'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import _ from 'lodash'
 
 const customSizeCard = {
@@ -14,26 +14,7 @@ const customSizeCard = {
   gapX: '4'
 }
 
-function DetailCategory() {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: 'smooth'
-  })
-  const { categoryId } = useParams()
-  const [open, setOpen] = useState(false)
-  const [typeSort, setTypeSort] = useState<string>('by-default')
-
-  const toggleOpen = () => setOpen((cur) => !cur)
-
-  const { data: categoryData } = useQuery({
-    queryKey: ['categoryDetail', categoryId],
-    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
-  })
-
-  const categoryDetail = categoryData?.data.data
-  let listProduct = categoryDetail?.products
-
+export const sortArray = (typeSort: string, listProduct: Product[]) => {
   if (typeSort === 'by-default') {
     listProduct = _.sortBy(listProduct, 'id')
   } else if (typeSort === 'by-date') {
@@ -43,23 +24,62 @@ function DetailCategory() {
   } else if (typeSort === 'by-decreasing') {
     listProduct = _.sortBy(listProduct, 'price').reverse()
   }
+  return listProduct
+}
 
-  const handleButtonDefaultSort = () => {
-    setTypeSort('by-default')
-  }
+function DetailCategory() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
+  const { categoryId } = useParams()
+  const [open, setOpen] = useState(true)
+  const [filteredProductList, setFilteredProductList] = useState<Product[]>([])
+  const [typeSort, setTypeSort] = useState<string>('by-default')
+  const [priceFilter, setPriceFilter] = useState<string>('all')
 
-  const handleButtonIncreasingSort = () => {
-    setTypeSort('by-increasing')
-  }
+  const toggleOpen = () => setOpen((cur) => !cur)
 
-  const handleButtonDecreasingSort = () => {
-    setTypeSort('by-decreasing')
-  }
+  const { data: categoryData } = useQuery({
+    queryKey: ['categoryDetail', categoryId],
+    queryFn: () => categoryApi.getCategoryDetailFromUser(categoryId as string)
+  })
 
-  const handleButtonDateSort = () => {
-    setTypeSort('by-date')
-  }
+  const categoryDetail = categoryData?.data.data
+  const listProduct = categoryDetail?.products
 
+  useEffect(() => {
+    let tempList: Product[] | undefined
+    if (priceFilter === 'all') {
+      tempList = sortArray(typeSort, listProduct as Product[])
+    }
+    if (priceFilter === 'low') {
+      tempList = listProduct?.filter((product) => {
+        return product.price < 300000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'medium') {
+      tempList = listProduct?.filter((product) => {
+        return product.price >= 300000 && product.price <= 600000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'high') {
+      tempList = listProduct?.filter((product) => {
+        return product.price > 600000 && product.price <= 900000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'premium') {
+      tempList = listProduct?.filter((product) => {
+        return product.price > 900000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    setFilteredProductList(tempList as Product[])
+  }, [priceFilter, typeSort, listProduct])
   return (
     <div className='h-full bg-gray-100 py-10'>
       <Helmet>
@@ -102,17 +122,45 @@ function DetailCategory() {
               <Card className='w-48'>
                 <CardBody>
                   <div className='flex flex-col gap-2'>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      2 - 4 triệu
+                    <button
+                      onClick={() => setPriceFilter('all')}
+                      className={`${
+                        priceFilter === 'all' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Tất cả
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      4 - 5 triệu
+                    <button
+                      onClick={() => setPriceFilter('low')}
+                      className={`${
+                        priceFilter === 'low' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Dưới 3 trăm
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      5 - 6 triệu
+                    <button
+                      onClick={() => setPriceFilter('medium')}
+                      className={`${
+                        priceFilter === 'medium' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      3 - 6 trăm
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      6 - 7 triệu
+                    <button
+                      onClick={() => setPriceFilter('high')}
+                      className={`${
+                        priceFilter === 'high' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      6 - 9 trăm
+                    </button>
+                    <button
+                      onClick={() => setPriceFilter('premium')}
+                      className={`${
+                        priceFilter === 'premium' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Trên 9 trăm
                     </button>
                   </div>
                 </CardBody>
@@ -128,7 +176,7 @@ function DetailCategory() {
               <div className='scroll-main scrollbar-item overflow-x-auto overflow-y-hidden whitespace-nowrap'>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDefaultSort}
+                    onClick={() => setTypeSort('by-default')}
                     className={`rounded-md rounded-md bg-white px-5 py-1 shadow-sm hover:bg-gray-200 ${
                       typeSort === 'by-default' ? '!bg-deep-purple-500 text-white' : ''
                     }`}
@@ -138,7 +186,7 @@ function DetailCategory() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDateSort}
+                    onClick={() => setTypeSort('by-date')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200 ${
                       typeSort === 'by-date' ? '!bg-deep-purple-500 text-white' : ''
                     }`}
@@ -148,7 +196,7 @@ function DetailCategory() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDecreasingSort}
+                    onClick={() => setTypeSort('by-decreasing')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200 
                     ${typeSort === 'by-decreasing' ? '!bg-deep-purple-500 text-white' : ''}`}
                   >
@@ -157,7 +205,7 @@ function DetailCategory() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonIncreasingSort}
+                    onClick={() => setTypeSort('by-increasing')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200
                     ${typeSort === 'by-increasing' ? '!bg-deep-purple-500 text-white' : ''}`}
                   >
@@ -166,7 +214,7 @@ function DetailCategory() {
                 </div>
               </div>
             </div>
-            {categoryDetail?.products?.length === 0 ? (
+            {filteredProductList?.length === 0 ? (
               <div className='mt-12'>
                 <div className='ml-52 mt-16 flex flex-col flex-wrap items-center justify-center gap-x-8'>
                   <ArchiveBoxXMarkIcon className='h-16 w-16 opacity-20'></ArchiveBoxXMarkIcon>
@@ -174,7 +222,7 @@ function DetailCategory() {
                 </div>
               </div>
             ) : (
-              <ListProduct products={listProduct as Product[]} customSizeCard={customSizeCard} />
+              <ListProduct products={filteredProductList as Product[]} customSizeCard={customSizeCard} />
             )}
           </div>
         </div>

@@ -6,8 +6,8 @@ import ListProduct from '../Home/components/ListProduct'
 import { useQuery } from '@tanstack/react-query'
 import productApi from 'src/apis/product.api'
 import { Product } from 'src/types/product.type'
-import { useState } from 'react'
-import _ from 'lodash'
+import { useState, useEffect } from 'react'
+import { sortArray } from '../DetailCategory/DetailCategory'
 
 const customSizeCard = {
   width: '60',
@@ -21,9 +21,10 @@ function SearchProduct() {
     behavior: 'smooth'
   })
   const location = useLocation()
-  const [open, setOpen] = useState(false)
-
+  const [open, setOpen] = useState(true)
+  const [filteredProductList, setFilteredProductList] = useState<Product[]>([])
   const [typeSort, setTypeSort] = useState<string>('by-default')
+  const [priceFilter, setPriceFilter] = useState<string>('all')
 
   const search = location.search
   const searchParams = new URLSearchParams(search)
@@ -36,38 +37,44 @@ function SearchProduct() {
     queryFn: () => productApi.searchProduct({ name: searchName as string })
   })
 
-  let listProduct = searchData?.data.data
+  const listProduct = searchData?.data.data
 
-  if (typeSort === 'by-default') {
-    listProduct = _.sortBy(listProduct, 'id')
-  } else if (typeSort === 'by-date') {
-    listProduct = _.sortBy(listProduct, 'created_at').reverse()
-  } else if (typeSort === 'by-increasing') {
-    listProduct = _.sortBy(listProduct, 'price')
-  } else if (typeSort === 'by-decreasing') {
-    listProduct = _.sortBy(listProduct, 'price').reverse()
-  }
-
-  const handleButtonDefaultSort = () => {
-    setTypeSort('by-default')
-  }
-
-  const handleButtonIncreasingSort = () => {
-    setTypeSort('by-increasing')
-  }
-
-  const handleButtonDecreasingSort = () => {
-    setTypeSort('by-decreasing')
-  }
-
-  const handleButtonDateSort = () => {
-    setTypeSort('by-date')
-  }
+  useEffect(() => {
+    let tempList: Product[] | undefined
+    if (priceFilter === 'all') {
+      tempList = sortArray(typeSort, listProduct as Product[])
+    }
+    if (priceFilter === 'low') {
+      tempList = listProduct?.filter((product) => {
+        return product.price < 300000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'medium') {
+      tempList = listProduct?.filter((product) => {
+        return product.price >= 300000 && product.price <= 600000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'high') {
+      tempList = listProduct?.filter((product) => {
+        return product.price > 600000 && product.price <= 900000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    if (priceFilter === 'premium') {
+      tempList = listProduct?.filter((product) => {
+        return product.price > 900000
+      })
+      tempList = sortArray(typeSort, tempList as Product[])
+    }
+    setFilteredProductList(tempList as Product[])
+  }, [priceFilter, typeSort, listProduct])
 
   return (
     <div className='h-full bg-gray-100 py-10'>
       <Helmet>
-        <title>Nón Trùm | Danh mục</title>
+        <title>Nón Trùm | Tìm kiếm</title>
         <meta name='description' content='Trang chủ' />
       </Helmet>
       <div className='container h-full '>
@@ -103,20 +110,48 @@ function SearchProduct() {
               <span>Khoảng giá</span>
             </Button>
             <Collapse open={open}>
-              <Card className='w-48 rounded-t-none'>
+              <Card className='w-48'>
                 <CardBody>
                   <div className='flex flex-col gap-2'>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      2 - 4 triệu
+                    <button
+                      onClick={() => setPriceFilter('all')}
+                      className={`${
+                        priceFilter === 'all' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Tất cả
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      4 - 5 triệu
+                    <button
+                      onClick={() => setPriceFilter('low')}
+                      className={`${
+                        priceFilter === 'low' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Dưới 3 trăm
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      5 - 6 triệu
+                    <button
+                      onClick={() => setPriceFilter('medium')}
+                      className={`${
+                        priceFilter === 'medium' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      3 - 6 trăm
                     </button>
-                    <button className='rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100'>
-                      6 - 7 triệu
+                    <button
+                      onClick={() => setPriceFilter('high')}
+                      className={`${
+                        priceFilter === 'high' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      6 - 9 trăm
+                    </button>
+                    <button
+                      onClick={() => setPriceFilter('premium')}
+                      className={`${
+                        priceFilter === 'premium' ? '!bg-deep-purple-500 text-white' : ''
+                      } rounded-lg border border-gray-500 px-4 py-1 text-center text-sm font-medium hover:cursor-pointer hover:bg-gray-100`}
+                    >
+                      Trên 9 trăm
                     </button>
                   </div>
                 </CardBody>
@@ -132,7 +167,7 @@ function SearchProduct() {
               <div className='scroll-main scrollbar-item overflow-x-auto overflow-y-hidden whitespace-nowrap'>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDefaultSort}
+                    onClick={() => setTypeSort('by-default')}
                     className={`rounded-md rounded-md bg-white px-5 py-1 shadow-sm hover:bg-gray-200 ${
                       typeSort === 'by-default' ? '!bg-deep-purple-500 text-white' : ''
                     }`}
@@ -142,7 +177,7 @@ function SearchProduct() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDateSort}
+                    onClick={() => setTypeSort('by-date')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200 ${
                       typeSort === 'by-date' ? '!bg-deep-purple-500 text-white' : ''
                     }`}
@@ -152,7 +187,7 @@ function SearchProduct() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonDecreasingSort}
+                    onClick={() => setTypeSort('by-decreasing')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200 
                     ${typeSort === 'by-decreasing' ? '!bg-deep-purple-500 text-white' : ''}`}
                   >
@@ -161,7 +196,7 @@ function SearchProduct() {
                 </div>
                 <div className='item mr-2 inline-block'>
                   <button
-                    onClick={handleButtonIncreasingSort}
+                    onClick={() => setTypeSort('by-increasing')}
                     className={`rounded-md bg-white px-5 py-1 shadow-sm hover:hover:bg-gray-200
                     ${typeSort === 'by-increasing' ? '!bg-deep-purple-500 text-white' : ''}`}
                   >
@@ -170,7 +205,7 @@ function SearchProduct() {
                 </div>
               </div>
             </div>
-            {listProduct?.length === 0 ? (
+            {filteredProductList?.length === 0 ? (
               <div className='mt-12'>
                 <div className='ml-52 mt-16 flex flex-col flex-wrap items-center justify-center gap-x-8'>
                   <ArchiveBoxXMarkIcon className='h-16 w-16 opacity-20'></ArchiveBoxXMarkIcon>
@@ -180,7 +215,7 @@ function SearchProduct() {
                 </div>
               </div>
             ) : (
-              <ListProduct products={listProduct as Product[]} customSizeCard={customSizeCard} />
+              <ListProduct products={filteredProductList as Product[]} customSizeCard={customSizeCard} />
             )}
           </div>
         </div>
