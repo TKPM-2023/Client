@@ -27,6 +27,9 @@ const productApi = {
   },
   getProductDetailFromUser: (id: string) => {
     return http.get<SuccessResponse<Product>>(`${URL_USER}/${id}`)
+  },
+  searchProduct: (params: { name: string }) => {
+    return http.get<{ data: Product[] }>(`${URL_USER}/search`, { params })
   }
 }
 

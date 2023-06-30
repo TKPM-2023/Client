@@ -47,7 +47,7 @@ function ProductInfor({ product }: Props) {
   const addProductToCartMutation = useMutation({
     mutationFn: (body: AddProductToCartType[]) => cartApi.addProductToCard(body),
     onSuccess: () => {
-      toast.success('Đã thêm vào giỏ hàng')
+      toast.success('Đã thêm vào giỏ hàng', { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
       refetch()
     }
   })
@@ -55,7 +55,7 @@ function ProductInfor({ product }: Props) {
   const updateProductQuantityMutation = useMutation({
     mutationFn: (body: AddProductToCartType) => cartApi.updateProductQuantity(body),
     onSuccess: () => {
-      toast.success('Đã thêm vào giỏ hàng')
+      toast.success('Đã thêm vào giỏ hàng', { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
       refetch()
     }
   })

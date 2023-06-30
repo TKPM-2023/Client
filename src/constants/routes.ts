@@ -16,7 +16,8 @@ const routes = {
   detailProduct: '/product/:id',
   detailCategory: '/category/:categoryId',
   order: '/order-and-payment',
-  cart: '/my-cart'
+  cart: '/my-cart',
+  search: '/search'
 } as const
 
 export default routes
