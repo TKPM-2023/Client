@@ -1,6 +1,4 @@
 import { useMemo } from 'react'
-import Button from 'src/components/Button'
-import Input from 'src/components/Input'
 import Modal from 'src/components/Modal'
 import { OrderType } from 'src/types/order.type'
 import { formatDate, formatNumber } from 'src/utils/utils'
@@ -12,6 +10,8 @@ interface Props {
 }
 
 function ViewModal({ order, isOpen, setIsOpen }: Props) {
+  console.log(order)
+
   const totalDiscount = useMemo(() => {
     if (!order) return 0
     return order.products.reduce((acc, product) => {
