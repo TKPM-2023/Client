@@ -23,6 +23,7 @@ export type RatingByUser = {
   product_id: string
   User: User
   product: Product
+  detail_id: string
 }
 
 export type ListRatingByUser = {

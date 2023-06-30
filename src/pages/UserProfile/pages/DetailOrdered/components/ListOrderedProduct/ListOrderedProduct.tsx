@@ -10,23 +10,48 @@ import {
   Textarea
 } from '@material-tailwind/react'
 import { OrderedProductType } from 'src/types/order.type'
-import { XMarkIcon } from '@heroicons/react/24/solid'
-import { useState } from 'react'
+import { XMarkIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
+import { useState, useContext } from 'react'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import ratingApi from 'src/apis/rating.api'
 import { toast } from 'react-toastify'
-import { PostRatingType } from 'src/types/rating.type'
+import { PostRatingType, RatingsConfig, RatingByUser } from 'src/types/rating.type'
+import { AppContext } from 'src/contexts/app.context'
 
 interface Props {
   orderedProduct: OrderedProductType
   status: number
 }
 
+const isAlreadyReview = (listRating: RatingByUser[], orderedProduct: OrderedProductType, userId?: string) => {
+  listRating?.forEach((rating) => {
+    if (
+      rating.detail_id === orderedProduct.id &&
+      rating.product_id === orderedProduct.product_origin.id &&
+      rating.user_id === userId
+    )
+      return true
+  })
+  return false
+}
+
 function ListOrderedProduct({ orderedProduct, status }: Props) {
+  const { profile } = useContext(AppContext)
   const [open, setOpen] = useState<boolean>(false)
   const [rated, setRated] = useState<number>(0)
+
+  const ratingQueryConfig: RatingsConfig = {
+    status: -1,
+    user_id: `"${profile?.id}"`
+  }
+  const { data: ratingsData } = useQuery({
+    queryKey: ['ratings', ratingQueryConfig],
+    queryFn: () => ratingApi.getListRatingByUser(ratingQueryConfig),
+    keepPreviousData: true
+  })
+  const listRating = ratingsData?.data.data
 
   const postRatingMutation = useMutation({
     mutationFn: (body: PostRatingType) => ratingApi.postRating(orderedProduct.product_origin.id, body),
@@ -51,6 +76,8 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
       handleOpen()
     }
   })
+
+  console.log(isAlreadyReview(listRating as RatingByUser[], orderedProduct, profile?.id))
   return (
     <div className='mb-1 flex justify-center'>
       <div className='grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2 hover:bg-gray-100'>
@@ -86,22 +113,13 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
             }}
             placement='bottom'
           >
-            <button onClick={handleOpen} className='flex cursor-pointer content-end items-center'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth='1.5'
-                stroke='currentColor'
-                className='h-4 w-4'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z'
-                />
-              </svg>
-            </button>
+            {isAlreadyReview(listRating as RatingByUser[], orderedProduct, profile?.id) ? (
+              <div>ok</div>
+            ) : (
+              <button onClick={handleOpen} className='flex cursor-pointer content-end items-center'>
+                <ChatBubbleLeftIcon className='h-4 w-4' />
+              </button>
+            )}
           </Tooltip>
         ) : (
           <div></div>
