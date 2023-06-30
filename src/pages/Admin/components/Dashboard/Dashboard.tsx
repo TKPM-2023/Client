@@ -1,5 +1,9 @@
-import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import range from 'lodash/range'
+import { useEffect, useMemo, useState } from 'react'
 import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, LineChart, Line } from 'recharts'
+import statisticApi from 'src/apis/statistic.api'
+import { formatNumberToSocialStyle } from 'src/utils/utils'
 
 const data = [
   {
@@ -64,8 +68,67 @@ const data = [
   }
 ]
 
+const CURRENT_YEAR = new Date().getFullYear()
+
 function Dashboard() {
-  console.log(window)
+  const [year, setYear] = useState(CURRENT_YEAR)
+  const { data: statisticData } = useQuery({
+    queryKey: ['statistic', year],
+    queryFn: () => statisticApi.getByYear(year)
+  })
+
+  const statistic = statisticData?.data.data
+
+  const revenueData = useMemo(() => {
+    if (!statistic) return []
+
+    return statistic.revenue.map((item, index) => {
+      let name = ''
+      switch (index) {
+        case 0:
+          name = 'Jan'
+          break
+        case 1:
+          name = 'Feb'
+          break
+        case 2:
+          name = 'Mar'
+          break
+        case 3:
+          name = 'Apr'
+          break
+        case 4:
+          name = 'May'
+          break
+        case 5:
+          name = 'Jun'
+          break
+        case 6:
+          name = 'Jul'
+          break
+        case 7:
+          name = 'Aug'
+          break
+        case 8:
+          name = 'Oct'
+          break
+        case 9:
+          name = 'Sep'
+          break
+        case 10:
+          name = 'Nov'
+          break
+        case 11:
+          name = 'Dev'
+          break
+        default:
+          break
+      }
+      return { name, revenue: item }
+    })
+  }, [statistic])
+
+  console.log(revenueData)
 
   return (
     <div>
@@ -103,8 +166,8 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 30 </h4>
-                <div className='text-gray-500'> Người dùng mới </div>
+                <h4 className='text-2xl font-semibold text-gray-700'> {statistic?.user_count} </h4>
+                <div className='text-gray-500'> Người dùng </div>
               </div>
             </div>
           </div>
@@ -127,7 +190,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 121 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'>{statistic?.order_count}</h4>
                 <div className='text-gray-500'> Tổng đơn hàng </div>
               </div>
             </div>
@@ -151,7 +214,7 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 50 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'>{statistic?.product_count}</h4>
                 <div className='text-gray-500'> Sản phẩm hiện có </div>
               </div>
             </div>
@@ -176,22 +239,39 @@ function Dashboard() {
                 </svg>
               </div>
               <div className='mx-5'>
-                <h4 className='text-2xl font-semibold text-gray-700'> 4 </h4>
+                <h4 className='text-2xl font-semibold text-gray-700'>{statistic?.category_count}</h4>
                 <div className='text-gray-500'>Thể loại</div>
               </div>
             </div>
           </div>
         </div>
         <div className='mt-6'>
-          <p className='mb-4 text-xl font-medium'>Sales report</p>
-          <LineChart width={930} height={250} data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <div className='mb-4 flex gap-2'>
+            <p className='text-xl font-medium'>Báo cáo doanh thu</p>
+            <select
+              className='hover:border-orange h-10 cursor-pointer rounded-sm border border-black/10 px-3'
+              name='year'
+              value={year}
+              onChange={(event) => setYear(Number(event.target.value))}
+            >
+              <option value='' disabled>
+                --Năm--
+              </option>
+              {range(CURRENT_YEAR, 2000).map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
+          <LineChart width={930} height={250} data={revenueData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray='3 3' />
             <XAxis dataKey='name' />
-            <YAxis />
+            <YAxis tickFormatter={formatNumberToSocialStyle} />
             <Tooltip />
             <Legend />
-            <Line type='monotone' dataKey='pv' stroke='#8884d8' />
-            <Line type='monotone' dataKey='uv' stroke='#82ca9d' />
+            <Line type='monotone' name='Doanh thu' dataKey='revenue' stroke='#8884d8' />
+            {/* <Line type='monotone' dataKey='uv' stroke='#82ca9d' /> */}
           </LineChart>
         </div>
       </div>

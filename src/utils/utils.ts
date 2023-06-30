@@ -25,6 +25,15 @@ export const formatNumber = (num: number) => {
   return Intl.NumberFormat('en-DE').format(num)
 }
 
+export const formatNumberToSocialStyle = (value: number) => {
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  })
+    .format(value)
+    .replace('.', ',')
+}
+
 export const renderRole = (role: 'user' | 'admin') => (role === 'admin' ? 'Quản trị' : 'Người dùng')
 
 export const renderStatus = (status: 1 | 0) => (status === 1 ? 'Tồn tại' : 'Đã xóa')
