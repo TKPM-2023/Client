@@ -59,6 +59,7 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
             <img
               src={orderedProduct.product_origin.images ? orderedProduct.product_origin.images[0].url : ''}
               alt=''
+              className='h-8'
               width={30}
             />
 
@@ -76,7 +77,7 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
         <Typography variant='small' color='red' className='flex items-center font-medium'>
           {orderedProduct?.price.toLocaleString('vi-VN')} VNĐ
         </Typography>
-        {status === 2 ? (
+        {status === 3 ? (
           <Tooltip
             content='Đánh giá sản phẩm'
             animate={{
@@ -109,7 +110,7 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
       <Dialog open={open} handler={handleOpen}>
         <div className='flex items-center justify-between'>
           <DialogHeader>Đánh giá sản phẩm</DialogHeader>
-          <XMarkIcon className='mr-3 h-5 w-5' onClick={handleOpen} />
+          <XMarkIcon className='mr-3 h-5 w-5 cursor-pointer' onClick={handleOpen} />
         </div>
         <DialogBody divider>
           <div className='grid gap-6'>
