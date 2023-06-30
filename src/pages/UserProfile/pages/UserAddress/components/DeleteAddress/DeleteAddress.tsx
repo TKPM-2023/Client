@@ -15,7 +15,7 @@ function DeleteAddress({ address, isOpen, setIsOpen, handleRefetchData }: Delete
   const deleteUserContactMutation = useMutation({
     mutationFn: () => contactApi.deleteContact(address?.id as string),
     onSuccess: () => {
-      toast.success('Xóa địa chỉ thành công')
+      toast.success('Xóa địa chỉ thành công', { autoClose: 1000 })
     }
   })
 

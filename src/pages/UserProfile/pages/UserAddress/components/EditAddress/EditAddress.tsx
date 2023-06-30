@@ -44,6 +44,7 @@ function EditAddress({ address, isOpen, setIsOpen, handleRefetchData }: EditAddr
         addr: address.addr
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address])
 
   return (

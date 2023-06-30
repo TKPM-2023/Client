@@ -1,24 +1,10 @@
-import {
-  Card,
-  CardBody,
-  Rating,
-  Select,
-  Option,
-  Popover,
-  PopoverHandler,
-  PopoverContent,
-  Chip,
-  Progress
-} from '@material-tailwind/react'
+import { Card, CardBody, Rating, Select, Option, Chip, Progress } from '@material-tailwind/react'
 import { RatingType } from 'src/types/product.type'
 import { DateRangeItem } from 'src/pages/UserProfile/pages/Orders/Orders'
 import { useState, useEffect } from 'react'
-import { CalendarDaysIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
+import { ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/24/solid'
-import { DateRange } from 'react-date-range'
-import 'react-date-range/dist/styles.css' // Import CSS styles
-import 'react-date-range/dist/theme/default.css' // Import theme CSS
-import vi from 'date-fns/locale/vi'
+import DateRangePicker from 'src/components/DateRangePicker'
 import UserRating from '../UserRating'
 import _ from 'lodash'
 
@@ -81,24 +67,13 @@ function ProductReview({ ratings }: Props) {
     key: 'selection'
   })
   const [filteredRatingList, setFilteredRatingList] = useState<RatingType[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDateChange = (item: any) => {
-    setDateRange(item.selection)
-  }
+
   const handleSelectPointChange = (value?: string) => {
     setSelectedPoint(value as string)
   }
 
   const handleSelectTimeChange = (value?: string) => {
     setSelectedTime(value as string)
-  }
-
-  const padTo2Digits = (num: number): string => {
-    return num.toString().padStart(2, '0')
-  }
-
-  const formatDate = (date: Date): string => {
-    return [padTo2Digits(date.getDate()), padTo2Digits(date.getMonth() + 1), date.getFullYear()].join('/')
   }
 
   useEffect(() => {
@@ -151,45 +126,7 @@ function ProductReview({ ratings }: Props) {
         <div className='mb-4 flex items-center justify-between'>
           <p className='pl-4 text-base font-medium md:pl-0 md:text-2xl'>Đánh giá sản phẩm</p>
           <div className='flex gap-2'>
-            <Popover
-              placement='bottom'
-              animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 }
-              }}
-            >
-              <PopoverHandler>
-                <button className='rounded-lg border border-gray-400 bg-white p-2.5 hover:border-blue-500 focus:ring-blue-500'>
-                  {dateRange?.startDate && dateRange?.endDate ? (
-                    <div className='flex gap-2'>
-                      <CalendarDaysIcon className='h-5 w-5' />
-                      <span className='text-am text-gray-900'>
-                        {formatDate(dateRange.startDate)} - {formatDate(dateRange.endDate)}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className='flex gap-2'>
-                      <CalendarDaysIcon className='h-5 w-5' />
-                      <span className='text-sm text-gray-900'>Ngày bắt đầu - Kết thúc</span>
-                    </div>
-                  )}
-                </button>
-              </PopoverHandler>
-              <PopoverContent>
-                <div>
-                  <DateRange
-                    locale={vi}
-                    editableDateInputs={true}
-                    onChange={handleDateChange}
-                    moveRangeOnFirstSelection={false}
-                    ranges={[dateRange]}
-                    startDatePlaceholder='Ngày bắt đầu'
-                    endDatePlaceholder='Ngày kết thúc'
-                    dateDisplayFormat='dd/MM/yyyy'
-                  />
-                </div>
-              </PopoverContent>
-            </Popover>
+            <DateRangePicker dateRange={dateRange} setDateRange={setDateRange} />
             <div className='z-10 bg-white'>
               <Select value={selectedTime} onChange={handleSelectTimeChange} lockScroll label='Xếp theo'>
                 <Option value='all'>Tất cả</Option>
