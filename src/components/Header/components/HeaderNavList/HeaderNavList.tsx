@@ -1,7 +1,8 @@
 import { Button, IconButton, Menu, MenuHandler, MenuList, MenuItem, Typography } from '@material-tailwind/react'
 import { ShoppingCartIcon, HomeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { Link, NavLink, useNavigate, createSearchParams } from 'react-router-dom'
-import { SetStateAction, useState } from 'react'
+import { SetStateAction, useState, useContext, useEffect } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 import classNames from 'classnames'
 import routes from 'src/constants/routes'
 import { CartProductType } from 'src/types/cart.type'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
+  const { setLocationCart } = useContext(AppContext)
   const currentURL = window.location.href
   const navigate = useNavigate()
   const [openMenu, setOpenMenu] = useState(false)
@@ -34,6 +36,11 @@ function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
       search: createSearchParams({ name: searchParam }).toString()
     })
   }
+
+  useEffect(() => {
+    setLocationCart(document.querySelector<HTMLElement>('#cart-btn') as HTMLElement)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-2'>
@@ -101,6 +108,7 @@ function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
           >
             <button
               {...triggers}
+              id='cart-btn'
               type='button'
               className='relative inline-flex items-center rounded-lg bg-blue-700 p-3 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             >

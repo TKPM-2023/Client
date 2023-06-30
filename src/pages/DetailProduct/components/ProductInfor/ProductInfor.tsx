@@ -11,12 +11,50 @@ import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { Upload } from 'src/types/upload.type'
 
+const speed = 1300
+const curveDelay = 300
+const position: 'fixed' | 'absolute' = 'fixed'
+
+//hoạt ảnh thêm vào giỏ hàng
+function animationAddtoCart(locationCart: HTMLElement) {
+  const img = document.querySelector<HTMLElement>('#image-product') as HTMLElement
+  const imgY = position === 'fixed' ? img.getBoundingClientRect().top : img.offsetTop
+  const imgX = position === 'fixed' ? img.getBoundingClientRect().left : img.offsetLeft
+  const flyingImg = img.cloneNode(true) as HTMLElement
+
+  const cartButton = locationCart
+
+  flyingImg.classList.add('flyingImg')
+  flyingImg.style.position = position
+  flyingImg.style.top = `${imgY}px`
+  flyingImg.style.left = `${imgX}px`
+  flyingImg.style.opacity = '0.5'
+  flyingImg.style.width = (img.offsetWidth as unknown as string) + 'px'
+  flyingImg.style.height = (img.offsetHeight as unknown as string) + 'px'
+  flyingImg.style.zIndex = '100'
+  flyingImg.style.transition = `all ${speed / 1000}s ease, top ${(speed + curveDelay) / 1000}s ease, left ${
+    speed / 1000
+  }s ease, transform ${speed / 1000}s ease ${(speed - 10) / 1000}s`
+
+  document.body.appendChild(flyingImg)
+
+  flyingImg.style.top = `${(cartButton as HTMLElement).offsetTop + (cartButton as HTMLElement).offsetHeight - 30}px`
+  flyingImg.style.left = `${(cartButton as HTMLElement).offsetLeft + (cartButton as HTMLElement).offsetWidth - 30}px`
+  flyingImg.style.height = '1rem'
+  flyingImg.style.width = '1rem'
+  flyingImg.style.transform = 'scale(0)'
+
+  setTimeout(() => {
+    flyingImg.remove()
+  }, speed * 1.5)
+}
+
 interface Props {
   product: Product
 }
 
 function ProductInfor({ product }: Props) {
-  const { profile, setListProductIsOrdering } = useContext(AppContext)
+  const { profile, setListProductIsOrdering, locationCart } = useContext(AppContext)
   const calAveragePoint = useCalAveragePoint(product)
   const [quantityOrder, setQuantityOrder] = useState<number>(1)
   const [open, setOpen] = useState(false)
@@ -44,6 +82,7 @@ function ProductInfor({ product }: Props) {
       }
     ])
   }
+
   const addProductToCartMutation = useMutation({
     mutationFn: (body: AddProductToCartType[]) => cartApi.addProductToCard(body),
     onSuccess: () => {
@@ -85,8 +124,13 @@ function ProductInfor({ product }: Props) {
         product_id: product.id,
         quantity: quantityOrder + quantityProductInCart
       })
-    } else await addProductToCartMutation.mutateAsync([{ product_id: product.id, quantity: quantityOrder }])
+      animationAddtoCart(locationCart)
+    } else {
+      animationAddtoCart(locationCart)
+      await addProductToCartMutation.mutateAsync([{ product_id: product.id, quantity: quantityOrder }])
+    }
   }
+
   if (!product)
     return (
       <div>
@@ -136,7 +180,12 @@ function ProductInfor({ product }: Props) {
         <Card className='w-full flex-row'>
           <CardHeader shadow={false} floated={false} className='m-0 h-[377px] w-[377px] shrink-0 rounded-r-none '>
             <Card className='h-full w-full cursor-pointer transition-opacity hover:opacity-90' onClick={handleOpen}>
-              <img src={product.images ? product.images[0].url : ''} alt='' className='h-full w-full object-fill' />
+              <img
+                src={product.images ? product.images[0].url : ''}
+                id='image-product'
+                alt=''
+                className='h-full w-full object-fill'
+              />
             </Card>
             <Dialog size='xl' open={open} handler={handleOpen}>
               <DialogBody divider={true} className='p-0'>
