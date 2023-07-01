@@ -1,5 +1,16 @@
-import { Card, CardHeader, CardBody, Typography, Button, Rating, Dialog, DialogBody } from '@material-tailwind/react'
-import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+  Button,
+  Rating,
+  Dialog,
+  DialogBody,
+  Carousel,
+  IconButton
+} from '@material-tailwind/react'
+import { MinusIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Product } from 'src/types/product.type'
 import { useState, useContext } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -189,11 +200,55 @@ function ProductInfor({ product }: Props) {
             </Card>
             <Dialog size='xl' open={open} handler={handleOpen}>
               <DialogBody divider={true} className='p-0'>
-                <img
-                  alt='nature'
-                  className='h-[40rem] w-full object-none object-center'
-                  src={product.images ? product.images[0].url : ''}
-                />
+                <Carousel
+                  className='text-red rounded-xl'
+                  loop
+                  prevArrow={({ handlePrev }) => (
+                    <IconButton
+                      variant='text'
+                      color='white'
+                      size='lg'
+                      onClick={handlePrev}
+                      className='!absolute left-4 top-2/4 -translate-y-2/4 rounded-full'
+                    >
+                      <ChevronLeftIcon strokeWidth={2} className='h-6 w-6 text-black' />
+                    </IconButton>
+                  )}
+                  nextArrow={({ handleNext }) => (
+                    <IconButton
+                      variant='text'
+                      color='white'
+                      size='lg'
+                      onClick={handleNext}
+                      className='!absolute !right-4 top-2/4 -translate-y-2/4 rounded-full'
+                    >
+                      <ChevronRightIcon strokeWidth={2} className='h-6 w-6 text-black' />
+                    </IconButton>
+                  )}
+                  navigation={({ setActiveIndex, activeIndex, length }) => (
+                    <div className='absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2'>
+                      {new Array(length).fill('').map((_, i) => (
+                        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+                        <span
+                          key={i}
+                          className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                            activeIndex === i ? 'w-8 bg-black' : 'w-4 bg-black/50'
+                          }`}
+                          onClick={() => setActiveIndex(i)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                >
+                  {product.images?.map((image) => (
+                    <img
+                      key={image.id}
+                      alt='nature'
+                      className='h-[40rem] w-full object-none object-center'
+                      src={image.url}
+                    />
+                  ))}
+                </Carousel>
               </DialogBody>
             </Dialog>
           </CardHeader>
