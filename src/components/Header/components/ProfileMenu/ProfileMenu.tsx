@@ -3,6 +3,7 @@ import { UserCircleIcon, PowerIcon, WrenchScrewdriverIcon, ChevronDownIcon } fro
 import { Link } from 'react-router-dom'
 import React from 'react'
 import routes from 'src/constants/routes'
+import { AppContext } from 'src/contexts/app.context'
 
 interface Props {
   avatarUrl: string
@@ -11,6 +12,7 @@ interface Props {
 
 function ProfileMenu({ avatarUrl, handleLogout }: Props) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const { profile } = React.useContext(AppContext)
 
   const triggers = {
     onMouseEnter: () => setIsMenuOpen(true),
@@ -51,17 +53,21 @@ function ProfileMenu({ avatarUrl, handleLogout }: Props) {
           </MenuItem>
         </Link>
 
-        <Link to={routes.admin}>
-          <MenuItem className='flex items-center gap-2 rounded'>
-            {React.createElement(WrenchScrewdriverIcon, {
-              className: 'h-4 w-4',
-              strokeWidth: 2
-            })}
-            <Typography as='span' variant='small' className='font-normal'>
-              Trang quản lý
-            </Typography>
-          </MenuItem>
-        </Link>
+        {profile?.role === 'admin' ? (
+          <Link to={routes.admin}>
+            <MenuItem className='flex items-center gap-2 rounded'>
+              {React.createElement(WrenchScrewdriverIcon, {
+                className: 'h-4 w-4',
+                strokeWidth: 2
+              })}
+              <Typography as='span' variant='small' className='font-normal'>
+                Trang quản lý
+              </Typography>
+            </MenuItem>
+          </Link>
+        ) : (
+          ''
+        )}
 
         <MenuItem
           className={'flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'}
