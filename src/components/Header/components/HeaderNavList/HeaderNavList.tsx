@@ -114,9 +114,13 @@ function HeaderNavList({ listCartProduct, isAuthenticated }: Props) {
             >
               <ShoppingCartIcon className='h-5 w-5 text-inherit' />
               <span className='sr-only'>Notifications</span>
-              <div className='absolute -right-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900'>
-                {listCartProduct?.length}
-              </div>
+              {isAuthenticated ? (
+                <div className='absolute -right-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900'>
+                  {listCartProduct?.length}
+                </div>
+              ) : (
+                ''
+              )}
             </button>
           </NavLink>
         </MenuHandler>
