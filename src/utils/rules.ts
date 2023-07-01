@@ -27,8 +27,8 @@ export const userSchema = yup
   .required()
 export type UserSchema = yup.InferType<typeof userSchema>
 
-export const MAX_PRODUCT_NAME_CHARACTERS = 60
-export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 120
+export const MAX_PRODUCT_NAME_CHARACTERS = 200
+export const MAX_PRODUCT_DESCRIPTION_CHARACTERS = 2000
 export const productSchema = yup.object({
   name: yup
     .string()
@@ -65,8 +65,8 @@ export const productSchema = yup.object({
 
 export type ProductSchema = yup.InferType<typeof productSchema>
 
-export const MAX_CATEGORY_NAME_CHARACTERS = 600
-export const MAX_CATEGORY_DESCRIPTION_CHARACTERS = 1200
+export const MAX_CATEGORY_NAME_CHARACTERS = 200
+export const MAX_CATEGORY_DESCRIPTION_CHARACTERS = 2000
 export const categorySchema = yup.object({
   name: yup
     .string()
