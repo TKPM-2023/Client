@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 
 import userApi from 'src/apis/user.api'
-import uploadApi from 'src/apis/upload.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'

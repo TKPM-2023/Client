@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import Footer from 'src/components/Footer'
@@ -13,4 +14,4 @@ function MainLayout() {
   )
 }
 
-export default MainLayout
+export default memo(MainLayout)
