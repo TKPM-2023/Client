@@ -52,7 +52,7 @@ function ListProductInCart({
     mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(body),
     onSuccess: () => {
       handleRefetchData()
-      toast.success('Đã xóa khỏi giỏ hàng')
+      toast.success('Đã xóa khỏi giỏ hàng', { autoClose: 1000 })
       const newList = listCheckedProduct.filter((item) => item !== productInCart.product_id)
       setListCheckedProduct(newList)
     }
