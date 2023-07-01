@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { Suspense, lazy, useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 
 import routes from './constants/routes'
@@ -7,29 +7,29 @@ import { AppContext } from './contexts/app.context'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
 // user profile
-import UserProfile from './pages/UserProfile'
-import GeneralInfor from './pages/UserProfile/pages/GeneralInfor'
-import ChangePassword from './pages/UserProfile/pages/ChangePassword'
-import UserAddress from './pages/UserProfile/pages/UserAddress'
-import UserOrders from './pages/UserProfile/pages/Orders'
-import DetailOrdered from './pages/UserProfile/pages/DetailOrdered'
-import Reviews from './pages/UserProfile/pages/Reviews'
+const UserProfile = lazy(() => import('./pages/UserProfile'))
+const GeneralInfor = lazy(() => import('./pages/UserProfile/pages/GeneralInfor'))
+const ChangePassword = lazy(() => import('./pages/UserProfile/pages/ChangePassword'))
+const UserAddress = lazy(() => import('./pages/UserProfile/pages/UserAddress'))
+const UserOrders = lazy(() => import('./pages/UserProfile/pages/Orders'))
+const DetailOrdered = lazy(() => import('./pages/UserProfile/pages/DetailOrdered'))
+const Reviews = lazy(() => import('./pages/UserProfile/pages/Reviews'))
 //
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Admin from './pages/Admin'
-import Dashboard from './pages/Admin/components/Dashboard'
-import UserManagement from './pages/Admin/pages/UserManagement'
-import ProductManagement from './pages/Admin/pages/ProductManagement'
-import CategoryManagement from './pages/Admin/pages/CategoryManagement'
-import DetailProduct from './pages/DetailProduct'
-import DetailCategory from './pages/DetailCategory'
-import Cart from './pages/Cart'
-import Order from './pages/Order'
-import NotFound from './pages/NotFound'
-import OrderManagement from './pages/Admin/pages/OrderManagement'
-import SearchProduct from './pages/SearchProduct'
+const Home = lazy(() => import('./pages/Home'))
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Admin = lazy(() => import('./pages/Admin'))
+const Dashboard = lazy(() => import('./pages/Admin/components/Dashboard'))
+const UserManagement = lazy(() => import('./pages/Admin/pages/UserManagement'))
+const ProductManagement = lazy(() => import('./pages/Admin/pages/ProductManagement'))
+const CategoryManagement = lazy(() => import('./pages/Admin/pages/CategoryManagement'))
+const DetailProduct = lazy(() => import('./pages/DetailProduct'))
+const DetailCategory = lazy(() => import('./pages/DetailCategory'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Order = lazy(() => import('./pages/Order'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const OrderManagement = lazy(() => import('./pages/Admin/pages/OrderManagement'))
+const SearchProduct = lazy(() => import('./pages/SearchProduct'))
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -47,10 +47,38 @@ function useRouteElements() {
       path: '',
       element: <MainLayout />,
       children: [
-        { path: routes.home, element: <Home /> },
-        { path: routes.detailProduct, element: <DetailProduct /> },
-        { path: routes.detailCategory, element: <DetailCategory /> },
-        { path: routes.search, element: <SearchProduct /> }
+        {
+          path: routes.home,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Home />
+            </Suspense>
+          )
+        },
+        {
+          path: routes.detailProduct,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <DetailProduct />
+            </Suspense>
+          )
+        },
+        {
+          path: routes.detailCategory,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <DetailCategory />
+            </Suspense>
+          )
+        },
+        {
+          path: routes.search,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <SearchProduct />
+            </Suspense>
+          )
+        }
       ]
     },
     {
@@ -63,47 +91,128 @@ function useRouteElements() {
           children: [
             {
               path: routes.profile,
-              element: <UserProfile />,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserProfile />
+                </Suspense>
+              ),
               children: [
                 {
-                  element: <GeneralInfor />,
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <GeneralInfor />
+                    </Suspense>
+                  ),
                   index: true
                 },
                 {
                   path: routes.changePassword,
-                  element: <ChangePassword />
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <ChangePassword />
+                    </Suspense>
+                  )
                 },
                 {
                   path: routes.userAddress,
-                  element: <UserAddress />
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <UserAddress />
+                    </Suspense>
+                  )
                 },
                 {
                   path: routes.userOrders,
-                  element: <UserOrders />
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <UserOrders />
+                    </Suspense>
+                  )
                 },
                 {
                   path: routes.reviews,
-                  element: <Reviews />
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Reviews />
+                    </Suspense>
+                  )
                 },
                 {
                   path: routes.detailUserOrder,
-                  element: <DetailOrdered />
+                  element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DetailOrdered />
+                    </Suspense>
+                  )
                 }
               ]
             },
-            { path: routes.cart, element: <Cart /> },
-            { path: routes.order, element: <Order /> }
+            {
+              path: routes.cart,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Cart />
+                </Suspense>
+              )
+            },
+            {
+              path: routes.order,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Order />
+                </Suspense>
+              )
+            }
           ]
         },
         {
           path: routes.admin,
-          element: <Admin />,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Admin />
+            </Suspense>
+          ),
           children: [
-            { element: <Dashboard />, index: true },
-            { path: routes.manageUsers, element: <UserManagement /> },
-            { path: routes.manageProducts, element: <ProductManagement /> },
-            { path: routes.manageCategories, element: <CategoryManagement /> },
-            { path: routes.manageOrders, element: <OrderManagement /> }
+            {
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Dashboard />
+                </Suspense>
+              ),
+              index: true
+            },
+            {
+              path: routes.manageUsers,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <UserManagement />
+                </Suspense>
+              )
+            },
+            {
+              path: routes.manageProducts,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProductManagement />
+                </Suspense>
+              )
+            },
+            {
+              path: routes.manageCategories,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <CategoryManagement />
+                </Suspense>
+              )
+            },
+            {
+              path: routes.manageOrders,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <OrderManagement />
+                </Suspense>
+              )
+            }
           ]
         }
       ]
@@ -116,15 +225,33 @@ function useRouteElements() {
           path: '',
           element: <AuthLayout />,
           children: [
-            { path: routes.login, element: <Login /> },
-            { path: routes.register, element: <Register /> }
+            {
+              path: routes.login,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Login />
+                </Suspense>
+              )
+            },
+            {
+              path: routes.register,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Register />
+                </Suspense>
+              )
+            }
           ]
         }
       ]
     },
     {
       path: '*',
-      element: <NotFound />
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NotFound />
+        </Suspense>
+      )
     }
   ])
 

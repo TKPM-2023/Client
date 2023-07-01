@@ -10,8 +10,6 @@ interface Props {
 }
 
 function ViewModal({ order, isOpen, setIsOpen }: Props) {
-  console.log(order)
-
   const totalDiscount = useMemo(() => {
     if (!order) return 0
     return order.products.reduce((acc, product) => {
