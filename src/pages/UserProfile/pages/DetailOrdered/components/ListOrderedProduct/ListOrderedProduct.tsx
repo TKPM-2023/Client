@@ -10,7 +10,7 @@ import {
   Textarea
 } from '@material-tailwind/react'
 import { OrderedProductType } from 'src/types/order.type'
-import { XMarkIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, ChatBubbleLeftIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import { useState, useContext } from 'react'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
@@ -26,15 +26,18 @@ interface Props {
 }
 
 const isAlreadyReview = (listRating: RatingByUser[], orderedProduct: OrderedProductType, userId?: string) => {
+  let count = 0
   listRating?.forEach((rating) => {
     if (
       rating.detail_id === orderedProduct.id &&
       rating.product_id === orderedProduct.product_origin.id &&
       rating.user_id === userId
-    )
-      return true
+    ) {
+      count += 1
+    }
   })
-  return false
+  if (count > 0) return true
+  else return false
 }
 
 function ListOrderedProduct({ orderedProduct, status }: Props) {
@@ -46,7 +49,7 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
     status: -1,
     user_id: `"${profile?.id}"`
   }
-  const { data: ratingsData } = useQuery({
+  const { data: ratingsData, refetch } = useQuery({
     queryKey: ['ratings', ratingQueryConfig],
     queryFn: () => ratingApi.getListRatingByUser(ratingQueryConfig),
     keepPreviousData: true
@@ -74,10 +77,10 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
     onSubmit: async (userRating) => {
       await postRatingMutation.mutateAsync({ ...userRating, point: rated, detail_id: orderedProduct.id })
       handleOpen()
+      refetch()
     }
   })
 
-  console.log(isAlreadyReview(listRating as RatingByUser[], orderedProduct, profile?.id))
   return (
     <div className='mb-1 flex justify-center'>
       <div className='grid w-[720px] grid-cols-[300px_120px_120px_135px_25px] rounded-md bg-gray-200 p-2 hover:bg-gray-100'>
@@ -106,7 +109,11 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
         </Typography>
         {status === 3 ? (
           <Tooltip
-            content='Đánh giá sản phẩm'
+            content={
+              isAlreadyReview(listRating as RatingByUser[], orderedProduct, profile?.id)
+                ? 'Đã đánh giá'
+                : 'Đánh giá sản phẩm'
+            }
             animate={{
               mount: { scale: 1, y: 0 },
               unmount: { scale: 0, y: 25 }
@@ -114,9 +121,11 @@ function ListOrderedProduct({ orderedProduct, status }: Props) {
             placement='bottom'
           >
             {isAlreadyReview(listRating as RatingByUser[], orderedProduct, profile?.id) ? (
-              <div>ok</div>
+              <button className='flex content-end items-center'>
+                <CheckCircleIcon className='h-5 w-5 text-green-500' />
+              </button>
             ) : (
-              <button onClick={handleOpen} className='flex cursor-pointer content-end items-center'>
+              <button onClick={handleOpen} className='flex content-end items-center'>
                 <ChatBubbleLeftIcon className='h-4 w-4' />
               </button>
             )}
