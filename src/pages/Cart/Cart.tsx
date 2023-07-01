@@ -83,7 +83,7 @@ function Cart() {
     mutationFn: (body: AddProductToCartType[]) => cartApi.deleteProductFromCart(body),
     onSuccess: () => {
       handleRefetchData()
-      toast.success('Đã xóa khỏi giỏ hàng')
+      toast.success('Đã xóa khỏi giỏ hàng', { autoClose: 1000 })
       setListCheckedProduct([''])
     }
   })
@@ -147,7 +147,11 @@ function Cart() {
                   }}
                   placement='bottom'
                 >
-                  <button onClick={handleDelteAll} className='flex cursor-pointer content-end items-center'>
+                  <button
+                    onClick={handleDelteAll}
+                    disabled={listCheckedProduct?.length <= 1 ? true : false}
+                    className='flex cursor-pointer content-end items-center'
+                  >
                     <svg
                       viewBox='64 64 896 896'
                       focusable='false'
